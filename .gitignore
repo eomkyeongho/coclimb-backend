@@ -13,7 +13,7 @@ a
 # Cache of project
 .gradletasknamecache
 
-
+.DS_Store
 
 HELP.md
 .gradle
