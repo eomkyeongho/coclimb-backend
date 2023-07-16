@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.application.port.in.gym.*;
 import swm.s3.coclimb.api.application.port.out.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.GymUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
+import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.domain.Gym;
 
 import java.util.List;
@@ -21,10 +23,12 @@ public class GymService implements GymCommand, GymQuery {
     @Override
     @Transactional
     public void createGym(GymCreateRequestDto request) {
-        if (gymLoadPort.existsByName(request.getName())) {
-            throw new IllegalArgumentException("같은 이름의 암장이 이미 존재합니다.");
+        if (gymLoadPort.existsByName(request.getName())){
+            throw new GymNameConflict();
         }
-        gymUpdatePort.save(request.toEntity());
+        Gym gym = request.toEntity();
+        gym.validate();
+        gymUpdatePort.save(gym);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class GymService implements GymCommand, GymQuery {
 
     private Gym getGymByName(String name) {
         Gym gym = gymLoadPort.findByName(name)
-                .orElseThrow(()->new IllegalArgumentException("해당 이름의 암장이 존재하지 않습니다."));
+                .orElseThrow(GymNotFound::new);
         return gym;
     }
 

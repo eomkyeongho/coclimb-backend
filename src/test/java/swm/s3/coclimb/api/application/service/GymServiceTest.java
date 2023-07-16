@@ -9,6 +9,8 @@ import swm.s3.coclimb.api.application.port.in.gym.GymCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymLocationResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymUpdateRequestDto;
+import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
+import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.config.IntegrationTestSupport;
 import swm.s3.coclimb.domain.Gym;
 import swm.s3.coclimb.domain.Location;
@@ -58,8 +60,10 @@ class GymServiceTest extends IntegrationTestSupport {
                 .build();
         // when, then
         assertThatThrownBy(() -> gymService.createGym(request))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("같은 이름의 암장이 이미 존재합니다.");
+                .isInstanceOf(GymNameConflict.class)
+                .hasMessage("해당 이름의 암장이 이미 존재합니다.")
+                .extracting("fields")
+                .hasFieldOrPropertyWithValue("name", "암장 이름은 중복될 수 없습니다.");
     }
 
     @Test
@@ -140,8 +144,10 @@ class GymServiceTest extends IntegrationTestSupport {
 
         // when, then
         assertThatThrownBy(() -> gymService.getGymInfoByName("존재하지 않는 암장"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 이름의 암장이 존재하지 않습니다.");
+                .isInstanceOf(GymNotFound.class)
+                .hasMessage("해당 암장을 찾을 수 없습니다.")
+                .extracting("fields")
+                .hasFieldOrPropertyWithValue("name", "해당 이름을 가진 암장이 존재하지 않습니다.");
     }
     
     @Test

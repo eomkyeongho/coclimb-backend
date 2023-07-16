@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpStatus;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymUpdateRequest;
@@ -15,16 +16,16 @@ import swm.s3.coclimb.domain.Location;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class GymControllerTest extends ControllerTestSupport {
+class GymControllerTest extends ControllerTestSupport{
 
     @Test
     @DisplayName("신규 암장을 등록한다.")
@@ -39,10 +40,15 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(201))
+                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.name()))
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.data").isEmpty());
     }
     @Test
-    @DisplayName("신규 암장을 등록시, 암장 이름은 필수값이다.")
+    @DisplayName("신규 암장 등록시, 암장 이름은 필수값이다.")
     void createGymWithNoName() throws Exception {
         // given
         GymCreateRequest request = GymCreateRequest.builder()
@@ -53,7 +59,13 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.name").value("암장 이름은 필수입니다."));
     }
 
     @Test
@@ -69,7 +81,11 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(204))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
+                .andExpect(jsonPath("$.message").isString());
     }
 
     @Test
@@ -77,8 +93,8 @@ class GymControllerTest extends ControllerTestSupport {
     void updateGym() throws Exception {
         // given
         GymUpdateRequest request = GymUpdateRequest.builder()
-                .targetName("대상이름")
-                .name("수정이름")
+                .name("대상이름")
+                .updateName("수정이름")
                 .build();
 
         // when, then
@@ -86,7 +102,11 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(204))
+                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
+                .andExpect(jsonPath("$.message").isString());
     }
     @ParameterizedTest
     @DisplayName("암장 정보 수정 시, 수정할 암장 이름은 필수값이다.")
@@ -95,8 +115,8 @@ class GymControllerTest extends ControllerTestSupport {
     void updateGymWithNoTargetName(String targetName) throws Exception {
         // given
         GymUpdateRequest request = GymUpdateRequest.builder()
-                .targetName(targetName)
-                .name("수정이름")
+                .name(targetName)
+                .updateName("수정이름")
                 .build();
 
         // when, then
@@ -104,7 +124,13 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.name").value("수정할 암장의 이름은 필수입니다."));
     }
 
     @ParameterizedTest
@@ -122,7 +148,13 @@ class GymControllerTest extends ControllerTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.name").value("정보를 제거할 암장의 이름은 필수입니다."));
     }
 
     @Test
@@ -138,27 +170,31 @@ class GymControllerTest extends ControllerTestSupport {
         mockMvc.perform(get("/gyms/{name}","암장이름"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("암장이름"));
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.data.name").value("암장이름"));
     }
 
-    //TODO
-//    @ParameterizedTest
-//    @DisplayName("이름으로 암장 정보를 조회할 때, 암장 이름은 필수값이다.")
-//    @ValueSource(strings = " ")
-//    @NullAndEmptySource
-//    void getGymInfoByNameWithNoName(String name) throws Exception {
-//        // given
-//        given(gymQuery.getGymInfoByName(any()))
-//                .willReturn(GymInfoResponse.builder()
-//                        .name("암장이름")
-//                        .build());
-//
-//        // when, then
-//        mockMvc.perform(get("/gyms/{name}",name))
-//                .andDo(print())
-//                .andExpect(status().isBadRequest());
-//        then(gymQuery).should().getGymInfoByName(name);
-//    }
+    @Test
+    @DisplayName("이름으로 암장 정보를 조회할 때, 암장 이름은 공백일 수 없다.")
+    void getGymInfoByNameWithNoWhiteSpace() throws Exception {
+        // given
+        String name = " ";
+
+        // when, then
+        mockMvc.perform(get("/gyms/{name}",name))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.name").value("암장 이름은 공백일 수 없습니다."));
+        then(gymQuery).shouldHaveNoInteractions();
+    }
 
     @Test
     @DisplayName("암장들의 위치 정보를 조회한다.")
@@ -179,7 +215,11 @@ class GymControllerTest extends ControllerTestSupport {
         mockMvc.perform(get("/gyms/locations"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.locations").isArray())
-                .andExpect(jsonPath("$.count").value(2));
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.data.locations").isArray())
+                .andExpect(jsonPath("$.data.count").value(2));
     }
 }

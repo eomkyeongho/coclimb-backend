@@ -1,6 +1,7 @@
 package swm.s3.coclimb.api.adapter.in.web.gym;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import swm.s3.coclimb.domain.Location;
 @Getter
 @NoArgsConstructor
 public class GymCreateRequest {
-    @NotBlank(message = "암장 이름은 필수입니다.")
+    @NotNull(message = "암장 이름은 필수입니다.")
     private String name;
     private String address;
     private String phone;
