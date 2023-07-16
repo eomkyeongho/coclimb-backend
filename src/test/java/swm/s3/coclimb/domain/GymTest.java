@@ -1,11 +1,14 @@
 package swm.s3.coclimb.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GymTest {
 
@@ -49,6 +52,24 @@ class GymTest {
         // then
         assertThat(sut)
                 .extracting("name", "address", "phone", "location.latitude", "location.longitude")
-                .contains("변경 암장", "변경 주소", "전화번호", 0f,0f);
+                .contains("변경 암장", "변경 주소", "전화번호", 0f, 0f);
+    }
+
+    @ParameterizedTest
+    @DisplayName("암장 이름은 필수값이다.")
+    @ValueSource(strings = " ")
+    @NullAndEmptySource
+    void validateName(String name) throws Exception {
+        // given
+        Gym sut = Gym.builder()
+                .name(name)
+                .build();
+
+        // when, then
+        assertThatThrownBy(sut::validate)
+                .isInstanceOf(ValidationFail.class)
+                .hasMessage("유효성 검사를 통과하지 못한 필드가 존재합니다.")
+                .extracting("fields")
+                .hasFieldOrPropertyWithValue("name", "암장 이름은 필수값입니다.");
     }
 }
