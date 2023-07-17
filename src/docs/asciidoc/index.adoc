@@ -13,7 +13,13 @@ endif::[]
 :sectlinks:
 //개행
 :hardbreaks:
+//문단번호
+:sectnums:
+
+[[Error-API]]
+== Error API
+include::api/error.adoc[]
 
 [[Gym-API]]
 == Gym API
-include::api.gym/gym.adoc[]
+include::api/gym.adoc[]
