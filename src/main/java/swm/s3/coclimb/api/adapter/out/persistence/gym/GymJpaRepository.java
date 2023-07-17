@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.persistence;
+package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import swm.s3.coclimb.domain.Gym;

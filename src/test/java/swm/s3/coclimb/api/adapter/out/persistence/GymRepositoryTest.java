@@ -1,19 +1,17 @@
 package swm.s3.coclimb.api.adapter.out.persistence;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import swm.s3.coclimb.config.IntegrationTestSupport;
+import swm.s3.coclimb.api.IntegrationTestSupport;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
 import swm.s3.coclimb.domain.Gym;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class GymRepositoryTest extends IntegrationTestSupport {
 

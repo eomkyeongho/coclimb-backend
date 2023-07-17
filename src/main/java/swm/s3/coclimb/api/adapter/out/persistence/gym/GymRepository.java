@@ -1,9 +1,9 @@
-package swm.s3.coclimb.api.adapter.out.persistence;
+package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import swm.s3.coclimb.api.application.port.out.GymLoadPort;
-import swm.s3.coclimb.api.application.port.out.GymUpdatePort;
+import swm.s3.coclimb.api.application.port.out.gym.GymLoadPort;
+import swm.s3.coclimb.api.application.port.out.gym.GymUpdatePort;
 import swm.s3.coclimb.domain.Gym;
 
 import java.util.List;

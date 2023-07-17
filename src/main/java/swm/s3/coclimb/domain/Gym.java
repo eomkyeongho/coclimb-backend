@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 
-import static java.util.Objects.isNull;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,8 +45,8 @@ public class Gym extends BaseTimeEntity {
 
     public void validate() {
         ValidationFail validationFail = new ValidationFail();
-        if (isNull(name) || name.isBlank()) {
-            validationFail.addField("name","암장 이름은 필수값입니다.");
+        if (name == null || name.isBlank()) {
+            validationFail.addField("name", "암장 이름은 필수값입니다.");
         }
 
         if (validationFail.isNotEmpty()) {

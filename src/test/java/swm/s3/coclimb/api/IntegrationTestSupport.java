@@ -1,4 +1,4 @@
-package swm.s3.coclimb.config;
+package swm.s3.coclimb.api;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;

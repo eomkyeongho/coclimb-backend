@@ -4,14 +4,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import swm.s3.coclimb.api.adapter.out.persistence.GymJpaRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.application.port.in.gym.GymCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymLocationResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymUpdateRequestDto;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
-import swm.s3.coclimb.config.IntegrationTestSupport;
+import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.domain.Gym;
 import swm.s3.coclimb.domain.Location;
 

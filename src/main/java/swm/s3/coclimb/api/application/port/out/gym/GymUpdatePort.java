@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.application.port.out;
+package swm.s3.coclimb.api.application.port.out.gym;
 
 import swm.s3.coclimb.domain.Gym;
 
