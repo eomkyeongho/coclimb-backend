@@ -32,10 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -44,9 +41,17 @@ dependencies {
 	// h2
 	runtimeOnly 'com.h2database:h2'
 
+	// test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.json:json:20230227'
+	implementation 'org.mockito:mockito-core:5.2.0'
+
 	// RESTDocs
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+
+
 }
 
 test {

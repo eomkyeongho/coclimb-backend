@@ -7,8 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.s3.coclimb.api.ApiResponse;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymLocationsResponse;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
-import swm.s3.coclimb.api.application.port.in.gym.GymInfoResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 
