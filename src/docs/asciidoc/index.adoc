@@ -1,0 +1,19 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= CoClimb REST API 문서
+:doctype: book
+:icons: font
+//json형식 하이라이트
+:source-highlighter: highlightjs
+//목차
+:toc: left
+:toclevels: 2
+//문단 하이퍼 링크
+:sectlinks:
+//개행
+:hardbreaks:
+
+[[Gym-API]]
+== Gym API
+include::api.gym/gym.adoc[]

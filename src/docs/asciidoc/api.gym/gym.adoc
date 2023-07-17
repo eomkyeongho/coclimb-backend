@@ -1,0 +1,11 @@
+[[gym-create]]
+=== 신규 암장 등록
+
+==== HTTP Request
+include::{snippets}/gym-create/http-request.adoc[]
+include::{snippets}/gym-create/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/gym-create/http-response.adoc[]
+include::{snippets}/gym-create/response-fields.adoc[]
+
