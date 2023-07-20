@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
 
+
 @Component
 @RequiredArgsConstructor
 public class InstagramRestApiManager {

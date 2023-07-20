@@ -5,8 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
-import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
 import swm.s3.coclimb.domain.Gym;
 
 import java.util.Optional;
