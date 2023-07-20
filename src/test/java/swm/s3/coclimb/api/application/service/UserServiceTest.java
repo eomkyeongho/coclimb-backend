@@ -16,6 +16,7 @@ import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.user.UserUpdatePort;
 import swm.s3.coclimb.domain.User;
 
+
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
