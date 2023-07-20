@@ -5,13 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.domain.Location;
 
 import java.util.List;
@@ -221,5 +223,51 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.data.locations").isArray())
                 .andExpect(jsonPath("$.data.count").value(2));
+    }
+
+    @Test
+    @DisplayName("기본 암장 페이지를 조회한다.")
+    void getPagedGyms() throws Exception {
+        // given
+        given(gymQuery.getPagedGyms(any()))
+                .willReturn(Page.empty(PageRequest.of(1,5)));
+
+        // when, then
+        mockMvc.perform(get("/gyms")
+                        .param("page",String.valueOf(0))
+                        .param("size",String.valueOf(5)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.data.gyms").isArray())
+                .andExpect(jsonPath("$.data.page").value(1))
+                .andExpect(jsonPath("$.data.size").value(5))
+                .andExpect(jsonPath("$.data.totalPage").isNumber());
+
+    }
+    @Test
+    @DisplayName("암장 페이지 조회 시, page 번호는 0이상의 정수여야 한다.")
+    void getPagedGymsWithoutPage() throws Exception {
+        // given
+
+        given(gymQuery.getPagedGyms(any()))
+                .willReturn(Page.empty(PageRequest.of(1,5)));
+
+        // when, then
+        mockMvc.perform(get("/gyms")
+                        .param("page", String.valueOf(-1))
+                        .param("size", String.valueOf(5)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(400))
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.page").value("조회할 페이지 번호는 0이상의 정수여야 합니다."));
+        then(gymQuery).shouldHaveNoInteractions();
     }
 }
