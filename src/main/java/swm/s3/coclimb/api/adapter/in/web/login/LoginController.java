@@ -1,13 +1,12 @@
-package swm.s3.coclimb.api.adapter.in.web.user;
+package swm.s3.coclimb.api.adapter.in.web.login;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import swm.s3.coclimb.api.adapter.in.web.user.dto.InstagramAuthRequest;
-import swm.s3.coclimb.api.application.port.in.user.UserCommand;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 
 import java.net.URI;
@@ -15,9 +14,8 @@ import java.net.URI;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
-public class UserController {
+public class LoginController {
 
-    private final UserCommand userCommand;
     private final InstagramOAuthRecord instagramOAuthRecord;
 
     @GetMapping("/login/instagram")
@@ -30,15 +28,6 @@ public class UserController {
         return ResponseEntity
                 .status(302)
                 .headers(headers)
-                .build();
-    }
-
-    @PostMapping("/auth/instagram")
-    public ResponseEntity<Void> authInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest) {
-        userCommand.loginInstagram(instagramAuthRequest.getCode());
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
                 .build();
     }
 }
