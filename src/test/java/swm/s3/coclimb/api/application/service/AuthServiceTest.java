@@ -25,8 +25,8 @@ import static org.mockito.Mockito.*;
 
 
 @Transactional
-class UserServiceTest extends IntegrationTestSupport {
-    UserService userService;
+class AuthServiceTest extends IntegrationTestSupport {
+    AuthService authService;
     @Mock
     InstagramRestApiManager instagramRestApiManager;
     @Autowired
@@ -38,7 +38,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userLoadPort, userUpdatePort, instagramRestApiManager);
+        authService = new AuthService(userLoadPort, userUpdatePort, instagramRestApiManager);
     }
 
     @AfterEach
@@ -50,10 +50,10 @@ class UserServiceTest extends IntegrationTestSupport {
     @DisplayName("첫 로그인 시 유저 생성 후 저장한다.")
     void firstLogin() {
         // given
-        Long instaUserId = 1L;
+        Long instagramUserId = 1L;
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
                 .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instaUserId)
+                .userId(instagramUserId)
                 .build());
         when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
                 .longLivedAccessToken("longLivedAccessToken")
@@ -62,8 +62,8 @@ class UserServiceTest extends IntegrationTestSupport {
                 .build());
 
         // when
-        userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instaUserId);
+        authService.authenticateWithInstagram("test");
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -82,10 +82,10 @@ class UserServiceTest extends IntegrationTestSupport {
                 .instagramTokenExpireDate(now.plusDays(31))
                 .build());
 
-        Long instaUserId = 1L;
+        Long instagramUserId = 1L;
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
                 .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instaUserId)
+                .userId(instagramUserId)
                 .build());
         lenient().when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
                 .longLivedAccessToken("newLongLivedAccessToken")
@@ -94,8 +94,8 @@ class UserServiceTest extends IntegrationTestSupport {
                 .build());
 
         // when
-        userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instaUserId);
+        authService.authenticateWithInstagram("test");
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -109,17 +109,17 @@ class UserServiceTest extends IntegrationTestSupport {
     void updateToken() {
         // given
         LocalDate now = LocalDate.now();
-        Long instaUserId = 1L;
+        Long instagramUserId = 1L;
 
         userJpaRepository.save(User.builder()
-                .instagramUserId(instaUserId)
+                .instagramUserId(instagramUserId)
                 .instagramAccessToken("longLivedAccessToken")
                 .instagramTokenExpireDate(now.plusDays(30))
                 .build());
 
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
                 .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instaUserId)
+                .userId(instagramUserId)
                 .build());
         when(instagramRestApiManager.refreshLongLivedToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
                 .longLivedAccessToken("refreshedAccessToken")
@@ -128,8 +128,8 @@ class UserServiceTest extends IntegrationTestSupport {
                 .build());
 
         // when
-        userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instaUserId);
+        authService.authenticateWithInstagram("test");
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -143,17 +143,17 @@ class UserServiceTest extends IntegrationTestSupport {
     void reissueToken() {
         // given
         LocalDate now = LocalDate.now();
-        Long instaUserId = 1L;
+        Long instagramUserId = 1L;
 
         userJpaRepository.save(User.builder()
-                .instagramUserId(instaUserId)
+                .instagramUserId(instagramUserId)
                 .instagramAccessToken("expiredAccessToken")
                 .instagramTokenExpireDate(now.minusDays(1))
                 .build());
 
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
                 .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instaUserId)
+                .userId(instagramUserId)
                 .build());
         when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
                 .longLivedAccessToken("newLongLivedAccessToken")
@@ -162,8 +162,8 @@ class UserServiceTest extends IntegrationTestSupport {
                 .build());
 
         // when
-        userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instaUserId);
+        authService.authenticateWithInstagram("test");
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
