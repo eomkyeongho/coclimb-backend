@@ -23,8 +23,9 @@ public abstract class CustomException extends RuntimeException{
     public void setFields(Map<String, String> fields) {
         this.fields = fields != null ? fields : new HashMap<>();
     }
-    public void addField(String fieldName, String fieldMessage){
+    public CustomException addField(String fieldName, String fieldMessage){
         fields.put(fieldName, fieldMessage);
+        return this;
     };
 
 }

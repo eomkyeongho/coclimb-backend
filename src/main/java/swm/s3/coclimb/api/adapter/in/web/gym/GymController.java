@@ -48,9 +48,8 @@ public class GymController {
     @GetMapping("/gyms/{name}")
     public ApiResponse<GymInfoResponseDto> getGymInfoByName(@PathVariable String name) {
         if(name.isBlank()){
-            ValidationFail validationFail = ValidationFail.onRequest();
-            validationFail.addField("name","암장 이름은 공백일 수 없습니다.");
-            throw validationFail;
+            throw ValidationFail.onRequest()
+                    .addField("name", "암장 이름은 공백일 수 없습니다.");
         }
         return ApiResponse.ok(gymQuery.getGymInfoByName(name));
     }
