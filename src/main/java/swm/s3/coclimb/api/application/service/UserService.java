@@ -32,31 +32,31 @@ public class UserService implements UserCommand {
         }
 
         ShortLivedTokenResponseDto shortLivedTokenResponseDto = instagramRestApiManager.getShortLivedAccessTokenAndUserId(code);
-        User user = userLoadPort.findByInstaUserId(shortLivedTokenResponseDto.getUserId());
+        User user = userLoadPort.findByInstagramUserId(shortLivedTokenResponseDto.getUserId());
         LocalDate nowDate = LocalDate.now();
 
         if(user == null) {
             LongLivedTokenResponseDto longLivedTokenResponseDto = instagramRestApiManager.getLongLivedAccessToken(shortLivedTokenResponseDto.getShortLivedAccessToken());
             userUpdatePort.save(User.builder()
-                    .instaUserId(shortLivedTokenResponseDto.getUserId())
-                    .instaAccessToken(longLivedTokenResponseDto.getLongLivedAccessToken())
-                    .instaTokenExpireDate(nowDate.plusDays(longLivedTokenResponseDto.getExpiresIn()/86400))
+                    .instagramUserId(shortLivedTokenResponseDto.getUserId())
+                    .instagramAccessToken(longLivedTokenResponseDto.getLongLivedAccessToken())
+                    .instagramTokenExpireDate(nowDate.plusDays(longLivedTokenResponseDto.getExpiresIn()/86400))
                     .build());
         } else {
-            Period gap = Period.between(nowDate, user.getInstaTokenExpireDate());
+            Period gap = Period.between(nowDate, user.getInstagramTokenExpireDate());
 
             if(gap.getMonths() <= 0) {
                 LongLivedTokenResponseDto longLivedTokenResponseDto;
 
                 if(gap.getDays() > 0) {
-                    longLivedTokenResponseDto = instagramRestApiManager.refreshLongLivedToken(user.getInstaAccessToken());
+                    longLivedTokenResponseDto = instagramRestApiManager.refreshLongLivedToken(user.getInstagramAccessToken());
                 } else {
                     longLivedTokenResponseDto = instagramRestApiManager.getLongLivedAccessToken(shortLivedTokenResponseDto.getShortLivedAccessToken());
                 }
 
                 user.update(User.builder()
-                        .instaAccessToken(longLivedTokenResponseDto.getLongLivedAccessToken())
-                        .instaTokenExpireDate(nowDate.plusDays(longLivedTokenResponseDto.getExpiresIn()/86400))
+                        .instagramAccessToken(longLivedTokenResponseDto.getLongLivedAccessToken())
+                        .instagramTokenExpireDate(nowDate.plusDays(longLivedTokenResponseDto.getExpiresIn()/86400))
                         .build());
             }
         }

@@ -21,22 +21,22 @@ public class User {
     private String username;
 
     // instagram information
-    private Long instaUserId;
-    private String instaAccessToken;
-    private LocalDate instaTokenExpireDate;
+    private Long instagramUserId;
+    private String instagramAccessToken;
+    private LocalDate instagramTokenExpireDate;
 
     @Builder
-    public User(String username, Long instaUserId, String instaAccessToken, LocalDate instaTokenExpireDate) {
+    public User(String username, Long instagramUserId, String instagramAccessToken, LocalDate instagramTokenExpireDate) {
         this.username = username;
-        this.instaUserId = instaUserId;
-        this.instaAccessToken = instaAccessToken;
-        this.instaTokenExpireDate = instaTokenExpireDate;
+        this.instagramUserId = instagramUserId;
+        this.instagramAccessToken = instagramAccessToken;
+        this.instagramTokenExpireDate = instagramTokenExpireDate;
     }
 
     public void update(User updatePart) {
         this.username = (updatePart.username == null) ? this.username : updatePart.username;
-        this.instaUserId = (updatePart.instaUserId == null) ? this.instaUserId : updatePart.instaUserId;
-        this.instaAccessToken = (updatePart.instaAccessToken == null) ? this.instaAccessToken : updatePart.instaAccessToken;
-        this.instaTokenExpireDate = (updatePart.instaTokenExpireDate == null) ? this.instaTokenExpireDate : updatePart.instaTokenExpireDate;
+        this.instagramUserId = (updatePart.instagramUserId == null) ? this.instagramUserId : updatePart.instagramUserId;
+        this.instagramAccessToken = (updatePart.instagramAccessToken == null) ? this.instagramAccessToken : updatePart.instagramAccessToken;
+        this.instagramTokenExpireDate = (updatePart.instagramTokenExpireDate == null) ? this.instagramTokenExpireDate : updatePart.instagramTokenExpireDate;
     }
 }

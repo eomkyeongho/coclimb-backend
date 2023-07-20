@@ -24,8 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-//@SpringBootTest
-//@ExtendWith(MockitoExtension.class)
 @Transactional
 class UserServiceTest extends IntegrationTestSupport {
     UserService userService;
@@ -65,12 +63,12 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstaUserId(instaUserId);
+        User sut = userLoadPort.findByInstagramUserId(instaUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
         verify(instagramRestApiManager, times(1)).getLongLivedAccessToken(any(String.class));
-        assertThat(sut.getInstaAccessToken()).isEqualTo("longLivedAccessToken");
+        assertThat(sut.getInstagramAccessToken()).isEqualTo("longLivedAccessToken");
     }
 
     @Test
@@ -79,9 +77,9 @@ class UserServiceTest extends IntegrationTestSupport {
         // given
         LocalDate now = LocalDate.now();
         userJpaRepository.save(User.builder()
-                .instaUserId(1L)
-                .instaAccessToken("longLivedAccessToken")
-                .instaTokenExpireDate(now.plusDays(31))
+                .instagramUserId(1L)
+                .instagramAccessToken("longLivedAccessToken")
+                .instagramTokenExpireDate(now.plusDays(31))
                 .build());
 
         Long instaUserId = 1L;
@@ -97,13 +95,13 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstaUserId(instaUserId);
+        User sut = userLoadPort.findByInstagramUserId(instaUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
         verify(instagramRestApiManager, times(0)).getLongLivedAccessToken(any(String.class));
         verify(instagramRestApiManager, times(0)).refreshLongLivedToken(any(String.class));
-        assertThat(sut.getInstaAccessToken()).isEqualTo("longLivedAccessToken");
+        assertThat(sut.getInstagramAccessToken()).isEqualTo("longLivedAccessToken");
     }
 
     @Test
@@ -114,9 +112,9 @@ class UserServiceTest extends IntegrationTestSupport {
         Long instaUserId = 1L;
 
         userJpaRepository.save(User.builder()
-                .instaUserId(instaUserId)
-                .instaAccessToken("longLivedAccessToken")
-                .instaTokenExpireDate(now.plusDays(30))
+                .instagramUserId(instaUserId)
+                .instagramAccessToken("longLivedAccessToken")
+                .instagramTokenExpireDate(now.plusDays(30))
                 .build());
 
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
@@ -131,13 +129,13 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstaUserId(instaUserId);
+        User sut = userLoadPort.findByInstagramUserId(instaUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
         verify(instagramRestApiManager, times(0)).getLongLivedAccessToken(any(String.class));
         verify(instagramRestApiManager, times(1)).refreshLongLivedToken(any(String.class));
-        assertThat(sut.getInstaAccessToken()).isEqualTo("refreshedAccessToken");
+        assertThat(sut.getInstagramAccessToken()).isEqualTo("refreshedAccessToken");
     }
 
     @Test
@@ -148,9 +146,9 @@ class UserServiceTest extends IntegrationTestSupport {
         Long instaUserId = 1L;
 
         userJpaRepository.save(User.builder()
-                .instaUserId(instaUserId)
-                .instaAccessToken("expiredAccessToken")
-                .instaTokenExpireDate(now.minusDays(1))
+                .instagramUserId(instaUserId)
+                .instagramAccessToken("expiredAccessToken")
+                .instagramTokenExpireDate(now.minusDays(1))
                 .build());
 
         when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
@@ -165,12 +163,12 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         userService.loginInstagram("test");
-        User sut = userLoadPort.findByInstaUserId(instaUserId);
+        User sut = userLoadPort.findByInstagramUserId(instaUserId);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
         verify(instagramRestApiManager, times(1)).getLongLivedAccessToken(any(String.class));
         verify(instagramRestApiManager, times(0)).refreshLongLivedToken(any(String.class));
-        assertThat(sut.getInstaAccessToken()).isEqualTo("newLongLivedAccessToken");
+        assertThat(sut.getInstagramAccessToken()).isEqualTo("newLongLivedAccessToken");
     }
 }

@@ -13,8 +13,8 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public User findByInstaUserId(Long instaUserId) {
-        return userJpaRepository.findByInstaUserId(instaUserId).orElse(null);
+    public User findByInstagramUserId(Long instagramUserId) {
+        return userJpaRepository.findByInstagramUserId(instagramUserId).orElse(null);
     }
 
     @Override
