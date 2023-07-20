@@ -11,7 +11,7 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.config.ControllerTestSupport;
+import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.domain.Location;
 
 import java.util.List;
@@ -211,7 +211,7 @@ class GymControllerTest extends ControllerTestSupport{
 
         given(gymQuery.getGymLocations()).willReturn(List.of(gym1, gym2));
 
-        // when
+        // when, then
         mockMvc.perform(get("/gyms/locations"))
                 .andDo(print())
                 .andExpect(status().isOk())
