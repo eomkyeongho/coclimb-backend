@@ -1,5 +1,6 @@
 package swm.s3.coclimb.api.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,18 +49,16 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("첫 로그인 시 유저 생성 후 저장한다.")
-    void firstLogin() {
+    void firstLogin() throws JsonProcessingException {
         // given
         Long instagramUserId = 1L;
-        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
-                .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instagramUserId)
-                .build());
-        when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken("longLivedAccessToken")
-                .expiresIn(5184000L)
-                .tokenType("Bearer")
-                .build());
+        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(new ShortLivedTokenResponseDto(
+                "shortLivedAccessToken",
+                instagramUserId));
+        when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(new LongLivedTokenResponseDto(
+                "longLivedAccessToken",
+                "Bearer",
+                5184000L));
 
         // when
         authService.authenticateWithInstagram("test");
@@ -73,7 +72,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("이미 유저가 존재하고 토큰 유효 기간이 31일 이상이면 토큰을 갱신하지 않는다.")
-    void notUpdateToken() {
+    void notUpdateToken() throws JsonProcessingException {
         // given
         LocalDate now = LocalDate.now();
         userJpaRepository.save(User.builder()
@@ -83,15 +82,13 @@ class AuthServiceTest extends IntegrationTestSupport {
                 .build());
 
         Long instagramUserId = 1L;
-        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
-                .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instagramUserId)
-                .build());
-        lenient().when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken("newLongLivedAccessToken")
-                .expiresIn(5184000L)
-                .tokenType("Bearer")
-                .build());
+        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(new ShortLivedTokenResponseDto(
+                "shortLivedAccessToken",
+                instagramUserId));
+        lenient().when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(new LongLivedTokenResponseDto(
+                "newLongLivedAccessToken",
+                "Bearer",
+                5184000L));
 
         // when
         authService.authenticateWithInstagram("test");
@@ -106,7 +103,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("이미 유저가 존재하고 토큰 유효 기간이 31일 미만이면 토큰을 갱신한다.")
-    void updateToken() {
+    void updateToken() throws JsonProcessingException {
         // given
         LocalDate now = LocalDate.now();
         Long instagramUserId = 1L;
@@ -117,15 +114,13 @@ class AuthServiceTest extends IntegrationTestSupport {
                 .instagramTokenExpireDate(now.plusDays(30))
                 .build());
 
-        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
-                .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instagramUserId)
-                .build());
-        when(instagramRestApiManager.refreshLongLivedToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken("refreshedAccessToken")
-                .expiresIn(5184000L)
-                .tokenType("Bearer")
-                .build());
+        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(new ShortLivedTokenResponseDto(
+                "shortLivedAccessToken",
+                instagramUserId));
+        when(instagramRestApiManager.refreshLongLivedToken(any(String.class))).thenReturn(new LongLivedTokenResponseDto(
+                "refreshedAccessToken",
+                "Bearer",
+                5184000L));
 
         // when
         authService.authenticateWithInstagram("test");
@@ -140,7 +135,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("이미 유저가 존재하고 토큰 유효 기간이 끝났으면 토큰을 새로 발급한다.")
-    void reissueToken() {
+    void reissueToken() throws JsonProcessingException {
         // given
         LocalDate now = LocalDate.now();
         Long instagramUserId = 1L;
@@ -151,15 +146,13 @@ class AuthServiceTest extends IntegrationTestSupport {
                 .instagramTokenExpireDate(now.minusDays(1))
                 .build());
 
-        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(ShortLivedTokenResponseDto.builder()
-                .shortLivedAccessToken("shortLivedAccessToken")
-                .userId(instagramUserId)
-                .build());
-        when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken("newLongLivedAccessToken")
-                .expiresIn(5184000L)
-                .tokenType("Bearer")
-                .build());
+        when(instagramRestApiManager.getShortLivedAccessTokenAndUserId(any(String.class))).thenReturn(new ShortLivedTokenResponseDto(
+                "shortLivedAccessToken",
+                instagramUserId));
+        when(instagramRestApiManager.getLongLivedAccessToken(any(String.class))).thenReturn(new LongLivedTokenResponseDto(
+                "newLongLivedAccessToken",
+                "Bearer",
+                5184000L));
 
         // when
         authService.authenticateWithInstagram("test");

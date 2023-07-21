@@ -1,5 +1,6 @@
 package swm.s3.coclimb.api.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +8,7 @@ import swm.s3.coclimb.api.application.port.in.auth.AuthCommand;
 import swm.s3.coclimb.api.application.port.in.auth.dto.SessionDataDto;
 import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.user.UserUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.auth.AuthCodeInvalid;
 import swm.s3.coclimb.domain.User;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
@@ -27,9 +29,9 @@ public class AuthService implements AuthCommand {
 
     @Override
     @Transactional
-    public SessionDataDto authenticateWithInstagram(String code) {
+    public SessionDataDto authenticateWithInstagram(String code) throws JsonProcessingException {
         if(code == null) {
-            throw new RuntimeException("유효하지 않은 인증 코드");
+            throw new AuthCodeInvalid();
         }
 
         ShortLivedTokenResponseDto shortLivedTokenResponseDto = instagramRestApiManager.getShortLivedAccessTokenAndUserId(code);
@@ -46,7 +48,7 @@ public class AuthService implements AuthCommand {
         }
     }
 
-    private SessionDataDto saveUserAndGetSessionData(ShortLivedTokenResponseDto shortLivedTokenResponseDto) {
+    private SessionDataDto saveUserAndGetSessionData(ShortLivedTokenResponseDto shortLivedTokenResponseDto) throws JsonProcessingException {
         LongLivedTokenResponseDto longLivedTokenResponseDto = instagramRestApiManager.getLongLivedAccessToken(shortLivedTokenResponseDto.getShortLivedAccessToken());
 
         userUpdatePort.save(User.builder()
@@ -61,7 +63,7 @@ public class AuthService implements AuthCommand {
                 .build();
     }
 
-    private void updateAccessToken(User user, ShortLivedTokenResponseDto shortLivedTokenResponseDto) {
+    private void updateAccessToken(User user, ShortLivedTokenResponseDto shortLivedTokenResponseDto) throws JsonProcessingException {
         Period gap = Period.between(LocalDate.now(), user.getInstagramTokenExpireDate());
 
         if(gap.getMonths() <= 0) {
