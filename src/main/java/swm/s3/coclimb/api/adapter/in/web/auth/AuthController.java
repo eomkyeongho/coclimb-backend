@@ -1,6 +1,7 @@
 package swm.s3.coclimb.api.adapter.in.web.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,11 @@ public class AuthController {
     private final AuthCommand authCommand;
 
     @PostMapping("/auth/instagram")
-    public ResponseEntity<Void> authInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest) throws JsonProcessingException {
+    public ResponseEntity<Void> authInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest, HttpSession httpSession) throws JsonProcessingException {
         SessionDataDto sessionData = authCommand.authenticateWithInstagram(instagramAuthRequest.getCode());
+
+        httpSession.setAttribute("instagramUserId", sessionData.getInstagramUserId());
+        httpSession.setAttribute("instagramAccessToken", sessionData.getInstagramAccessToken());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -62,7 +62,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -92,7 +92,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -124,7 +124,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -156,7 +156,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId);
+        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));

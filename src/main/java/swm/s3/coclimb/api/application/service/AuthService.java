@@ -35,7 +35,7 @@ public class AuthService implements AuthCommand {
         }
 
         ShortLivedTokenResponseDto shortLivedTokenResponseDto = instagramRestApiManager.getShortLivedAccessTokenAndUserId(code);
-        User user = userLoadPort.findByInstagramUserId(shortLivedTokenResponseDto.getUserId());
+        User user = userLoadPort.findByInstagramUserId(shortLivedTokenResponseDto.getUserId()).orElse(null);
 
         if(user == null) {
             return saveUserAndGetSessionData(shortLivedTokenResponseDto);
