@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
+import swm.s3.coclimb.config.WebConfig;
 import swm.s3.coclimb.domain.User;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,6 +27,9 @@ class UserControllerTest {
 
     @Autowired
     UserJpaRepository userJpaRepository;
+
+    @MockBean
+    WebConfig webConfig;
 
     @Test
     @DisplayName("/users/me 으로 접속하면 세션 정보 기반으로 유저를 조회한다.")
