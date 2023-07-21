@@ -20,4 +20,9 @@ public class UserService implements UserCommand, UserQuery {
     public User getUserByInstagramUserId(Long instagramUserId) {
         return userLoadPort.findByInstagramUserId(instagramUserId).orElseThrow(UserNotFound::new);
     }
+
+    @Override
+    public User findUserByInstagramUserId(Long instagramUserId) {
+        return userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+    }
 }
