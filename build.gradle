@@ -41,6 +41,9 @@ dependencies {
 	// h2
 	runtimeOnly 'com.h2database:h2'
 
+	// mysql
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.json:json:20230227'
