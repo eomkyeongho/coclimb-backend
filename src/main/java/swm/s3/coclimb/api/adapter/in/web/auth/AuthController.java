@@ -23,20 +23,20 @@ public class AuthController {
     private final AuthCommand authCommand;
 
     @PostMapping("/auth/instagram")
-    public ResponseEntity<Void> authInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest, HttpSession httpSession
+    public ResponseEntity<Void> loginWithInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest, HttpSession httpSession
     , HttpServletResponse response) throws JsonProcessingException {
         SessionDataDto sessionData = authCommand.authenticateWithInstagram(instagramAuthRequest.getCode());
 
         httpSession.setAttribute("instagramUserId", sessionData.getInstagramUserId());
         httpSession.setAttribute("instagramAccessToken", sessionData.getInstagramAccessToken());
-        setCookie(response, sessionData.getInstagramAccessToken(), sessionData.getInstagramUserId());
+        setInstagramCookie(response, sessionData.getInstagramAccessToken(), sessionData.getInstagramUserId());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
     }
 
-    private void setCookie(HttpServletResponse response, String instagramAccessToken, Long instagramUserId) {
+    private void setInstagramCookie(HttpServletResponse response, String instagramAccessToken, Long instagramUserId) {
         Cookie tokenCookie = new Cookie("instagramAccessToken", instagramAccessToken);
 
         tokenCookie.setPath("/");
