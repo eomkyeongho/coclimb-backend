@@ -60,12 +60,7 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
             session.setAttribute("instagramUserId", instagramUserId);
             session.setAttribute("instagramAccessToken", instagramAccessToken);
 
-            if (request.getRequestURI().matches("^/login/.*$")) {
-                response.sendRedirect("/autoLoginSuccess");
-                return false;
-            }
-
-            return true;
+            return autoLoginSuccess(request, response);
         } else {
             return autoLoginFail(request, response);
         }
@@ -78,5 +73,13 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
             response.setStatus(401);
             return false;
         }
+    }
+
+    private boolean autoLoginSuccess(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getRequestURI().matches("^/login/.*$")) {
+            response.setStatus(200);
+            return false;
+        }
+        return true;
     }
 }
