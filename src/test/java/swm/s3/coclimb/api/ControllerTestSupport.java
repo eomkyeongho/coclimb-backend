@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymController;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
+import swm.s3.coclimb.config.WebConfig;
+import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
 
 @WebMvcTest(controllers = {
         GymController.class
@@ -26,4 +28,10 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected GymQuery gymQuery;
+
+    @MockBean
+    protected WebConfig webConfig;
+
+    @MockBean
+    protected AutoLoginInterceptor autoLoginInterceptor;
 }

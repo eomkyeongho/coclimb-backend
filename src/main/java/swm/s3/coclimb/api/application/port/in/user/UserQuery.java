@@ -4,4 +4,5 @@ import swm.s3.coclimb.domain.User;
 
 public interface UserQuery {
     User getUserByInstagramUserId(Long instagramUserId);
+    User findUserByInstagramUserId(Long instagramUserId);
 }

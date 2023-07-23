@@ -1,12 +1,14 @@
 package swm.s3.coclimb.api.adapter.in.web.login;
 
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import swm.s3.coclimb.api.ApiResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 
 import java.net.URI;
@@ -19,7 +21,7 @@ public class LoginController {
     private final InstagramOAuthRecord instagramOAuthRecord;
 
     @GetMapping("/login/instagram")
-    public ResponseEntity<?> loginInstagram() {
+    public ResponseEntity<?> redirectInstagramLoginPage() {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("https://api.instagram.com/oauth/authorize?client_id=" + instagramOAuthRecord.clientId()
                 + "&redirect_uri=" + instagramOAuthRecord.redirectUri()
@@ -29,5 +31,12 @@ public class LoginController {
                 .status(302)
                 .headers(headers)
                 .build();
+    }
+
+    @GetMapping("/logout")
+    public ApiResponse<?> logout(HttpSession session) {
+        session.invalidate();
+
+        return ApiResponse.ok("로그아웃 되었습니다.");
     }
 }
