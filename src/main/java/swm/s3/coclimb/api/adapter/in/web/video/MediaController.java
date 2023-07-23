@@ -17,9 +17,9 @@ public class MediaController {
 
     private final MediaQuery mediaQuery;
 
-    @GetMapping("/medias/my-videos")
-    public ApiResponse<List<InstagramMediaResponseDto>> getMyVideos(HttpSession httpSession) throws JsonProcessingException {
-        List<InstagramMediaResponseDto> myVideos = mediaQuery.getMyVideos((String) httpSession.getAttribute("instagramAccessToken"));
-        return ApiResponse.ok(myVideos);
+    @GetMapping("/medias/instagram/my-videos")
+    public ApiResponse<List<InstagramMediaResponseDto>> getMyInstagramVideos(HttpSession httpSession) throws JsonProcessingException {
+        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos((String) httpSession.getAttribute("instagramAccessToken"));
+        return ApiResponse.ok(myInstagramVideos);
     }
 }

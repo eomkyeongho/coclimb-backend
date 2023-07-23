@@ -6,5 +6,5 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import java.util.List;
 
 public interface MediaQuery {
-    List<InstagramMediaResponseDto> getMyVideos(String accessToken) throws JsonProcessingException;
+    List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) throws JsonProcessingException;
 }
