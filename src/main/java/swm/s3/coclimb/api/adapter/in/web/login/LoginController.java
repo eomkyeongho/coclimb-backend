@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import swm.s3.coclimb.api.ApiResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 
 import java.net.URI;
@@ -32,9 +31,9 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public ApiResponse<?> logout(HttpSession session) {
+    public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
 
-        return ApiResponse.ok("로그아웃 되었습니다.");
+        return ResponseEntity.ok().build();
     }
 }

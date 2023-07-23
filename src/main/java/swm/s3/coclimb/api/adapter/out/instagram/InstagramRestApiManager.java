@@ -11,9 +11,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueLongLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueShortLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.RefreshTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramLongLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramShortLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.RefreshInstagramTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.RetrieveInstagramMediaFail;
+
+import java.util.List;
 
 
 @Component
@@ -40,7 +43,7 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new IssueShortLivedTokenFail());
+                        return Mono.error(new IssueInstagramShortLivedTokenFail());
                     }
                 }).block();
 
@@ -58,7 +61,7 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new IssueLongLivedTokenFail());
+                        return Mono.error(new IssueInstagramLongLivedTokenFail());
                     }
                 }).block();
 
@@ -75,7 +78,7 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new RefreshTokenFail());
+                        return Mono.error(new RefreshInstagramTokenFail());
                     }
                 }).block();
 
