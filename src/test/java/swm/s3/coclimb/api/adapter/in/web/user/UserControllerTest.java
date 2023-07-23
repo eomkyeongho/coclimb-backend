@@ -47,7 +47,7 @@ class UserControllerTest {
         // when
         mockMvc.perform(get("/users/me").session(session))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(username))
-                .andExpect(jsonPath("$.instagramUserId").value(instagramUserId));
+                .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.instagramUserId").value(instagramUserId));
     }
 }
