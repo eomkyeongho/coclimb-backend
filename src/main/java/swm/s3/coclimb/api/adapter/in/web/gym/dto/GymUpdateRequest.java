@@ -11,7 +11,7 @@ import swm.s3.coclimb.domain.Location;
 @Getter
 @NoArgsConstructor
 public class GymUpdateRequest {
-    @NotBlank(message = "수정할 암장의 이름은 필수입니다.")
+    @NotBlank
     private String name;
     private String updateName;
     private String updateAddress;

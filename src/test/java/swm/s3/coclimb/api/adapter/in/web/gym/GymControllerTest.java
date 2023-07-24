@@ -7,13 +7,13 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
+import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.domain.Location;
 
 import java.util.List;
@@ -42,12 +42,7 @@ class GymControllerTest extends ControllerTestSupport{
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(201))
-                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data").isEmpty());
+                .andExpect(status().isCreated());
     }
     @Test
     @DisplayName("신규 암장 등록시, 암장 이름은 필수값이다.")
@@ -62,12 +57,9 @@ class GymControllerTest extends ControllerTestSupport{
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value("암장 이름은 필수입니다."));
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
     }
 
     @Test
@@ -83,11 +75,7 @@ class GymControllerTest extends ControllerTestSupport{
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(204))
-                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
-                .andExpect(jsonPath("$.message").isString());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -104,11 +92,7 @@ class GymControllerTest extends ControllerTestSupport{
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(204))
-                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
-                .andExpect(jsonPath("$.message").isString());
+                .andExpect(status().isNoContent());
     }
     @ParameterizedTest
     @DisplayName("암장 정보 수정 시, 수정할 암장 이름은 필수값이다.")
@@ -127,12 +111,30 @@ class GymControllerTest extends ControllerTestSupport{
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value("수정할 암장의 이름은 필수입니다."));
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
+    }
+
+    @ParameterizedTest
+    @DisplayName("암장 정보 수정 시, 암장 이름은 공백으로 수정될 수 없다.")
+    @ValueSource(strings = {"", "  "})
+    void updateGymWithBlankUpdateName(String updateName) throws Exception {
+        // given
+        GymUpdateRequest request = GymUpdateRequest.builder()
+                .name("암장이름")
+                .updateName(updateName)
+                .build();
+
+        // when, then
+        mockMvc.perform(patch("/gyms")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.updateName").value(FieldErrorType.NOT_BLANK));
     }
 
     @ParameterizedTest
@@ -151,12 +153,9 @@ class GymControllerTest extends ControllerTestSupport{
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value("정보를 제거할 암장의 이름은 필수입니다."));
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
     }
 
     @Test
@@ -172,11 +171,7 @@ class GymControllerTest extends ControllerTestSupport{
         mockMvc.perform(get("/gyms/{name}","암장이름"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data.name").value("암장이름"));
+                .andExpect(jsonPath("$.name").value("암장이름"));
     }
 
     @Test
@@ -189,12 +184,9 @@ class GymControllerTest extends ControllerTestSupport{
         mockMvc.perform(get("/gyms/{name}",name))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value("암장 이름은 공백일 수 없습니다."));
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
         then(gymQuery).shouldHaveNoInteractions();
     }
 
@@ -217,12 +209,8 @@ class GymControllerTest extends ControllerTestSupport{
         mockMvc.perform(get("/gyms/locations"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data.locations").isArray())
-                .andExpect(jsonPath("$.data.count").value(2));
+                .andExpect(jsonPath("$.locations").isArray())
+                .andExpect(jsonPath("$.count").value(2));
     }
 
     @Test
@@ -238,14 +226,10 @@ class GymControllerTest extends ControllerTestSupport{
                         .param("size",String.valueOf(5)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data.gyms").isArray())
-                .andExpect(jsonPath("$.data.page").value(1))
-                .andExpect(jsonPath("$.data.size").value(5))
-                .andExpect(jsonPath("$.data.totalPage").isNumber());
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.size").value(5))
+                .andExpect(jsonPath("$.totalPage").isNumber());
 
     }
     @Test
@@ -262,12 +246,9 @@ class GymControllerTest extends ControllerTestSupport{
                         .param("size", String.valueOf(5)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.page").value("조회할 페이지 번호는 0이상의 정수여야 합니다."));
+                .andExpect(jsonPath("$.fields.page").value(FieldErrorType.MIN(0)));
         then(gymQuery).shouldHaveNoInteractions();
     }
 }

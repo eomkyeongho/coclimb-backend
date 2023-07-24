@@ -30,9 +30,7 @@ public class GymService implements GymCommand, GymQuery {
         if (gymLoadPort.existsByName(request.getName())){
             throw new GymNameConflict();
         }
-        Gym gym = request.toEntity();
-        gym.validate();
-        gymUpdatePort.save(gym);
+        gymUpdatePort.save(request.toEntity());
     }
 
     @Override

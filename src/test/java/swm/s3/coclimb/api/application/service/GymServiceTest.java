@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
+import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.domain.Gym;
@@ -62,7 +63,7 @@ class GymServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(GymNameConflict.class)
                 .hasMessage("해당 이름의 암장이 이미 존재합니다.")
                 .extracting("fields")
-                .hasFieldOrPropertyWithValue("name", "암장 이름은 중복될 수 없습니다.");
+                .hasFieldOrPropertyWithValue("name", FieldErrorType.DUPLICATED);
     }
 
     @Test
@@ -146,7 +147,7 @@ class GymServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(GymNotFound.class)
                 .hasMessage("해당 암장을 찾을 수 없습니다.")
                 .extracting("fields")
-                .hasFieldOrPropertyWithValue("name", "해당 이름을 가진 암장이 존재하지 않습니다.");
+                .hasFieldOrPropertyWithValue("name", FieldErrorType.NOT_MATCH);
     }
     
     @Test

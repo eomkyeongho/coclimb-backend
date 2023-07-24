@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 
 @Entity
 @Getter
@@ -40,17 +39,6 @@ public class Gym extends BaseTimeEntity {
         this.address = (updateInfo.address == null) ? address : updateInfo.address;
         this.phone = (updateInfo.phone == null) ? phone : updateInfo.phone;
         this.location = (updateInfo.location == null) ? location : updateInfo.location;
-        validate();
     }
 
-    public void validate() {
-        ValidationFail validationFail = new ValidationFail();
-        if (name == null || name.isBlank()) {
-            validationFail.addField("name", "암장 이름은 필수값입니다.");
-        }
-
-        if (validationFail.isNotEmpty()) {
-            throw validationFail;
-        }
-    }
 }
