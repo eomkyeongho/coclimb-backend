@@ -11,6 +11,7 @@ import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
 import swm.s3.coclimb.api.application.port.out.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.media.MediaUpdatePort;
@@ -93,6 +94,24 @@ class MediaServiceTest extends IntegrationTestSupport {
         assertThat(allVideos).hasSize(1)
                 .extracting("mediaType")
                 .containsExactly("VIDEO");
+    }
+
+    @Test
+    @DisplayName("미디어를 저장할 수 있다.")
+    void save() {
+        //given
+        Long userId = 1L;
+
+        MediaCreateRequestDto mediaCreateRequestDto = MediaCreateRequestDto.builder()
+                .userId(userId)
+                .build();
+
+        //when
+        mediaService.createMedia(mediaCreateRequestDto);
+        Media media = mediaJpaRepository.findByUserId(userId).orElseThrow();
+
+        //then
+        assertThat(media.getUserId()).isEqualTo(userId);
     }
 
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
