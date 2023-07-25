@@ -1,11 +1,12 @@
-package swm.s3.coclimb.docs;
+package swm.s3.coclimb.api.docs;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
+import swm.s3.coclimb.api.exception.FieldErrorType;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -33,25 +34,16 @@ class ExceptionControllerDocsTest extends RestDocsTestSupport {
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("요청에 유효하지 않은 값이 포함된 필드가 존재합니다."))
+                .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value("암장 이름은 필수입니다."));
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
 
         // docs
         result.andDo(document("error-response",
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
                         fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
+                                .description("에러 메세지"),
                         fieldWithPath("fields").type(JsonFieldType.OBJECT)
                                 .description("에러가 발생한 필드 목록"),
                         fieldWithPath("fields.name").type(JsonFieldType.STRING)

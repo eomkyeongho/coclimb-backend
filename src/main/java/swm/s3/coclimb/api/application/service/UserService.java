@@ -8,6 +8,8 @@ import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
 import swm.s3.coclimb.api.exception.errortype.user.UserNotFound;
 import swm.s3.coclimb.domain.User;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,8 +22,7 @@ public class UserService implements UserQuery {
         return userLoadPort.findByInstagramUserId(instagramUserId).orElseThrow(UserNotFound::new);
     }
 
-    @Override
-    public User findUserByInstagramUserId(Long instagramUserId) {
-        return userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+    public Optional<User> findUserByInstagramUserId(Long instagramUserId) {
+        return userLoadPort.findByInstagramUserId(instagramUserId);
     }
 }

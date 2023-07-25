@@ -50,7 +50,7 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
             return autoLoginFail(request, response);
         }
 
-        User user = userService.findUserByInstagramUserId(instagramUserId);
+        User user = userService.findUserByInstagramUserId(instagramUserId).orElse(null);
 
         if (user == null) {
             return autoLoginFail(request, response);

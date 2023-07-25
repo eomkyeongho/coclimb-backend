@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,7 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class LoginController {
 
     private final LoginCommand loginCommand;
@@ -41,12 +44,11 @@ public class LoginController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
-
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/instagram")
-    public ResponseEntity<?> loginWithInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest, HttpSession httpSession
+    public ResponseEntity<?> loginWithInstagram(@RequestBody @Valid InstagramAuthRequest instagramAuthRequest, HttpSession httpSession
     , HttpServletResponse response) throws JsonProcessingException {
         SessionDataDto sessionData = loginCommand.authenticateWithInstagram(instagramAuthRequest.getCode());
 

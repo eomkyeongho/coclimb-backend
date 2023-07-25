@@ -1,13 +1,13 @@
 package swm.s3.coclimb.api.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swm.s3.coclimb.api.application.port.in.gym.*;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymCreateRequestDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymUpdateRequestDto;
+import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
+import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
+import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.application.port.out.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.gym.GymUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
@@ -30,9 +30,7 @@ public class GymService implements GymCommand, GymQuery {
         if (gymLoadPort.existsByName(request.getName())){
             throw new GymNameConflict();
         }
-        Gym gym = request.toEntity();
-        gym.validate();
-        gymUpdatePort.save(gym);
+        gymUpdatePort.save(request.toEntity());
     }
 
     @Override
@@ -67,6 +65,15 @@ public class GymService implements GymCommand, GymQuery {
         Gym gym = gymLoadPort.findByName(name)
                 .orElseThrow(GymNotFound::new);
         return gym;
+    }
+
+    @Override
+    public Page<Gym> getPagedGyms(GymPageRequestDto request) {
+        PageRequest pageRequest = PageRequest.of(
+                request.getPage(),
+                request.getSize());
+        //TODO 정렬
+        return gymLoadPort.findPage(pageRequest);
     }
 
 

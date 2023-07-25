@@ -36,7 +36,7 @@ class LoginControllerTest {
 
 
     @Test
-    @DisplayName("/login/instagram 으로 접속하면 인스타그램 로그인 페이지로 리다이렉트 된다.")
+    @DisplayName("인스타그램 로그인 페이지로 리다이렉트 된다.")
     void redirectInstagramLoginPage() throws Exception {
         mockMvc.perform(get("/login/instagram"))
                 .andExpect(status().is3xxRedirection())
