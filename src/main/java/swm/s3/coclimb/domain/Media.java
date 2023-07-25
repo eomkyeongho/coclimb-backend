@@ -17,22 +17,27 @@ public class Media {
     @Column(name="media_id")
     Long id;
 
+    // common attributes
+    Long userId;
     String mediaType;
     String platform; // instagram or original
-
-    String instagramMediaId;
-    String instagramPermalink;
-
     String mediaUrl;
     String thumbnailUrl;
 
+    // for instagram
+    String instagramUserId;
+    String instagramMediaId;
+    String instagramPermalink;
+
     @Builder
-    public Media(String mediaType, String platform, String instagramMediaId, String instagramPermalink, String mediaUrl, String thumbnailUrl) {
+    public Media(Long userId, String mediaType, String platform, String instagramMediaId, String instagramPermalink, String mediaUrl, String thumbnailUrl, String instagramUserId) {
+        this.userId = userId;
         this.mediaType = mediaType;
         this.platform = platform;
         this.instagramMediaId = instagramMediaId;
         this.instagramPermalink = instagramPermalink;
         this.mediaUrl = mediaUrl;
         this.thumbnailUrl = thumbnailUrl;
+        this.instagramUserId = instagramUserId;
     }
 }

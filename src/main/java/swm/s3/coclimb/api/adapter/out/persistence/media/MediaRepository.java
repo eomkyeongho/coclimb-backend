@@ -21,4 +21,8 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     public List<Media> findAllVideos() {
         return mediaJpaRepository.findAllVideos();
     }
+
+    public void save(Media media) {
+        mediaJpaRepository.save(media);
+    }
 }
