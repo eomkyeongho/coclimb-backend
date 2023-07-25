@@ -3,35 +3,25 @@ package swm.s3.coclimb.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import swm.s3.coclimb.api.adapter.in.web.auth.AuthController;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymController;
-import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
-import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
-import swm.s3.coclimb.config.WebConfig;
-import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
+import swm.s3.coclimb.api.adapter.in.web.login.LoginController;
+import swm.s3.coclimb.api.adapter.in.web.user.UserController;
 
 @WebMvcTest(controllers = {
-        GymController.class
+        GymController.class,
+        UserController.class,
+        LoginController.class,
+        AuthController.class
 })
 @ActiveProfiles("test")
-public abstract class ControllerTestSupport {
+public abstract class ControllerTestSupport extends MockMvcSupport{
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @MockBean
-    protected GymCommand gymCommand;
-
-    @MockBean
-    protected GymQuery gymQuery;
-
-    @MockBean
-    protected WebConfig webConfig;
-
-    @MockBean
-    protected AutoLoginInterceptor autoLoginInterceptor;
 }
