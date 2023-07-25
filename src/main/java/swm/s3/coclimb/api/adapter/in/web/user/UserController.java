@@ -1,44 +1,27 @@
 package swm.s3.coclimb.api.adapter.in.web.user;
 
-
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import swm.s3.coclimb.api.adapter.in.web.user.dto.InstagramAuthRequest;
-import swm.s3.coclimb.api.application.port.in.user.UserCommand;
-import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import swm.s3.coclimb.api.ApiResponse;
+import swm.s3.coclimb.api.adapter.in.web.user.dto.UserInfoResponse;
+import swm.s3.coclimb.api.application.port.in.user.UserQuery;
+import swm.s3.coclimb.domain.User;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
 public class UserController {
 
-    private final UserCommand userCommand;
-    private final InstagramOAuthRecord instagramOAuthRecord;
+    private final UserQuery userQuery;
 
-    @GetMapping("/login/instagram")
-    public ResponseEntity<?> loginInstagram() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("https://api.instagram.com/oauth/authorize?client_id=" + instagramOAuthRecord.clientId()
-                + "&redirect_uri=" + instagramOAuthRecord.redirectUri()
-                + "&scope=user_profile,user_media&response_type=code"));
+    @GetMapping("/users/me")
+    public ApiResponse<UserInfoResponse> getMe(HttpSession httpSession) {
+        User user = userQuery.getUserByInstagramUserId((Long) httpSession.getAttribute("instagramUserId"));
 
-        return ResponseEntity
-                .status(302)
-                .headers(headers)
-                .build();
-    }
-
-    @PostMapping("/auth/instagram")
-    public ResponseEntity<Void> authInstagram(@RequestBody InstagramAuthRequest instagramAuthRequest) {
-        userCommand.loginInstagram(instagramAuthRequest.getCode());
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .build();
+        return ApiResponse.ok(UserInfoResponse.builder()
+                .username(user.getUsername())
+                .instagramUserId(user.getInstagramUserId())
+                .build());
     }
 }
