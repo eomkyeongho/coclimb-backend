@@ -12,9 +12,9 @@ import swm.s3.coclimb.api.application.service.UserService;
 @SpringBootTest
 @ActiveProfiles("test")
 public abstract class IntegrationTestSupport {
-    @Autowired UserService userService;
-    @Autowired UserJpaRepository userJpaRepository;
-    @Autowired GymService gymService;
-    @Autowired GymJpaRepository gymJpaRepository;
-    @Autowired AuthService authService;
+    @Autowired protected UserService userService;
+    @Autowired protected UserJpaRepository userJpaRepository;
+    @Autowired protected GymService gymService;
+    @Autowired protected GymJpaRepository gymJpaRepository;
+    @Autowired protected AuthService authService;
 }
