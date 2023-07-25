@@ -23,3 +23,11 @@ include::api/error.adoc[]
 [[Gym-API]]
 == Gym API
 include::api/gym.adoc[]
+
+[[User-API]]
+== User API
+include::api/user.adoc[]
+
+[[Login-API]]
+== Login API
+include::api/login.adoc[]

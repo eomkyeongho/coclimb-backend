@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class GymRemoveRequest {
-    @NotBlank(message = "정보를 제거할 암장의 이름은 필수입니다.")
+    @NotBlank
     private String name;
     @Builder
     public GymRemoveRequest(String name) {
