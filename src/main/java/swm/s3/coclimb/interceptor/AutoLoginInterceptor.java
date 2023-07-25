@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import swm.s3.coclimb.api.application.service.UserService;
-import swm.s3.coclimb.api.exception.errortype.auth.AlreadyLogin;
+import swm.s3.coclimb.api.exception.errortype.login.AlreadyLogin;
 import swm.s3.coclimb.domain.User;
 
 import java.io.IOException;

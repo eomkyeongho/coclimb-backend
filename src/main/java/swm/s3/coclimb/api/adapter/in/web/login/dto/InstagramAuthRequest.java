@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.in.web.auth.dto;
+package swm.s3.coclimb.api.adapter.in.web.login.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.exception.errortype.auth;
+package swm.s3.coclimb.api.exception.errortype.login;
 
 import swm.s3.coclimb.api.exception.errortype.basetype.Conflict;
 

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.application.port.in.auth.dto;
+package swm.s3.coclimb.api.application.port.in.login.dto;
 
 import lombok.Builder;
 import lombok.Getter;

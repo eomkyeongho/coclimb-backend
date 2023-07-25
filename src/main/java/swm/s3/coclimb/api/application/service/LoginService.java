@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
-import swm.s3.coclimb.api.application.port.in.auth.AuthCommand;
-import swm.s3.coclimb.api.application.port.in.auth.dto.SessionDataDto;
+import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
+import swm.s3.coclimb.api.application.port.in.login.dto.SessionDataDto;
 import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.user.UserUpdatePort;
 import swm.s3.coclimb.domain.User;
@@ -19,7 +19,7 @@ import java.time.Period;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuthService implements AuthCommand {
+public class LoginService implements LoginCommand {
 
     private final UserLoadPort userLoadPort;
     private final UserUpdatePort userUpdatePort;

@@ -26,8 +26,8 @@ import static org.mockito.Mockito.*;
 
 
 @Transactional
-class AuthServiceTest extends IntegrationTestSupport {
-    AuthService authService;
+class LoginServiceTest extends IntegrationTestSupport {
+    LoginService loginService;
     @Mock
     InstagramRestApiManager instagramRestApiManager;
     @Autowired
@@ -39,7 +39,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(userLoadPort, userUpdatePort, instagramRestApiManager);
+        loginService = new LoginService(userLoadPort, userUpdatePort, instagramRestApiManager);
     }
 
     @AfterEach
@@ -61,7 +61,7 @@ class AuthServiceTest extends IntegrationTestSupport {
                 5184000L));
 
         // when
-        authService.authenticateWithInstagram("test");
+        loginService.authenticateWithInstagram("test");
         User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
@@ -91,7 +91,7 @@ class AuthServiceTest extends IntegrationTestSupport {
                 5184000L));
 
         // when
-        authService.authenticateWithInstagram("test");
+        loginService.authenticateWithInstagram("test");
         User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
@@ -123,7 +123,7 @@ class AuthServiceTest extends IntegrationTestSupport {
                 5184000L));
 
         // when
-        authService.authenticateWithInstagram("test");
+        loginService.authenticateWithInstagram("test");
         User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
@@ -155,7 +155,7 @@ class AuthServiceTest extends IntegrationTestSupport {
                 5184000L));
 
         // when
-        authService.authenticateWithInstagram("test");
+        loginService.authenticateWithInstagram("test");
         User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then

@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
+import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
 import swm.s3.coclimb.config.WebConfig;
 import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
 
@@ -29,6 +30,9 @@ class LoginControllerTest {
 
     @MockBean
     AutoLoginInterceptor autoLoginInterceptor;
+
+    @MockBean
+    LoginCommand loginCommand;
 
 
     @Test
