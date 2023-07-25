@@ -1,12 +1,12 @@
-package swm.s3.coclimb.docs;
+package swm.s3.coclimb.api.docs;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
@@ -14,7 +14,6 @@ import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.domain.Gym;
 import swm.s3.coclimb.domain.Location;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -51,15 +50,10 @@ class GymControllerDocsTest extends RestDocsTestSupport {
 
         // when, then
         ResultActions result = mockMvc.perform(post("/gyms")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(201))
-                .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data").isEmpty());
+                .andExpect(status().isCreated());
 
         // docs
         result.andDo(document("gym-create",
@@ -83,18 +77,6 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("location.longitude").type(JsonFieldType.NUMBER)
                                 .optional()
                                 .description("경도")
-                ),
-                responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
-                        fieldWithPath("data").type(JsonFieldType.NULL)
-                                .description("데이터")
                 )
         ));
     }
@@ -121,11 +103,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(204))
-                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
-                .andExpect(jsonPath("$.message").isString());
+                .andExpect(status().isNoContent());
 
         // docs
         result.andDo(document("gym-remove",
@@ -134,18 +112,6 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 requestFields(
                         fieldWithPath("name").type(JsonFieldType.STRING)
                                 .description("정보를 제거할 암장 이름")
-                ),
-                responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
-                        fieldWithPath("data").type(JsonFieldType.NULL)
-                                .description("데이터")
                 )
         ));
     }
@@ -169,11 +135,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(204))
-                .andExpect(jsonPath("$.status").value(HttpStatus.NO_CONTENT.name()))
-                .andExpect(jsonPath("$.message").isString());
+                .andExpect(status().isNoContent());
 
         // docs
         result.andDo(document("gym-update",
@@ -194,26 +156,14 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .optional().description("위도"),
                         fieldWithPath("updateLocation.longitude").type(JsonFieldType.NUMBER)
                                 .optional().description("경도")
-                        ),
-                responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
-                        fieldWithPath("data").type(JsonFieldType.NULL)
-                                .description("데이터")
-                )
+                        )
         ));
     }
 
 
 
     @Test
-    @DisplayName("암장 정보를 조회하는 API")
+    @DisplayName("이름으로 암장 정보를 조회하는 API")
     void getGymInfoByName() throws Exception {
         // given
         createTestGym("암장이름");
@@ -222,11 +172,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         ResultActions result = mockMvc.perform(get("/gyms/{name}", "암장이름"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data.name").value("암장이름"));
+                .andExpect(jsonPath("$.name").value("암장이름"));
 
         result.andDo(document("gym-info",
                 preprocessRequest(prettyPrint()),
@@ -235,21 +181,11 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         parameterWithName("name").description("조회할 암장 이름")
                 ),
                 responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
-                        fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                .description("데이터"),
-                        fieldWithPath("data.name").type(JsonFieldType.STRING)
+                        fieldWithPath("name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("data.address").type(JsonFieldType.STRING)
+                        fieldWithPath("address").type(JsonFieldType.STRING)
                                 .description("주소"),
-                        fieldWithPath("data.phone").type(JsonFieldType.STRING)
+                        fieldWithPath("phone").type(JsonFieldType.STRING)
                                 .description("연락처")
                 )
         ));
@@ -267,39 +203,25 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         ResultActions result = mockMvc.perform(get("/gyms/locations"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.data.locations").isArray())
-                .andExpect(jsonPath("$.data.count").value(2));
+                .andExpect(jsonPath("$.locations").isArray())
+                .andExpect(jsonPath("$.count").value(2));
 
         // docs
         result.andDo(document("gym-locations",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN)
-                                .description("요청 성공 여부"),
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                                .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                                .description("메세지"),
-                        fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                .description("데이터"),
-                        fieldWithPath("data.locations").type(JsonFieldType.ARRAY)
+                        fieldWithPath("locations").type(JsonFieldType.ARRAY)
                                 .description("암장 위치 정보"),
-                        fieldWithPath("data.locations[].name").type(JsonFieldType.STRING)
+                        fieldWithPath("locations[].name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("data.locations[].location").type(JsonFieldType.OBJECT)
+                        fieldWithPath("locations[].location").type(JsonFieldType.OBJECT)
                                 .description("위치"),
-                        fieldWithPath("data.locations[].location.latitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("locations[].location.latitude").type(JsonFieldType.NUMBER)
                                 .description("위도"),
-                        fieldWithPath("data.locations[].location.longitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("locations[].location.longitude").type(JsonFieldType.NUMBER)
                                 .description("경도"),
-                        fieldWithPath("data.count").type(JsonFieldType.NUMBER)
+                        fieldWithPath("count").type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
                 )
         ));

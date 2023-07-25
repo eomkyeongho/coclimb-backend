@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import swm.s3.coclimb.api.application.service.UserService;
+import swm.s3.coclimb.api.adapter.out.persistence.user.UserRepository;
 import swm.s3.coclimb.api.exception.errortype.auth.AlreadyLogin;
 import swm.s3.coclimb.domain.User;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AutoLoginInterceptor implements HandlerInterceptor {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
@@ -50,7 +50,7 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
             return autoLoginFail(request, response);
         }
 
-        User user = userService.findUserByInstagramUserId(instagramUserId);
+        User user = userRepository.findByInstagramUserId(instagramUserId).orElse(null);
 
         if (user == null) {
             return autoLoginFail(request, response);

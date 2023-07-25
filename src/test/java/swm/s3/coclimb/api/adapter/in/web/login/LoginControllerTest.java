@@ -2,34 +2,12 @@ package swm.s3.coclimb.api.adapter.in.web.login;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
-import swm.s3.coclimb.config.WebConfig;
-import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
+import swm.s3.coclimb.api.ControllerTestSupport;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(LoginController.class)
-@ActiveProfiles("test")
-class LoginControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    InstagramOAuthRecord instagramOAuthRecord;
-
-    @MockBean
-    WebConfig webConfig;
-
-    @MockBean
-    AutoLoginInterceptor autoLoginInterceptor;
-
+class LoginControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("/login/instagram 으로 접속하면 인스타그램 로그인 페이지로 리다이렉트 된다.")
