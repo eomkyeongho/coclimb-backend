@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
-public abstract class RestDocsTestSupport extends MockMvcSupport {
+public abstract class RestDocsTestSupport {
     @Autowired
     protected MockMvc mockMvc;
 

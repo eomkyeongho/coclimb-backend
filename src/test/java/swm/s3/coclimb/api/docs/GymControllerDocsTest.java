@@ -163,7 +163,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
 
 
     @Test
-    @DisplayName("암장 정보를 조회하는 API")
+    @DisplayName("이름으로 암장 정보를 조회하는 API")
     void getGymInfoByName() throws Exception {
         // given
         createTestGym("암장이름");
