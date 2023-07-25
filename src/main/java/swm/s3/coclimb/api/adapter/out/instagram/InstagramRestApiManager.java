@@ -1,15 +1,19 @@
 package swm.s3.coclimb.api.adapter.out.instagram;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
+import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueLongLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueShortLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.RefreshTokenFail;
 
 
 @Component
@@ -18,8 +22,9 @@ public class InstagramRestApiManager {
 
     private final InstagramWebClient instagramWebClient;
     private final InstagramOAuthRecord instagramOAuthRecord;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public ShortLivedTokenResponseDto getShortLivedAccessTokenAndUserId(String code) {
+    public ShortLivedTokenResponseDto getShortLivedAccessTokenAndUserId(String code) throws JsonProcessingException {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("client_id", instagramOAuthRecord.clientId());
         formData.add("client_secret", instagramOAuthRecord.clientSecret());
@@ -35,19 +40,14 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new RuntimeException("단기 토큰 발급 실패"));
+                        return Mono.error(new IssueShortLivedTokenFail());
                     }
                 }).block();
 
-        JSONObject responseJson = new JSONObject(response);
-
-        return ShortLivedTokenResponseDto.builder()
-                .shortLivedAccessToken(responseJson.getString("access_token"))
-                .userId(responseJson.getLong("user_id"))
-                .build();
+        return objectMapper.readValue(response, ShortLivedTokenResponseDto.class);
     }
 
-    public LongLivedTokenResponseDto getLongLivedAccessToken(String shortLivedAccessToken) {
+    public LongLivedTokenResponseDto getLongLivedAccessToken(String shortLivedAccessToken) throws JsonProcessingException {
         String targetUri = String.format("/access_token?grant_type=ig_exchange_token&client_secret=%s&access_token=%s",
                 instagramOAuthRecord.clientSecret(), shortLivedAccessToken);
 
@@ -58,20 +58,14 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new RuntimeException("장기 토큰 발급 실패"));
+                        return Mono.error(new IssueLongLivedTokenFail());
                     }
                 }).block();
 
-        JSONObject responseJson = new JSONObject(response);
-
-        return LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken(responseJson.getString("access_token"))
-                .tokenType(responseJson.getString("token_type"))
-                .expiresIn(responseJson.getLong("expires_in"))
-                .build();
+        return objectMapper.readValue(response, LongLivedTokenResponseDto.class);
     }
 
-    public LongLivedTokenResponseDto refreshLongLivedToken(String longLivedAccessToken) {
+    public LongLivedTokenResponseDto refreshLongLivedToken(String longLivedAccessToken) throws JsonProcessingException {
         String targetUri = String.format("/refresh_access_token?grant_type=ig_refresh_token&access_token=%s",
                 longLivedAccessToken);
 
@@ -81,16 +75,10 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new RuntimeException("장기 토큰 갱신 실패"));
+                        return Mono.error(new RefreshTokenFail());
                     }
                 }).block();
 
-        JSONObject responseJson = new JSONObject(response);
-
-        return LongLivedTokenResponseDto.builder()
-                .longLivedAccessToken(responseJson.getString("access_token"))
-                .tokenType(responseJson.getString("token_type"))
-                .expiresIn(responseJson.getLong("expires_in"))
-                .build();
+        return objectMapper.readValue(response, LongLivedTokenResponseDto.class);
     }
 }

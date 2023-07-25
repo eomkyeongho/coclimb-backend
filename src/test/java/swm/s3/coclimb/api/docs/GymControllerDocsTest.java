@@ -1,4 +1,4 @@
-package swm.s3.coclimb.docs;
+package swm.s3.coclimb.api.docs;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
@@ -162,7 +163,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
 
 
     @Test
-    @DisplayName("암장 정보를 조회하는 API")
+    @DisplayName("이름으로 암장 정보를 조회하는 API")
     void getGymInfoByName() throws Exception {
         // given
         createTestGym("암장이름");
