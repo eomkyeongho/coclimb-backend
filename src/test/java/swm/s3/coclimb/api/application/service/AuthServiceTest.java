@@ -12,11 +12,9 @@ import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
-import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.user.UserUpdatePort;
 import swm.s3.coclimb.domain.User;
-
 
 import java.time.LocalDate;
 
@@ -34,17 +32,13 @@ class AuthServiceTest extends IntegrationTestSupport {
     UserLoadPort userLoadPort;
     @Autowired
     UserUpdatePort userUpdatePort;
-    @Autowired
-    UserJpaRepository userJpaRepository;
-
-    @BeforeEach
-    void setUp() {
-        authService = new AuthService(userLoadPort, userUpdatePort, instagramRestApiManager);
-    }
-
     @AfterEach
     void tearDown() {
         userJpaRepository.deleteAllInBatch();
+    }
+    @BeforeEach
+    void setUp() {
+        authService = new AuthService(userLoadPort, userUpdatePort, instagramRestApiManager);
     }
 
     @Test
@@ -62,7 +56,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+        User sut = userJpaRepository.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -92,7 +86,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+        User sut = userJpaRepository.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -124,7 +118,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+        User sut = userJpaRepository.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));
@@ -156,7 +150,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when
         authService.authenticateWithInstagram("test");
-        User sut = userLoadPort.findByInstagramUserId(instagramUserId).orElse(null);
+        User sut = userJpaRepository.findByInstagramUserId(instagramUserId).orElse(null);
 
         // then
         verify(instagramRestApiManager, times(1)).getShortLivedAccessTokenAndUserId(any(String.class));

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.docs;
+package swm.s3.coclimb.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +18,4 @@ public abstract class RestDocsTestSupport {
 
     @Autowired
     protected ObjectMapper objectMapper;
-
 }

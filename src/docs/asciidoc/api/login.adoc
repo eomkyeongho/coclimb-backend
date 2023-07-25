@@ -1,0 +1,7 @@
+[[login-redirect]]
+=== 인스타그램 로그인 페이지 요청
+==== HTTP Request
+include::{snippets}/login-redirect/http-request.adoc[]
+==== HTTP Response
+include::{snippets}/login-redirect/http-response.adoc[]
+---

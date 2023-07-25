@@ -4,19 +4,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymCreateRequestDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymUpdateRequestDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.*;
+import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
-import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.domain.Gym;
 import swm.s3.coclimb.domain.Location;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -63,7 +63,7 @@ class GymServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(GymNameConflict.class)
                 .hasMessage("해당 이름의 암장이 이미 존재합니다.")
                 .extracting("fields")
-                .hasFieldOrPropertyWithValue("name", "암장 이름은 중복될 수 없습니다.");
+                .hasFieldOrPropertyWithValue("name", FieldErrorType.DUPLICATED);
     }
 
     @Test
@@ -147,7 +147,7 @@ class GymServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(GymNotFound.class)
                 .hasMessage("해당 암장을 찾을 수 없습니다.")
                 .extracting("fields")
-                .hasFieldOrPropertyWithValue("name", "해당 이름을 가진 암장이 존재하지 않습니다.");
+                .hasFieldOrPropertyWithValue("name", FieldErrorType.NOT_MATCH);
     }
     
     @Test
@@ -175,4 +175,27 @@ class GymServiceTest extends IntegrationTestSupport {
                         tuple("암장2", 5f, -9f)
                 );
     }
+
+    @Test
+    @DisplayName("페이지와 사이즈를 입력받으면 암장 페이지를 조회한다.")
+    void getPagedGyms() throws Exception {
+        // given
+        gymJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Gym.builder().name("암장" + i).build())
+                .toList());
+        GymPageRequestDto request = GymPageRequestDto.builder()
+                .page(1)
+                .size(5)
+                .build();
+        // when
+        Page<Gym> sut = gymService.getPagedGyms(request);
+
+        // then
+        assertThat(sut.getNumber()).isEqualTo(1);
+        assertThat(sut.getTotalPages()).isEqualTo(2);
+        assertThat(sut).hasSize(5)
+                .extracting("name")
+                .containsExactly("암장5", "암장6", "암장7", "암장8", "암장9");
+    }
+
 }

@@ -1,6 +1,8 @@
 package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.application.port.out.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.gym.GymUpdatePort;
@@ -33,5 +35,9 @@ public class GymRepository implements GymUpdatePort, GymLoadPort {
     public List<Gym> findAll() {
         return gymJpaRepository.findAll();
     }
+
+    @Override
+    public Page<Gym> findPage(PageRequest pageRequest){
+        return gymJpaRepository.findAll(pageRequest);}
 
 }
