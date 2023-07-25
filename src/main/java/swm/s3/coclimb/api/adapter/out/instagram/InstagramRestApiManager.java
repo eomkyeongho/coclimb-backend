@@ -3,17 +3,22 @@ package swm.s3.coclimb.api.adapter.out.instagram;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
+import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponseDto;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueLongLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueShortLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.RefreshTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramLongLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramShortLivedTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.RefreshInstagramTokenFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.RetrieveInstagramMediaFail;
+
+import java.util.List;
 
 
 @Component
@@ -40,7 +45,7 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new IssueShortLivedTokenFail());
+                        return Mono.error(new IssueInstagramShortLivedTokenFail());
                     }
                 }).block();
 
@@ -58,7 +63,7 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new IssueLongLivedTokenFail());
+                        return Mono.error(new IssueInstagramLongLivedTokenFail());
                     }
                 }).block();
 
@@ -75,10 +80,30 @@ public class InstagramRestApiManager {
                     if (clientResponse.statusCode().is2xxSuccessful()) {
                         return clientResponse.bodyToMono(String.class);
                     } else {
-                        return Mono.error(new RefreshTokenFail());
+                        return Mono.error(new RefreshInstagramTokenFail());
                     }
                 }).block();
 
         return objectMapper.readValue(response, LongLivedTokenResponseDto.class);
+    }
+
+    public List<InstagramMediaResponseDto> getMyMedias(String accessToken) throws JsonProcessingException {
+        String targetUri = String.format("/me/media?fields=id,media_type,media_url,permalink,thumbnail_url&access_token=%s",
+                accessToken);
+
+        String response = instagramWebClient.graphClient().get()
+                .uri(targetUri)
+                .exchangeToMono(clientResponse -> {
+                    if (clientResponse.statusCode().is2xxSuccessful()) {
+                        return clientResponse.bodyToMono(String.class);
+                    } else {
+                        return Mono.error(new RetrieveInstagramMediaFail());
+                    }
+                }).block();
+
+        JSONObject jsonObject = new JSONObject(response);
+
+        return objectMapper.readValue(jsonObject.getJSONArray("data").toString(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, InstagramMediaResponseDto.class));
     }
 }
