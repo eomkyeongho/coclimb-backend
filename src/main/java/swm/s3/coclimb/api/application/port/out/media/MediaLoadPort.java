@@ -7,4 +7,6 @@ import java.util.List;
 public interface MediaLoadPort {
     List<Media> findAll();
     List<Media> findAllVideos();
+
+    Media getById(Long id);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.application.port.out.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.media.MediaUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.media.MediaNotFound;
 import swm.s3.coclimb.domain.Media;
 
 import java.util.List;
@@ -24,5 +25,13 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
 
     public void save(Media media) {
         mediaJpaRepository.save(media);
+    }
+
+    public Media getById(Long id) {
+        return mediaJpaRepository.findById(id).orElseThrow(MediaNotFound::new);
+    }
+
+    public void deleteById(Long id) {
+        mediaJpaRepository.deleteById(id);
     }
 }

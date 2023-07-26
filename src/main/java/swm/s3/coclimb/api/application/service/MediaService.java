@@ -57,4 +57,9 @@ public class MediaService implements MediaQuery, MediaCommand {
     public void createMedia(MediaCreateRequestDto mediaCreateRequestDto) {
         mediaUpdatePort.save(mediaCreateRequestDto.toEntity());
     }
+
+    @Override
+    public void removeMediaById(Long mediaId) {
+        mediaUpdatePort.deleteById(mediaId);
+    }
 }

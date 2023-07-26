@@ -55,4 +55,12 @@ public class MediaController {
 
         return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));
     }
+
+    @DeleteMapping("/medias/{id}")
+    public ResponseEntity<Void> removeMediaById(@PathVariable Long id) {
+        mediaCommand.removeMediaById(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }
