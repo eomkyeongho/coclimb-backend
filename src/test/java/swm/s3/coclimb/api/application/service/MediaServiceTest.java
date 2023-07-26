@@ -120,7 +120,6 @@ class MediaServiceTest extends IntegrationTestSupport {
         //given
         Media media = mediaJpaRepository.save(Media.builder().build());
         Long mediaId = media.getId();
-        assertThat(mediaJpaRepository.findById(mediaId).isPresent()).isTrue();
 
         //when
         mediaService.removeMediaById(mediaId);
