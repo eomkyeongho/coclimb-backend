@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -76,5 +77,15 @@ class MediaControllerTest extends ControllerTestSupport {
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("미디어를 삭제할 수 있다.")
+    void removeMediaById() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/medias/{id}", 1L))
+                .andExpect(status().isNoContent());
     }
 }

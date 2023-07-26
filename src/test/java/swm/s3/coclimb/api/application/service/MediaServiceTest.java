@@ -114,6 +114,21 @@ class MediaServiceTest extends IntegrationTestSupport {
         assertThat(media.getUserId()).isEqualTo(userId);
     }
 
+    @Test
+    @DisplayName("ID 값을 통해 미디어를 삭제할 수 있다.")
+    void deleteById() {
+        //given
+        Media media = mediaJpaRepository.save(Media.builder().build());
+        Long mediaId = media.getId();
+        assertThat(mediaJpaRepository.findById(mediaId).isPresent()).isTrue();
+
+        //when
+        mediaService.removeMediaById(mediaId);
+
+        //then
+        assertThat(mediaJpaRepository.findById(mediaId).isEmpty()).isTrue();
+    }
+
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
         String mediaId;
         String mediaType;
