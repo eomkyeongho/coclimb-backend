@@ -3,7 +3,7 @@ package swm.s3.coclimb.api.application.port.in.gym.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import swm.s3.coclimb.domain.Gym;
+import swm.s3.coclimb.domain.gym.Gym;
 
 @Getter
 @NoArgsConstructor

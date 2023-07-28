@@ -14,7 +14,7 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
-import swm.s3.coclimb.domain.Location;
+import swm.s3.coclimb.domain.gym.Location;
 
 import java.util.List;
 

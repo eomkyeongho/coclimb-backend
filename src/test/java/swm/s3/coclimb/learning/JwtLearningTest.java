@@ -8,9 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.config.AppConfig;
 
 import javax.crypto.SecretKey;
 import java.sql.Timestamp;
@@ -24,9 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class JwtLearningTest extends IntegrationTestSupport {
-
-    @Autowired
-    AppConfig appConfig;
 
     @Test
     @DisplayName("jwt를 생성한다.")
@@ -45,12 +40,12 @@ public class JwtLearningTest extends IntegrationTestSupport {
                 .setExpiration(new Date(iat.getTime()+1000*60*60))//만료시간 - ms단위;1000=1초
                 .signWith(secretKey)
                 .compact();
-
-        // when
         JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(secretKey).build();
 
-        // then
+        // when
         Claims claims = jwtParser.parseClaimsJws(jws).getBody();
+        // then
+
         assertThat(claims.getSubject()).isEqualTo("joe");
         assertThat(claims.getIssuedAt()).isEqualTo(iat);
     }

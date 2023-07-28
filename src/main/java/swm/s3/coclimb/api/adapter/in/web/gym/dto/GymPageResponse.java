@@ -3,7 +3,7 @@ package swm.s3.coclimb.api.adapter.in.web.gym.dto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
-import swm.s3.coclimb.domain.Gym;
+import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
 

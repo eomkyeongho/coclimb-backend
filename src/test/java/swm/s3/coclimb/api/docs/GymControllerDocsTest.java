@@ -11,8 +11,8 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
-import swm.s3.coclimb.domain.Gym;
-import swm.s3.coclimb.domain.Location;
+import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.Location;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
