@@ -1,4 +1,4 @@
-package swm.s3.coclimb.domain;
+package swm.s3.coclimb.domain.gym;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class Location {
     private Float latitude;
     private Float longitude;
 
+    @Builder
     public Location(Float latitude, Float longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

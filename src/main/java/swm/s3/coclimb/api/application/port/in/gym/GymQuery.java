@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
-import swm.s3.coclimb.domain.Gym;
+import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
 

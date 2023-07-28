@@ -11,8 +11,8 @@ import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
-import swm.s3.coclimb.domain.Gym;
-import swm.s3.coclimb.domain.Location;
+import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.Location;
 
 import java.util.List;
 import java.util.Optional;
