@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import swm.s3.coclimb.api.adapter.in.web.user.dto.UserInfoResponse;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
-import swm.s3.coclimb.domain.User;
+import swm.s3.coclimb.domain.user.User;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class UserController {
 
         return ResponseEntity.ok(UserInfoResponse.builder()
                 .username(user.getUsername())
-                .instagramUserId(user.getInstagramUserId())
+                .instagramUserId(user.getInstagram().getUserId())
                 .build());
     }
 }

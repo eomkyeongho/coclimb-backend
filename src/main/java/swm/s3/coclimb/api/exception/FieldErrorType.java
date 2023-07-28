@@ -11,8 +11,12 @@ public class FieldErrorType {
     public static String MAX(int value) {
         return "must be less than or equal to " + value;
     }
+
+    public static String INVALID_VALUE = "is invalid value";
+
     // 404:NOT_FOUND
     public static String NOT_MATCH = "does not match";
+
     // 409:CONFLICT
     public static String DUPLICATED = "must not be duplicated";
 }
