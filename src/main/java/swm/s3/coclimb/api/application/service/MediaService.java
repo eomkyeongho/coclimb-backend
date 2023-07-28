@@ -10,8 +10,8 @@ import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
-import swm.s3.coclimb.api.application.port.out.media.MediaLoadPort;
-import swm.s3.coclimb.api.application.port.out.media.MediaUpdatePort;
+import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
+import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
 
 import java.util.ArrayList;
 import java.util.List;

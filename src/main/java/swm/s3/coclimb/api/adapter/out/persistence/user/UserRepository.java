@@ -2,9 +2,9 @@ package swm.s3.coclimb.api.adapter.out.persistence.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import swm.s3.coclimb.api.application.port.out.user.UserLoadPort;
-import swm.s3.coclimb.api.application.port.out.user.UserUpdatePort;
-import swm.s3.coclimb.domain.User;
+import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
+import swm.s3.coclimb.api.application.port.out.persistence.user.UserUpdatePort;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
     }
 
     @Override
-    public void save(User user) {
-        userJpaRepository.save(user);
+    public Long save(User user) {
+        return userJpaRepository.save(user).getId();
     }
 }
