@@ -36,9 +36,11 @@ class GymControllerTest extends ControllerTestSupport{
         GymCreateRequest request = GymCreateRequest.builder()
                 .name("암장 이름")
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(post("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -50,9 +52,11 @@ class GymControllerTest extends ControllerTestSupport{
         // given
         GymCreateRequest request = GymCreateRequest.builder()
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(post("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -60,6 +64,24 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(jsonPath("$.message").isString())
                 .andExpect(jsonPath("$.fields").isMap())
                 .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
+    }
+    @Test
+    @DisplayName("인증 받지 못한 사용자는 신규 암장을 등록할 수 없다.")
+    void createGymNeedAuth() throws Exception {
+        // given
+        GymCreateRequest request = GymCreateRequest.builder()
+                .build();
+        String accessToken = "invalid token";
+        given(jwtManager.isValid(accessToken)).willReturn(false);
+        // when, then
+        mockMvc.perform(post("/gyms")
+                        .header("Authorization", accessToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.fields").isEmpty());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package swm.s3.coclimb.security;
 
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
@@ -9,11 +9,17 @@ import swm.s3.coclimb.config.ServerClock;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Component
 public class JwtManager {
     private final AppConfig appConfig;
     private final ServerClock serverClock;
+    private final JwtParser jwtParser;
+
+    public JwtManager(AppConfig appConfig, ServerClock serverClock) {
+        this.appConfig = appConfig;
+        this.serverClock = serverClock;
+        this.jwtParser = Jwts.parserBuilder().setSigningKey(appConfig.getSecretKey()).build();
+    }
 
     public String issueToken(String subject) {
         Timestamp iat = Timestamp.valueOf(serverClock.getDateTime());
@@ -28,4 +34,7 @@ public class JwtManager {
     }
 
 
+    public boolean isValid(String jwt) {
+        return jwtParser.isSigned(jwt);
+    }
 }
