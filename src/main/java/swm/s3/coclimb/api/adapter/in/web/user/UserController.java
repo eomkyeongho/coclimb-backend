@@ -16,7 +16,7 @@ public class UserController {
     private final UserQuery userQuery;
 
     @GetMapping("/users/me")
-    public ResponseEntity<UserInfoResponse> getMe(@LoginUser User user) {
+    public ResponseEntity<UserInfoResponse> getMyInfo(@LoginUser User user) {
         return ResponseEntity.ok(UserInfoResponse.builder()
                 .username(user.getName())
                 .build());
