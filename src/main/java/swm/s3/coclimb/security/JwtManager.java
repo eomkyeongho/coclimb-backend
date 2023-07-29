@@ -3,6 +3,7 @@ package swm.s3.coclimb.security;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
+import swm.s3.coclimb.api.exception.errortype.login.InvalidToken;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
 
@@ -36,5 +37,13 @@ public class JwtManager {
 
     public boolean isValid(String jwt) {
         return jwtParser.isSigned(jwt);
+    }
+
+    public String getSubject(String jwt) {
+        try {
+            return jwtParser.parseClaimsJws(jwt).getBody().getSubject();
+        } catch (Exception e) {
+            throw new InvalidToken();
+        }
     }
 }
