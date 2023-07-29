@@ -16,15 +16,15 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    private String username;
+    private String name;
 
 
     @Embedded
     private Instagram instagram;
 
     @Builder
-    public User(String username, Instagram instagram) {
-        this.username = username;
+    public User(String name, Instagram instagram) {
+        this.name = name;
         this.instagram = instagram;
     }
 

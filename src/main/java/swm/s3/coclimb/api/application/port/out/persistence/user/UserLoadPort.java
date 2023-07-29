@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface UserLoadPort {
     Optional<User> findByInstagramUserId(Long instagramUserId);
+
+    User getById(Long id);
 }

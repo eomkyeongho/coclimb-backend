@@ -76,7 +76,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         String token = "token";
         Long instagramUserId = 123L;
         userJpaRepository.save(User.builder()
-                .username("사용자")
+                .name("사용자")
                 .instagram(Instagram.builder()
                         .userId(instagramUserId)
                         .accessToken(token)

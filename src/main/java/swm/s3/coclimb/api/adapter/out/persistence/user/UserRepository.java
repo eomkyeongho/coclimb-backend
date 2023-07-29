@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.user.UserNotFound;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
@@ -22,5 +23,11 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
     @Override
     public Long save(User user) {
         return userJpaRepository.save(user).getId();
+    }
+
+    @Override
+    public User getById(Long id) {
+        return userJpaRepository.findById(id)
+                .orElseThrow(UserNotFound::new);
     }
 }
