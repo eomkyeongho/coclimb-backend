@@ -3,20 +3,20 @@ package swm.s3.coclimb.api.exception.errortype.basetype;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class Conflict extends CustomException {
+public abstract class Unauthorized extends CustomException {
 
-    public Conflict(String message) {
+    public Unauthorized(String message) {
         super(message);
     }
 
     @Override
     public int getStatusCode() {
-        return 409;
+        return 401;
     }
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.CONFLICT;
+        return HttpStatus.UNAUTHORIZED;
     }
 
 }

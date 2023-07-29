@@ -6,21 +6,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
+import swm.s3.coclimb.interceptor.AuthInterceptor;
+import swm.s3.coclimb.security.JwtManager;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AutoLoginInterceptor autoLoginInterceptor;
+    private final JwtManager jwtManager;
     @Value("${front_end.site_url}")
     private String frontEndSiteUrl;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(autoLoginInterceptor)
-                .addPathPatterns("/login/**")
-                .addPathPatterns("/users/me");
+        registry.addInterceptor(new AuthInterceptor(jwtManager))
+                .order(1);
     }
 
     @Override

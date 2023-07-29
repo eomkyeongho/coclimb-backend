@@ -2,13 +2,10 @@ package swm.s3.coclimb.api.adapter.in.web.login;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
 import swm.s3.coclimb.api.exception.FieldErrorType;
-import swm.s3.coclimb.security.JwtManager;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -18,11 +15,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(JwtManager.class)
+
 class LoginControllerTest extends ControllerTestSupport {
 
-    @Autowired
-    JwtManager jwtManager;
     @Test
     @DisplayName("인스타그램 로그인 페이지로 리다이렉트 된다.")
     void redirectInstagramLoginPage() throws Exception {

@@ -16,9 +16,6 @@ import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
-import swm.s3.coclimb.config.AppConfig;
-import swm.s3.coclimb.config.WebConfig;
-import swm.s3.coclimb.interceptor.AutoLoginInterceptor;
 import swm.s3.coclimb.security.JwtManager;
 
 @WebMvcTest(controllers = {
@@ -47,8 +44,6 @@ public abstract class ControllerTestSupport{
     // Login
     @MockBean
     protected LoginCommand loginCommand;
-    @MockBean
-    protected AutoLoginInterceptor autoLoginInterceptor;
 
     // Instagram
     @MockBean
@@ -59,12 +54,6 @@ public abstract class ControllerTestSupport{
     protected MediaCommand mediaCommand;
     @MockBean
     protected MediaQuery mediaQuery;
-
-    // Config
-    @MockBean
-    protected WebConfig webConfig;
-    @MockBean
-    protected AppConfig appConfig;
 
     // Security
     @MockBean
