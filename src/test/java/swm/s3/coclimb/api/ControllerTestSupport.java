@@ -16,6 +16,7 @@ import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
+import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
 import swm.s3.coclimb.security.JwtManager;
 
 @WebMvcTest(controllers = {
@@ -40,6 +41,8 @@ public abstract class ControllerTestSupport{
     // User
     @MockBean
     protected UserQuery userQuery;
+    @MockBean
+    protected UserLoadPort userLoadPort;
 
     // Login
     @MockBean

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import swm.s3.coclimb.security.JwtManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -15,7 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 public abstract class RestDocsTestSupport {
     @Autowired
     protected MockMvc mockMvc;
-
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected JwtManager jwtManager;
 }

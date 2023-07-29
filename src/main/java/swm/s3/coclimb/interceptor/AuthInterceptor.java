@@ -27,7 +27,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-
         String accessToken = request.getHeader("Authorization");
         if(!jwtManager.isValid(accessToken)){
             throw new InvalidToken();
