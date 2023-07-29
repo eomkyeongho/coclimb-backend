@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.domain.Gym;
+import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.Optional;
 
@@ -13,10 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GymRepositoryTest extends IntegrationTestSupport {
 
-    @Autowired
-    GymRepository gymRepository;
-    @Autowired
-    GymJpaRepository gymJpaRepository;
     @AfterEach
     void tearDown() {
         gymJpaRepository.deleteAllInBatch();

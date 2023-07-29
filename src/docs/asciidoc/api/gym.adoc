@@ -5,7 +5,7 @@ include::{snippets}/gym-create/http-request.adoc[]
 include::{snippets}/gym-create/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-create/http-response.adoc[]
-include::{snippets}/gym-create/response-fields.adoc[]
+// include::{snippets}/gym-create/response-fields.adoc[]
 ---
 
 [[gym-remove]]
@@ -15,7 +15,7 @@ include::{snippets}/gym-remove/http-request.adoc[]
 include::{snippets}/gym-remove/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-remove/http-response.adoc[]
-include::{snippets}/gym-remove/response-fields.adoc[]
+// include::{snippets}/gym-remove/response-fields.adoc[]
 ---
 
 [[gym-update]]
@@ -25,7 +25,7 @@ include::{snippets}/gym-update/http-request.adoc[]
 include::{snippets}/gym-update/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-update/http-response.adoc[]
-include::{snippets}/gym-update/response-fields.adoc[]
+// include::{snippets}/gym-update/response-fields.adoc[]
 
 [[gym-info]]
 === 암장 정보 조회

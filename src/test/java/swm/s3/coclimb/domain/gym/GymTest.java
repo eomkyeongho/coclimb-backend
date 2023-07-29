@@ -1,4 +1,4 @@
-package swm.s3.coclimb.domain;
+package swm.s3.coclimb.domain.gym;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

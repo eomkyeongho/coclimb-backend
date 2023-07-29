@@ -11,8 +11,8 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
-import swm.s3.coclimb.domain.Gym;
-import swm.s3.coclimb.domain.Location;
+import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.Location;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,9 +47,11 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .phone("02-000-0000")
                 .location(Location.of(0f,0f))
                 .build();
+        String accessToken = jwtManager.issueToken("docs");
 
         // when, then
         ResultActions result = mockMvc.perform(post("/gyms")
+                        .header("Authorization", accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -96,10 +98,11 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         GymRemoveRequest request = GymRemoveRequest.builder()
                 .name("암장 이름")
                 .build();
-
+        String accessToken = jwtManager.issueToken("docs");
 
         // when, then
         ResultActions result = mockMvc.perform(delete("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -129,9 +132,10 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .updatePhone("02-000-0000")
                 .updateLocation(Location.of(1f,1f))
                 .build();
-
+        String accessToken = jwtManager.issueToken("docs");
         // when, then
         ResultActions result = mockMvc.perform(patch("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())

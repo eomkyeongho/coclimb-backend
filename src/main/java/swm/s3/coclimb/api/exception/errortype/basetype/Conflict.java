@@ -11,7 +11,7 @@ public abstract class Conflict extends CustomException {
 
     @Override
     public int getStatusCode() {
-        return 400;
+        return 409;
     }
 
     @Override

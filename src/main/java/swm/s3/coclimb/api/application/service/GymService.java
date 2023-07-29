@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
-import swm.s3.coclimb.api.application.port.out.gym.GymLoadPort;
-import swm.s3.coclimb.api.application.port.out.gym.GymUpdatePort;
+import swm.s3.coclimb.api.application.port.out.persistence.gym.GymLoadPort;
+import swm.s3.coclimb.api.application.port.out.persistence.gym.GymUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
-import swm.s3.coclimb.domain.Gym;
+import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
 

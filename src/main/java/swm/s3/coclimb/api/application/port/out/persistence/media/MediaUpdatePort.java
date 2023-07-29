@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.application.port.out.media;
+package swm.s3.coclimb.api.application.port.out.persistence.media;
 
 import swm.s3.coclimb.domain.Media;
 

@@ -27,9 +27,11 @@ class ExceptionControllerDocsTest extends RestDocsTestSupport {
         // given
         GymCreateRequest request = GymCreateRequest.builder()
                 .build();
+        String accessToken = jwtManager.issueToken("docs");
 
         // when, then
         ResultActions result = mockMvc.perform(post("/gyms")
+                        .header("Authorization", accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
