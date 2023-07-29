@@ -1,4 +1,4 @@
-package swm.s3.coclimb.interceptor;
+package swm.s3.coclimb.config.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import swm.s3.coclimb.api.exception.errortype.login.InvalidToken;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 @Component
 @RequiredArgsConstructor

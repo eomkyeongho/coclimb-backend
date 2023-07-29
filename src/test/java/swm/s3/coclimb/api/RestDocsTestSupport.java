@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 @SpringBootTest
 @AutoConfigureMockMvc

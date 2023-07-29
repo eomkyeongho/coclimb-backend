@@ -8,9 +8,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
-import swm.s3.coclimb.argumentresolver.LoginUserArgumentResolver;
-import swm.s3.coclimb.interceptor.AuthInterceptor;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.argumentresolver.LoginUserArgumentResolver;
+import swm.s3.coclimb.config.interceptor.AuthInterceptor;
+import swm.s3.coclimb.config.security.JwtManager;
 
 import java.util.List;
 

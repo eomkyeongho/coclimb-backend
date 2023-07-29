@@ -17,7 +17,7 @@ import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 @WebMvcTest(controllers = {
         GymController.class,

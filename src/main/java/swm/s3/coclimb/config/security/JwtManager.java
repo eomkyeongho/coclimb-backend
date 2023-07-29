@@ -1,4 +1,4 @@
-package swm.s3.coclimb.security;
+package swm.s3.coclimb.config.security;
 
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

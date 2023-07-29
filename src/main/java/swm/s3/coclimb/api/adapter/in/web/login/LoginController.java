@@ -13,7 +13,7 @@ import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
 import swm.s3.coclimb.api.adapter.in.web.login.dto.LoginResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 import java.net.URI;
 
