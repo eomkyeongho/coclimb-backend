@@ -66,7 +66,7 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
     }
     @Test
-    @DisplayName("인증 받지 못한 사용자는 신규 암장을 등록할 수 없다.")
+    @DisplayName("인증된 사용자만 신규 암장을 등록할 수 있다.")
     void createGymNeedAuth() throws Exception {
         // given
         GymCreateRequest request = GymCreateRequest.builder()
@@ -91,13 +91,57 @@ class GymControllerTest extends ControllerTestSupport{
         GymRemoveRequest request = GymRemoveRequest.builder()
                 .name("암장 이름")
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(delete("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+    @ParameterizedTest
+    @DisplayName("암장 정보 제거 시, 제거할 암장 이름은 필수값이다.")
+    @NullAndEmptySource
+    @ValueSource(strings = "  ")
+    void removeGymByNameWithNoName(String name) throws Exception {
+        // given
+        GymRemoveRequest request = GymRemoveRequest.builder()
+                .name(name)
+                .build();
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
+        // when, then
+        mockMvc.perform(delete("/gyms")
+                        .header("Authorization",accessToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.fields").isMap())
+                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
+    }
+
+    @Test
+    @DisplayName("인증된 사용자만 암장 정보를 제거할 수 있다.")
+    void removeGymNeedAuth() throws Exception {
+        // given
+        GymRemoveRequest request = GymRemoveRequest.builder()
+                .name("암장 이름")
+                .build();
+        String accessToken = "invalid token";
+        given(jwtManager.isValid(accessToken)).willReturn(false);
+        // when, then
+        mockMvc.perform(delete("/gyms")
+                        .header("Authorization",accessToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.fields").isEmpty());
     }
 
     @Test
@@ -108,14 +152,17 @@ class GymControllerTest extends ControllerTestSupport{
                 .name("대상이름")
                 .updateName("수정이름")
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(patch("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
+
     @ParameterizedTest
     @DisplayName("암장 정보 수정 시, 수정할 암장 이름은 필수값이다.")
     @NullAndEmptySource
@@ -126,9 +173,11 @@ class GymControllerTest extends ControllerTestSupport{
                 .name(targetName)
                 .updateName("수정이름")
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(patch("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -147,9 +196,11 @@ class GymControllerTest extends ControllerTestSupport{
                 .name("암장이름")
                 .updateName(updateName)
                 .build();
-
+        String accessToken = "token";
+        given(jwtManager.isValid(accessToken)).willReturn(true);
         // when, then
         mockMvc.perform(patch("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -159,26 +210,27 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(jsonPath("$.fields.updateName").value(FieldErrorType.NOT_BLANK));
     }
 
-    @ParameterizedTest
-    @DisplayName("암장 정보 제거 시, 제거할 암장 이름은 필수값이다.")
-    @NullAndEmptySource
-    @ValueSource(strings = "  ")
-    void removeGymByNameWithNoName(String name) throws Exception {
+    @Test
+    @DisplayName("수정할 암장 이름과 필드값을 입력받아 암장 정보를 부분 수정한다.")
+    void updateGymNeedAuth() throws Exception {
         // given
-        GymRemoveRequest request = GymRemoveRequest.builder()
-                .name(name)
+        GymUpdateRequest request = GymUpdateRequest.builder()
+                .name("대상이름")
+                .updateName("수정이름")
                 .build();
-
+        String accessToken = "invalid token";
+        given(jwtManager.isValid(accessToken)).willReturn(false);
         // when, then
-        mockMvc.perform(delete("/gyms")
+        mockMvc.perform(patch("/gyms")
+                        .header("Authorization",accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").isString())
-                .andExpect(jsonPath("$.fields").isMap())
-                .andExpect(jsonPath("$.fields.name").value(FieldErrorType.NOT_BLANK));
+                .andExpect(jsonPath("$.fields").isEmpty());
     }
+
 
     @Test
     @DisplayName("이름으로 암장 정보를 조회한다.")

@@ -13,8 +13,8 @@ import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
-import swm.s3.coclimb.interceptor.Auth;
 import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.interceptor.Auth;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +32,7 @@ public class GymController {
                 .build();
     }
 
+    @Auth
     @DeleteMapping("/gyms")
     public ResponseEntity<Void> removeGymByName(@RequestBody @Valid GymRemoveRequest request) {
         gymCommand.removeGymByName(request.getName());
@@ -39,6 +40,8 @@ public class GymController {
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
+    @Auth
     @PatchMapping("/gyms")
     public ResponseEntity<Void> updateGym(@RequestBody @Valid GymUpdateRequest request) {
         if (request.getUpdateName().isBlank()) {
