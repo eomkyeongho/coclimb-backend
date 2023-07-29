@@ -1,4 +1,4 @@
-package swm.s3.coclimb.argumentresolver;
+package swm.s3.coclimb.config.argumentresolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
 import swm.s3.coclimb.domain.user.User;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 @RequiredArgsConstructor
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {

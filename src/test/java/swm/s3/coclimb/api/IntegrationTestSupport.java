@@ -15,7 +15,7 @@ import swm.s3.coclimb.api.application.service.GymService;
 import swm.s3.coclimb.api.application.service.UserService;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
-import swm.s3.coclimb.security.JwtManager;
+import swm.s3.coclimb.config.security.JwtManager;
 
 @SpringBootTest
 @ActiveProfiles("test")
