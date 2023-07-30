@@ -15,12 +15,14 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -113,6 +115,27 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(sut.getUserId()).isEqualTo(userId);
+    }
+
+    @Test
+    @DisplayName("인스타그램 미디어 ID가 중복되면 예외가 발생한다.")
+    void saveDuplicateInstagramMediaId() {
+        //given
+        String instagramMediaId = "instagramMediaId";
+
+        MediaCreateRequestDto mediaCreateRequestDto = MediaCreateRequestDto.builder()
+                .instagramMediaId(instagramMediaId)
+                .build();
+
+        mediaJpaRepository.save(Media.builder()
+                .instagramMediaInfo(InstagramMediaInfo.builder()
+                        .id(instagramMediaId)
+                        .build())
+                .build());
+        //when
+        //then
+        assertThatThrownBy(() -> mediaService.createMedia(mediaCreateRequestDto))
+                .isInstanceOf(InstagramMediaIdConflict.class);
     }
 
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{

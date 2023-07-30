@@ -31,7 +31,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
 
         // then
         assertThat(sut)
-                .extracting("userId", "accessToken", "tokenExpireTime")
+                .extracting("id", "accessToken", "tokenExpireTime")
                 .containsExactly(1L, "longToken", time.plusSeconds(1000L));
     }
 
@@ -41,7 +41,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
         InstagramUserInfo sut = InstagramUserInfo.builder()
-                .userId(1L)
+                .id(1L)
                 .accessToken("oldToken")
                 .tokenExpireTime(time)
                 .build();
@@ -57,7 +57,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
 
         // then
         assertThat(sut)
-                .extracting("userId", "accessToken", "tokenExpireTime")
+                .extracting("id", "accessToken", "tokenExpireTime")
                 .containsExactly(1L, "newToken", time.plusSeconds(1000L));
     }
 
@@ -67,7 +67,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
         InstagramUserInfo sut = InstagramUserInfo.builder()
-                .userId(1L)
+                .id(1L)
                 .accessToken("token")
                 .tokenExpireTime(time.plusDays(6))
                 .build();
@@ -83,7 +83,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
 
         // then
         assertThat(sut)
-                .extracting("userId", "accessToken", "tokenExpireTime")
+                .extracting("id", "accessToken", "tokenExpireTime")
                 .containsExactly(1L, "token", time.plusSeconds(1000L));
     }
 
@@ -93,7 +93,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
         InstagramUserInfo sut = InstagramUserInfo.builder()
-                .userId(1L)
+                .id(1L)
                 .accessToken("token")
                 .tokenExpireTime(time.plusDays(7))
                 .build();
@@ -106,7 +106,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
 
         // then
         assertThat(sut)
-                .extracting("userId", "accessToken", "tokenExpireTime")
+                .extracting("id", "accessToken", "tokenExpireTime")
                 .containsExactly(1L, "token", time.plusDays(7));
     }
 

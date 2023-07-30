@@ -12,4 +12,6 @@ public interface MediaJpaRepository extends JpaRepository<Media, Long> {
     List<Media> findAllVideos();
 
     Optional<Media> findByUserId(Long UserId);
+
+    Optional<Media> findByInstagramMediaInfoId(String instagramMediaId);
 }

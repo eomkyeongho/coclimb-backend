@@ -15,14 +15,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InstagramUserInfo {
     @Column(name = "instagram_user_id")
-    private Long userId; // userId vs Id
+    private Long id; // userId vs Id
     @Column(name = "instagram_access_token")
     private String accessToken;
     @Column(name = "instagram_token_expire_time")
     private LocalDateTime tokenExpireTime;
     @Builder
-    public InstagramUserInfo(Long userId, String accessToken, LocalDateTime tokenExpireTime) {
-        this.userId = userId;
+    public InstagramUserInfo(Long id, String accessToken, LocalDateTime tokenExpireTime) {
+        this.id = id;
         this.accessToken = accessToken;
         this.tokenExpireTime = tokenExpireTime;
     }

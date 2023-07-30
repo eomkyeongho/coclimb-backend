@@ -24,7 +24,7 @@ public class InstagramRestApiManager implements InstagramAuthPort {
     public InstagramUserInfo getNewInstagramInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
         LongLivedTokenResponse longLivedTokenResponse = instagramRestApi.getLongLivedToken(shortLivedTokenResponse.getToken());
         return InstagramUserInfo.builder()
-                .userId(shortLivedTokenResponse.getUserId())
+                .id(shortLivedTokenResponse.getUserId())
                 .accessToken(longLivedTokenResponse.getToken())
                 .tokenExpireTime(serverClock.getDateTime().plusSeconds(longLivedTokenResponse.getExpiresIn()))
                 .build();

@@ -53,7 +53,7 @@ class LoginServiceTest extends IntegrationTestSupport {
                 .willReturn(new ShortLivedTokenResponse(token, instagramUserId));
         given(instagramRestApiManager.getNewInstagramInfo(any()))
                 .willReturn(InstagramUserInfo.builder()
-                        .userId(instagramUserId)
+                        .id(instagramUserId)
                         .accessToken(token)
                         .build());
 
@@ -64,7 +64,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         then(instagramRestApiManager).should().getNewInstagramInfo(any());
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("instagramUserInfo.userId", "instagramUserInfo.accessToken")
+                .extracting("instagramUserInfo.id", "instagramUserInfo.accessToken")
                 .containsExactly(instagramUserId, token);
     }
 
@@ -78,7 +78,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         userJpaRepository.save(User.builder()
                 .name("사용자")
                 .instagramUserInfo(InstagramUserInfo.builder()
-                        .userId(instagramUserId)
+                        .id(instagramUserId)
                         .accessToken(token)
                         .build())
                 .build());
@@ -93,7 +93,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         then(instagramRestApiManager).should().updateInstagramToken(any(),any());
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("instagramUserInfo.userId", "instagramUserInfo.accessToken")
+                .extracting("instagramUserInfo.id", "instagramUserInfo.accessToken")
                 .containsExactly(instagramUserId, token);
     }
 

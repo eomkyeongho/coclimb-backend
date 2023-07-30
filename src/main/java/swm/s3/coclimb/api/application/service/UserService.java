@@ -33,7 +33,7 @@ public class UserService implements UserQuery, UserCommand {
         return userUpdatePort.save((User.builder()
                 .name(UUID.randomUUID().toString().substring(8))
                 .instagramUserInfo(InstagramUserInfo.builder()
-                        .userId(instagramUserInfo.getUserId())
+                        .id(instagramUserInfo.getId())
                         .accessToken(instagramUserInfo.getAccessToken())
                         .tokenExpireTime(instagramUserInfo.getTokenExpireTime())
                         .build())

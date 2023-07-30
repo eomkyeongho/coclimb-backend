@@ -54,7 +54,7 @@ class LoginControllerDocsTest extends RestDocsTestSupport {
                 .willReturn(new ShortLivedTokenResponse(instagramToken, instagramUserId));
         given(instagramRestApiManager.getNewInstagramInfo(any()))
                 .willReturn(InstagramUserInfo.builder()
-                        .userId(instagramUserId)
+                        .id(instagramUserId)
                         .accessToken(instagramToken)
                         .build());
         // when, then

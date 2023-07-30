@@ -27,8 +27,8 @@ public class MediaController {
     private final MediaCommand mediaCommand;
 
     @PostMapping("/medias")
-    public ResponseEntity<Void> createMedia(@RequestBody @Valid MediaCreateRequest mediaCreateRequest) {
-        mediaCommand.createMedia(mediaCreateRequest.toServiceDto());
+    public ResponseEntity<Void> createMedia(@RequestBody @Valid MediaCreateRequest mediaCreateRequest, @LoginUser User user) {
+        mediaCommand.createMedia(mediaCreateRequest.toServiceDto(user));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();

@@ -25,7 +25,7 @@ class UserServiceTest extends IntegrationTestSupport {
         userJpaRepository.save(User.builder()
                 .name("user")
                 .instagramUserInfo(InstagramUserInfo.builder()
-                        .userId(1L)
+                        .id(1L)
                         .build())
                 .build());
         // when
@@ -34,7 +34,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // then
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("name", "instagramUserInfo.userId")
+                .extracting("name", "instagramUserInfo.id")
                 .containsExactly("user", 1L);
     }
 
@@ -43,7 +43,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void createUserByInstagramInfo() throws Exception {
         // given
         InstagramUserInfo instagramUserInfo = InstagramUserInfo.builder()
-                .userId(1L)
+                .id(1L)
                 .build();
 
         // when
@@ -55,6 +55,6 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThat(sut).isNotNull();
         assertThat(sut.getName()).isNotEmpty();
         assertThat(sut.getInstagramUserInfo())
-                .hasFieldOrPropertyWithValue("userId",1L);
+                .hasFieldOrPropertyWithValue("id",1L);
     }
 }
