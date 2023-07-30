@@ -8,7 +8,7 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramAuthPort;
 import swm.s3.coclimb.config.ServerClock;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class InstagramRestApiManager implements InstagramAuthPort {
 
 
     @Override
-    public Instagram getNewInstagram(ShortLivedTokenResponse shortLivedTokenResponse) {
+    public InstagramInfo getNewInstagramInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
         LongLivedTokenResponse longLivedTokenResponse = instagramRestApi.getLongLivedToken(shortLivedTokenResponse.getToken());
-        return Instagram.builder()
+        return InstagramInfo.builder()
                 .userId(shortLivedTokenResponse.getUserId())
                 .accessToken(longLivedTokenResponse.getToken())
                 .tokenExpireTime(serverClock.getDateTime().plusSeconds(longLivedTokenResponse.getExpiresIn()))
@@ -32,17 +32,17 @@ public class InstagramRestApiManager implements InstagramAuthPort {
     }
 
     @Override
-    public void updateInstagramToken(Instagram instagram, ShortLivedTokenResponse shortLivedTokenResponse) {
+    public void updateInstagramToken(InstagramInfo instagramInfo, ShortLivedTokenResponse shortLivedTokenResponse) {
         LongLivedTokenResponse longLivedTokenResponse;
-        if (instagram.isExpiredFor(serverClock.getDateTime())) {
+        if (instagramInfo.isExpiredFor(serverClock.getDateTime())) {
             longLivedTokenResponse = instagramRestApi.getLongLivedToken(shortLivedTokenResponse.getToken());
-            instagram.updateAccessToken(longLivedTokenResponse.getToken());
-        }else if(instagram.isNeedRefreshFor(serverClock.getDateTime())){
-            longLivedTokenResponse = instagramRestApi.refreshLongLivedToken(instagram.getAccessToken());
+            instagramInfo.updateAccessToken(longLivedTokenResponse.getToken());
+        }else if(instagramInfo.isNeedRefreshFor(serverClock.getDateTime())){
+            longLivedTokenResponse = instagramRestApi.refreshLongLivedToken(instagramInfo.getAccessToken());
         } else{
             return;
         }
-        instagram.updateTokenExpireTime((serverClock.getDateTime().plusSeconds(longLivedTokenResponse.getExpiresIn())));
+        instagramInfo.updateTokenExpireTime((serverClock.getDateTime().plusSeconds(longLivedTokenResponse.getExpiresIn())));
     }
 
     @Override

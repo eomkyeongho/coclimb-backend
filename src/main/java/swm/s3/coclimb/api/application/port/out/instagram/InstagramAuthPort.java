@@ -2,12 +2,12 @@ package swm.s3.coclimb.api.application.port.out.instagram;
 
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 
 public interface InstagramAuthPort {
-    Instagram getNewInstagram(ShortLivedTokenResponse shortLivedTokenResponse);
+    InstagramInfo getNewInstagramInfo(ShortLivedTokenResponse shortLivedTokenResponse);
 
-    void updateInstagramToken(Instagram instagram, ShortLivedTokenResponse shortLivedTokenResponse);
+    void updateInstagramToken(InstagramInfo instagram, ShortLivedTokenResponse shortLivedTokenResponse);
 
     ShortLivedTokenResponse getShortLivedTokenAndUserId(String code);
 

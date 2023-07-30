@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +27,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
         given(serverClock.getDateTime()).willReturn(time);
 
         // when
-        Instagram sut = instagramRestApiManager.getNewInstagram(shortLivedTokenResponse);
+        InstagramInfo sut = instagramRestApiManager.getNewInstagramInfo(shortLivedTokenResponse);
 
         // then
         assertThat(sut)
@@ -40,7 +40,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
     void updateInstagramTokenWhenExpired() throws Exception {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
-        Instagram sut = Instagram.builder()
+        InstagramInfo sut = InstagramInfo.builder()
                 .userId(1L)
                 .accessToken("oldToken")
                 .tokenExpireTime(time)
@@ -66,7 +66,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
     void updateInstagramTokenWhenNotExpired() throws Exception {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
-        Instagram sut = Instagram.builder()
+        InstagramInfo sut = InstagramInfo.builder()
                 .userId(1L)
                 .accessToken("token")
                 .tokenExpireTime(time.plusDays(6))
@@ -92,7 +92,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
     void notUpdateInstagramToken() throws Exception {
         // given
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
-        Instagram sut = Instagram.builder()
+        InstagramInfo sut = InstagramInfo.builder()
                 .userId(1L)
                 .accessToken("token")
                 .tokenExpireTime(time.plusDays(7))

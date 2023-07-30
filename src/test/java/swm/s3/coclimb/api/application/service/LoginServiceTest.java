@@ -12,7 +12,7 @@ import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.api.application.port.in.user.UserCommand;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
@@ -51,8 +51,8 @@ class LoginServiceTest extends IntegrationTestSupport {
         Long instagramUserId = 123L;
         given(instagramRestApiManager.getShortLivedTokenAndUserId(any()))
                 .willReturn(new ShortLivedTokenResponse(token, instagramUserId));
-        given(instagramRestApiManager.getNewInstagram(any()))
-                .willReturn(Instagram.builder()
+        given(instagramRestApiManager.getNewInstagramInfo(any()))
+                .willReturn(InstagramInfo.builder()
                         .userId(instagramUserId)
                         .accessToken(token)
                         .build());
@@ -61,10 +61,10 @@ class LoginServiceTest extends IntegrationTestSupport {
         Long userId = loginService.loginWithInstagram(code);
         Optional<User> sut = userJpaRepository.findById(userId);
         // then
-        then(instagramRestApiManager).should().getNewInstagram(any());
+        then(instagramRestApiManager).should().getNewInstagramInfo(any());
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("instagram.userId", "instagram.accessToken")
+                .extracting("instagramInfo.userId", "instagramInfo.accessToken")
                 .containsExactly(instagramUserId, token);
     }
 
@@ -77,7 +77,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         Long instagramUserId = 123L;
         userJpaRepository.save(User.builder()
                 .name("사용자")
-                .instagram(Instagram.builder()
+                .instagramInfo(InstagramInfo.builder()
                         .userId(instagramUserId)
                         .accessToken(token)
                         .build())
@@ -93,7 +93,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         then(instagramRestApiManager).should().updateInstagramToken(any(),any());
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("instagram.userId", "instagram.accessToken")
+                .extracting("instagramInfo.userId", "instagramInfo.accessToken")
                 .containsExactly(instagramUserId, token);
     }
 

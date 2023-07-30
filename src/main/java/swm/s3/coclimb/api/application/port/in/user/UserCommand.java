@@ -1,7 +1,7 @@
 package swm.s3.coclimb.api.application.port.in.user;
 
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 
 public interface UserCommand {
-    Long createUserByInstagram(Instagram instagram);
+    Long createUserByInstagramInfo(InstagramInfo instagram);
 }

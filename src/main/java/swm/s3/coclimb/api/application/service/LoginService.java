@@ -8,7 +8,7 @@ import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
 import swm.s3.coclimb.api.application.port.in.user.UserCommand;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramAuthPort;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 import swm.s3.coclimb.domain.user.User;
 
 @Service
@@ -27,10 +27,10 @@ public class LoginService implements LoginCommand {
                 .orElse(null);
 
         if (user == null) {
-            Instagram instagram = instagramAuthPort.getNewInstagram(shortLivedTokenResponse);
-            return userCommand.createUserByInstagram(instagram);
+            InstagramInfo instagram = instagramAuthPort.getNewInstagramInfo(shortLivedTokenResponse);
+            return userCommand.createUserByInstagramInfo(instagram);
         } else {
-            instagramAuthPort.updateInstagramToken(user.getInstagram(), shortLivedTokenResponse);
+            instagramAuthPort.updateInstagramToken(user.getInstagramInfo(), shortLivedTokenResponse);
             return user.getId();
         }
     }
