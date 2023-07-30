@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
@@ -13,6 +14,8 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.domain.gym.Location;
+
+import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -173,7 +176,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         createTestGym("암장이름");
 
         // when, then
-        ResultActions result = mockMvc.perform(get("/gyms/{name}", "암장이름"))
+        ResultActions result = mockMvc.perform(get("/gyms/info/{name}", "암장이름"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("암장이름"));
@@ -195,7 +198,6 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         ));
 
     }
-
     @Test
     @DisplayName("암장들의 위치 정보를 조회하는 API")
     void getGymLocations() throws Exception {
@@ -228,6 +230,53 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("count").type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
                 )
+        ));
+    }
+
+    @Test
+    @DisplayName("페이징된 암장들을 조회하는 API")
+    void getPagedGyms() throws Exception {
+        // given
+        gymJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Gym.builder()
+                        .name("암장" + i)
+                        .address("주소")
+                        .phone("010-1111-1111")
+                        .build())
+                .toList());
+
+        // when, then
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/gyms")
+                        .param("page", String.valueOf(1))
+                        .param("size", String.valueOf(5)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.size").value(5))
+                .andExpect(jsonPath("$.totalPage").value(2));
+
+        // docs
+        result.andDo(document("gym-page",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                                .description("페이지 포함된 암장들"),
+                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                                .description("암장 이름"),
+                        fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
+                                .description("주소"),
+                        fieldWithPath("gyms[].phone").type(JsonFieldType.STRING)
+                                .description("전화번호"),
+                        fieldWithPath("page").type(JsonFieldType.NUMBER)
+                                .description("페이지 번호"),
+                        fieldWithPath("size").type(JsonFieldType.NUMBER)
+                                .description("페이지 크기"),
+                        fieldWithPath("totalPage").type(JsonFieldType.NUMBER)
+                                .description("전체 페이지 수")
+                )
+
         ));
     }
 }
