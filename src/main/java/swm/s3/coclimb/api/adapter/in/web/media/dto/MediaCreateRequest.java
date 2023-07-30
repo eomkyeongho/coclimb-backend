@@ -11,7 +11,7 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 @NoArgsConstructor
 public class MediaCreateRequest {
 
-    // default
+    // common attributes
     @NotNull
     Long userId;
     @NotNull
@@ -25,9 +25,10 @@ public class MediaCreateRequest {
     // for instagram
     String instagramMediaId;
     String instagramUserId;
+    String instagramPermalink;
 
     @Builder
-    public MediaCreateRequest(Long userId, String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId) {
+    public MediaCreateRequest(Long userId, String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId, String instagramPermalink) {
         this.userId = userId;
         this.platform = platform;
         this.mediaUrl = mediaUrl;
@@ -35,6 +36,7 @@ public class MediaCreateRequest {
         this.thumbnailUrl = thumbnailUrl;
         this.instagramMediaId = instagramMediaId;
         this.instagramUserId = instagramUserId;
+        this.instagramPermalink = instagramPermalink;
     }
 
     public MediaCreateRequestDto toServiceDto() {

@@ -37,7 +37,7 @@ public class MediaController {
 
     @GetMapping("/medias/instagram/my-videos")
     public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(@LoginUser User user) {
-        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos(user.getInstagramInfo().getAccessToken());
+        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos(user.getInstagramUserInfo().getAccessToken());
         return ResponseEntity.ok(InstagramMyVideosResponse.of(myInstagramVideos));
     }
 
@@ -45,12 +45,15 @@ public class MediaController {
     public ResponseEntity<MediaInfosResponse> getAllMedias(@RequestParam(required = false) String mediaType) {
         List<MediaInfoDto> mediaInfos;
 
-        if(mediaType == null) {
-            mediaInfos = mediaQuery.findAll();
-        } else if(mediaType.equals("VIDEO")) {
-            mediaInfos = mediaQuery.findAllVideos();
-        } else {
-            mediaInfos = mediaQuery.findAll();
+        switch (mediaType == null ? "ALL" : mediaType.toUpperCase()) {
+            case "VIDEO":
+                mediaInfos = mediaQuery.findAllVideos();
+                break;
+
+            case "ALL":
+            default:
+                mediaInfos = mediaQuery.findAll();
+                break;
         }
 
         return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));

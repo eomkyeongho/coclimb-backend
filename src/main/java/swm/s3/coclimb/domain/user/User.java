@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
 
     @Embedded
-    private InstagramInfo instagramInfo;
+    private InstagramUserInfo instagramUserInfo;
 
     @Builder
-    public User(String name, InstagramInfo instagramInfo) {
+    public User(String name, InstagramUserInfo instagramUserInfo) {
         this.name = name;
-        this.instagramInfo = instagramInfo;
+        this.instagramUserInfo = instagramUserInfo;
     }
 
 }

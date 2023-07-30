@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
-import swm.s3.coclimb.domain.Media;
+import swm.s3.coclimb.domain.media.Media;
 
 import java.util.List;
 

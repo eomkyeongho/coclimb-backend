@@ -1,7 +1,8 @@
 package swm.s3.coclimb.api.application.port.in.media.dto;
 
 import lombok.Builder;
-import swm.s3.coclimb.domain.Media;
+import swm.s3.coclimb.domain.media.InstagramMediaInfo;
+import swm.s3.coclimb.domain.media.Media;
 
 public class MediaCreateRequestDto {
     Long userId;
@@ -12,6 +13,7 @@ public class MediaCreateRequestDto {
 
     String instagramMediaId;
     String instagramUserId;
+    String instagramPermalink;
 
     @Builder
     public MediaCreateRequestDto(Long userId, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId, String platform) {
@@ -19,8 +21,6 @@ public class MediaCreateRequestDto {
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
-        this.instagramMediaId = instagramMediaId;
-        this.instagramUserId = instagramUserId;
         this.platform = platform;
     }
 
@@ -31,8 +31,11 @@ public class MediaCreateRequestDto {
                 .mediaUrl(mediaUrl)
                 .mediaType(mediaType)
                 .thumbnailUrl(thumbnailUrl)
-                .instagramMediaId(instagramMediaId)
-                .instagramUserId(instagramUserId)
+                .instagramMediaInfo(InstagramMediaInfo.builder()
+                        .mediaId(instagramMediaId)
+                        .userId(instagramUserId)
+                        .permalink(instagramPermalink)
+                        .build())
                 .build();
     }
 }

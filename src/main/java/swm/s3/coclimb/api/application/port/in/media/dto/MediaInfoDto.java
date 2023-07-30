@@ -2,7 +2,7 @@ package swm.s3.coclimb.api.application.port.in.media.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import swm.s3.coclimb.domain.Media;
+import swm.s3.coclimb.domain.media.Media;
 
 @Getter
 public class MediaInfoDto {
@@ -27,7 +27,7 @@ public class MediaInfoDto {
                 .mediaType(media.getMediaType())
                 .mediaUrl(media.getMediaUrl())
                 .thumbnailUrl(media.getThumbnailUrl())
-                .instagramPermalink(media.getInstagramPermalink())
+                .instagramPermalink(media.getInstagramMediaInfo().getPermalink())
                 .build();
     }
 }
