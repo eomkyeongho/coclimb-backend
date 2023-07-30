@@ -36,10 +36,10 @@ class MediaControllerTest extends ControllerTestSupport {
         //then
         mockMvc.perform(get("/medias"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..medias").isArray())
-                .andExpect(jsonPath("$..medias.length()").value(2))
-                .andExpect(jsonPath("$..medias[0].mediaType").value("VIDEO"))
-                .andExpect(jsonPath("$..medias[1].mediaType").value("IMAGE"));
+                .andExpect(jsonPath("$.medias").isArray())
+                .andExpect(jsonPath("$.medias.length()").value(2))
+                .andExpect(jsonPath("$.medias[0].mediaType").value("VIDEO"))
+                .andExpect(jsonPath("$.medias[1].mediaType").value("IMAGE"));
     }
 
     @Test

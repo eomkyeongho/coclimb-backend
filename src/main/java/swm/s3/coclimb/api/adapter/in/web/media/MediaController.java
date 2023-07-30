@@ -1,7 +1,5 @@
 package swm.s3.coclimb.api.adapter.in.web.media;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,8 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
+import swm.s3.coclimb.config.argumentresolver.LoginUser;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
 
@@ -36,8 +36,8 @@ public class MediaController {
 
 
     @GetMapping("/medias/instagram/my-videos")
-    public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(HttpSession httpSession) throws JsonProcessingException {
-        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos((String) httpSession.getAttribute("instagramAccessToken"));
+    public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(@LoginUser User user) {
+        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos(user.getInstagramInfo().getAccessToken());
         return ResponseEntity.ok(InstagramMyVideosResponse.of(myInstagramVideos));
     }
 

@@ -1,6 +1,5 @@
 package swm.s3.coclimb.api.adapter.out.instagram;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
@@ -56,7 +55,7 @@ public class InstagramRestApiManager implements InstagramAuthPort {
     }
 
     // TODO 수정필요
-    public List<InstagramMediaResponseDto> getMyMedias(String accessToken) throws JsonProcessingException {
+    public List<InstagramMediaResponseDto> getMyMedias(String accessToken) {
         return instagramRestApi.getMyMedias(accessToken);
     }
 

@@ -1,6 +1,5 @@
 package swm.s3.coclimb.api.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class MediaService implements MediaQuery, MediaCommand {
     private final MediaUpdatePort mediaUpdatePort;
 
     @Override
-    public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) throws JsonProcessingException {
+    public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) {
         List<InstagramMediaResponseDto> myMedias = instagramRestApiManager.getMyMedias(accessToken);
         List<InstagramMediaResponseDto> myVideos = new ArrayList<InstagramMediaResponseDto>();
 
