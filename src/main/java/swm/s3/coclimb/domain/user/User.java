@@ -20,12 +20,12 @@ public class User {
 
 
     @Embedded
-    private Instagram instagram;
+    private InstagramInfo instagramInfo;
 
     @Builder
-    public User(String name, Instagram instagram) {
+    public User(String name, InstagramInfo instagramInfo) {
         this.name = name;
-        this.instagram = instagram;
+        this.instagramInfo = instagramInfo;
     }
 
 }

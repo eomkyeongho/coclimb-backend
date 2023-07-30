@@ -242,7 +242,7 @@ class GymControllerTest extends ControllerTestSupport{
                         .build());
 
         // when, then
-        mockMvc.perform(get("/gyms/{name}","암장이름"))
+        mockMvc.perform(get("/gyms/info/{name}","암장이름"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("암장이름"));
@@ -255,7 +255,7 @@ class GymControllerTest extends ControllerTestSupport{
         String name = " ";
 
         // when, then
-        mockMvc.perform(get("/gyms/{name}",name))
+        mockMvc.perform(get("/gyms/info/{name}",name))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").isString())

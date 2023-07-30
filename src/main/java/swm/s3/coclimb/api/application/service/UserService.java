@@ -7,7 +7,7 @@ import swm.s3.coclimb.api.application.port.in.user.UserCommand;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserUpdatePort;
-import swm.s3.coclimb.domain.user.Instagram;
+import swm.s3.coclimb.domain.user.InstagramInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
@@ -28,13 +28,14 @@ public class UserService implements UserQuery, UserCommand {
     }
 
     @Override
-    public Long createUserByInstagram(Instagram instagram) {
+    @Transactional
+    public Long createUserByInstagramInfo(InstagramInfo instagramInfo) {
         return userUpdatePort.save((User.builder()
                 .name(UUID.randomUUID().toString().substring(8))
-                .instagram(Instagram.builder()
-                        .userId(instagram.getUserId())
-                        .accessToken(instagram.getAccessToken())
-                        .tokenExpireTime(instagram.getTokenExpireTime())
+                .instagramInfo(InstagramInfo.builder()
+                        .userId(instagramInfo.getUserId())
+                        .accessToken(instagramInfo.getAccessToken())
+                        .tokenExpireTime(instagramInfo.getTokenExpireTime())
                         .build())
                 .build()));
     }

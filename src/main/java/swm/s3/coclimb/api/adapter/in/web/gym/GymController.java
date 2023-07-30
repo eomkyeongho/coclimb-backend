@@ -54,7 +54,7 @@ public class GymController {
                 .build();
     }
 
-    @GetMapping("/gyms/{name}")
+    @GetMapping("/gyms/info/{name}")
     public ResponseEntity<GymInfoResponseDto> getGymInfoByName(@PathVariable String name) {
         if(name.isBlank()){
             throw ValidationFail.onRequest()

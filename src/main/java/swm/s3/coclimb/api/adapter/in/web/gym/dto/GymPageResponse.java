@@ -6,17 +6,18 @@ import org.springframework.data.domain.Page;
 import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class GymPageResponse {
-    private List<Gym> gyms;
+    private List<GymResponse> gyms;
     private int page;
     private int size;
     private int totalPage;
 
     @Builder
     private GymPageResponse(List<Gym> gyms, int page, int size, int totalPage) {
-        this.gyms = gyms;
+        this.gyms = gyms.stream().map(GymResponse::new).collect(Collectors.toList());
         this.page = page;
         this.size = size;
         this.totalPage = totalPage;
@@ -29,5 +30,18 @@ public class GymPageResponse {
                 .size(pagedGyms.getSize())
                 .totalPage(pagedGyms.getTotalPages())
                 .build();
+    }
+
+    @Getter
+    private class GymResponse {
+        private String name;
+        private String address;
+        private String phone;
+
+        private GymResponse(Gym gym) {
+            this.name = gym.getName();
+            this.address = gym.getAddress();
+            this.phone = gym.getPhone();
+        }
     }
 }

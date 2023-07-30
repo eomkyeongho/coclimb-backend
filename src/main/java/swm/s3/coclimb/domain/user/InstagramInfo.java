@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Instagram {
+public class InstagramInfo {
     @Column(name = "instagram_user_id")
     private Long userId;
     @Column(name = "instagram_access_token")
@@ -21,7 +21,7 @@ public class Instagram {
     @Column(name = "instagram_token_expire_time")
     private LocalDateTime tokenExpireTime;
     @Builder
-    public Instagram(Long userId, String accessToken, LocalDateTime tokenExpireTime) {
+    public InstagramInfo(Long userId, String accessToken, LocalDateTime tokenExpireTime) {
         this.userId = userId;
         this.accessToken = accessToken;
         this.tokenExpireTime = tokenExpireTime;
