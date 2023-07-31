@@ -20,6 +20,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 
 public class JwtLearningTest extends IntegrationTestSupport {
 
@@ -123,6 +124,17 @@ public class JwtLearningTest extends IntegrationTestSupport {
         // then
         assertThatThrownBy(() -> jwtParser.parseClaimsJws(jws))
                 .isInstanceOf(SignatureException.class);
+    }
+
+    @Test
+    @DisplayName("테스트용 토큰 발급")
+    void tokenForPostman() throws Exception {
+        Long id = 1L;
+        given(serverClock.getDateTime()).willReturn(LocalDateTime.now());
+        String token = jwtManager.issueToken(id.toString());
+        assertThat(jwtManager.isValid(token)).isTrue();
+        System.out.println(token);
+
     }
 
 

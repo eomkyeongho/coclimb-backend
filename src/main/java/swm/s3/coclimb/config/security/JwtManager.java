@@ -36,7 +36,12 @@ public class JwtManager {
 
 
     public boolean isValid(String jwt) {
-        return jwtParser.isSigned(jwt);
+        try {
+            jwtParser.parseClaimsJws(jwt);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     public String getSubject(String jwt) {
