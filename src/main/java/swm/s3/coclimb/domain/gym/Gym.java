@@ -10,6 +10,7 @@ import swm.s3.coclimb.domain.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "gyms")
 public class Gym extends BaseTimeEntity {
 
     @Id

@@ -98,7 +98,7 @@ public class InstagramRestApi {
         }
     }
 
-    protected List<InstagramMediaResponseDto> getMyMedias(String accessToken) throws JsonProcessingException {
+    protected List<InstagramMediaResponseDto> getMyMedias(String accessToken) {
         String targetUri = String.format("/me/media?fields=id,media_type,media_url,permalink,thumbnail_url&access_token=%s",
                 accessToken);
 
@@ -114,8 +114,12 @@ public class InstagramRestApi {
 
         JSONObject jsonObject = new JSONObject(response);
 
-        return objectMapper.readValue(jsonObject.getJSONArray("data").toString(),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, InstagramMediaResponseDto.class));
+        try {
+            return objectMapper.readValue(jsonObject.getJSONArray("data").toString(),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, InstagramMediaResponseDto.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.domain.user.InstagramInfo;
+import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
@@ -24,8 +24,8 @@ class UserServiceTest extends IntegrationTestSupport {
         // given
         userJpaRepository.save(User.builder()
                 .name("user")
-                .instagramInfo(InstagramInfo.builder()
-                        .userId(1L)
+                .instagramUserInfo(InstagramUserInfo.builder()
+                        .id(1L)
                         .build())
                 .build());
         // when
@@ -34,7 +34,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // then
         assertThat(sut).isNotNull();
         assertThat(sut.get())
-                .extracting("name", "instagramInfo.userId")
+                .extracting("name", "instagramUserInfo.id")
                 .containsExactly("user", 1L);
     }
 
@@ -42,19 +42,19 @@ class UserServiceTest extends IntegrationTestSupport {
     @DisplayName("인스타그램의 정보를 사용하여 사용자를 생성한다.")
     void createUserByInstagramInfo() throws Exception {
         // given
-        InstagramInfo instagramInfo = InstagramInfo.builder()
-                .userId(1L)
+        InstagramUserInfo instagramUserInfo = InstagramUserInfo.builder()
+                .id(1L)
                 .build();
 
         // when
-        Long userId = userService.createUserByInstagramInfo(instagramInfo);
+        Long userId = userService.createUserByInstagramInfo(instagramUserInfo);
         User sut = userJpaRepository.findById(userId).orElse(null);
 
         // then
         assertThat(userId).isNotNull();
         assertThat(sut).isNotNull();
         assertThat(sut.getName()).isNotEmpty();
-        assertThat(sut.getInstagramInfo())
-                .hasFieldOrPropertyWithValue("userId",1L);
+        assertThat(sut.getInstagramUserInfo())
+                .hasFieldOrPropertyWithValue("id",1L);
     }
 }

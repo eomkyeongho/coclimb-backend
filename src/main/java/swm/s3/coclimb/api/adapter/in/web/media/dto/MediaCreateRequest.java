@@ -6,14 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
+import swm.s3.coclimb.domain.user.User;
 
 @Getter
 @NoArgsConstructor
 public class MediaCreateRequest {
 
-    // default
-    @NotNull
-    Long userId;
+    // common attributes
     @NotNull
     String platform;
     @NotNull
@@ -24,28 +23,29 @@ public class MediaCreateRequest {
 
     // for instagram
     String instagramMediaId;
-    String instagramUserId;
+    String instagramPermalink;
 
     @Builder
-    public MediaCreateRequest(Long userId, String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId) {
-        this.userId = userId;
+    public MediaCreateRequest(String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramPermalink) {
         this.platform = platform;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
         this.instagramMediaId = instagramMediaId;
-        this.instagramUserId = instagramUserId;
+        this.instagramPermalink = instagramPermalink;
     }
 
-    public MediaCreateRequestDto toServiceDto() {
+    public MediaCreateRequestDto toServiceDto(User user) {
         return MediaCreateRequestDto.builder()
-                .userId(userId)
+                .userId(user.getId())
+                .username(user.getName())
                 .mediaUrl(mediaUrl)
                 .mediaType(mediaType)
                 .thumbnailUrl(thumbnailUrl)
-                .instagramMediaId(instagramMediaId)
-                .instagramUserId(instagramUserId)
                 .platform(platform)
+                .instagramMediaId(instagramMediaId)
+                .instagramUserId(user.getInstagramUserInfo().getId().toString())
+                .instagramPermalink(instagramPermalink)
                 .build();
     }
 }
