@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByInstagramInfoUserId(Long instagramUserId);
+    Optional<User> findByInstagramUserInfoId(Long instagramUserId);
 }

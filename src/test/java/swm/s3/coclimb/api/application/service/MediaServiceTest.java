@@ -15,11 +15,14 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
-import swm.s3.coclimb.domain.Media;
+import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
+import swm.s3.coclimb.domain.media.InstagramMediaInfo;
+import swm.s3.coclimb.domain.media.Media;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -56,10 +59,10 @@ class MediaServiceTest extends IntegrationTestSupport {
                 new TestInstagramMediaResponseDto("2", "IMAGE")
         ));
         //when
-        List<InstagramMediaResponseDto> myVideos = mediaService.getMyInstagramVideos("accessToken");
+        List<InstagramMediaResponseDto> sut = mediaService.getMyInstagramVideos("accessToken");
 
         //then
-        assertThat(myVideos).hasSize(1)
+        assertThat(sut).hasSize(1)
                 .extracting("mediaId", "mediaType")
                 .containsExactly(tuple("1", "VIDEO"));
     }
@@ -68,32 +71,32 @@ class MediaServiceTest extends IntegrationTestSupport {
     @DisplayName("모든 타입의 미디어를 반환한다.")
     void findAllType() {
         //given
-        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").build());
-        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").build());
+        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink1").build()).build());
+        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink2").build()).build());
 
         //when
-        List<MediaInfoDto> allMedias = mediaService.findAll();
+        List<MediaInfoDto> sut = mediaService.findAll();
 
         //then
-        assertThat(allMedias).hasSize(2)
-                .extracting("mediaType")
-                .containsExactly("VIDEO", "IMAGE");
+        assertThat(sut).hasSize(2)
+                .extracting("mediaType", "instagramPermalink")
+                .containsExactly(tuple("VIDEO", "permalink1"), tuple("IMAGE", "permalink2"));
     }
 
     @Test
     @DisplayName("비디오 타입의 미디어를 반환한다.")
     void findAllVideos() {
         //given
-        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").build());
-        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").build());
+        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink1").build()).build());
+        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink2").build()).build());
 
         //when
-        List<MediaInfoDto> allVideos = mediaService.findAllVideos();
+        List<MediaInfoDto> sut = mediaService.findAllVideos();
 
         //then
-        assertThat(allVideos).hasSize(1)
-                .extracting("mediaType")
-                .containsExactly("VIDEO");
+        assertThat(sut).hasSize(1)
+                .extracting("mediaType", "instagramPermalink")
+                .containsExactly(tuple("VIDEO", "permalink1"));
     }
 
     @Test
@@ -108,10 +111,31 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         //when
         mediaService.createMedia(mediaCreateRequestDto);
-        Media media = mediaJpaRepository.findByUserId(userId).orElseThrow();
+        Media sut = mediaJpaRepository.findByUserId(userId).orElseThrow();
 
         //then
-        assertThat(media.getUserId()).isEqualTo(userId);
+        assertThat(sut.getUserId()).isEqualTo(userId);
+    }
+
+    @Test
+    @DisplayName("인스타그램 미디어 ID가 중복되면 예외가 발생한다.")
+    void saveDuplicateInstagramMediaId() {
+        //given
+        String instagramMediaId = "instagramMediaId";
+
+        MediaCreateRequestDto mediaCreateRequestDto = MediaCreateRequestDto.builder()
+                .instagramMediaId(instagramMediaId)
+                .build();
+
+        mediaJpaRepository.save(Media.builder()
+                .instagramMediaInfo(InstagramMediaInfo.builder()
+                        .id(instagramMediaId)
+                        .build())
+                .build());
+        //when
+        //then
+        assertThatThrownBy(() -> mediaService.createMedia(mediaCreateRequestDto))
+                .isInstanceOf(InstagramMediaIdConflict.class);
     }
 
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{

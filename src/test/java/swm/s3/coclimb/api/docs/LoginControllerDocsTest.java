@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.domain.user.InstagramInfo;
+import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -53,8 +53,8 @@ class LoginControllerDocsTest extends RestDocsTestSupport {
         given(instagramRestApiManager.getShortLivedTokenAndUserId(any()))
                 .willReturn(new ShortLivedTokenResponse(instagramToken, instagramUserId));
         given(instagramRestApiManager.getNewInstagramInfo(any()))
-                .willReturn(InstagramInfo.builder()
-                        .userId(instagramUserId)
+                .willReturn(InstagramUserInfo.builder()
+                        .id(instagramUserId)
                         .accessToken(instagramToken)
                         .build());
         // when, then

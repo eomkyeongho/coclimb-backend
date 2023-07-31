@@ -1,7 +1,5 @@
 package swm.s3.coclimb.api.adapter.in.web.media;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,8 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
+import swm.s3.coclimb.config.argumentresolver.LoginUser;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class MediaController {
     private final MediaCommand mediaCommand;
 
     @PostMapping("/medias")
-    public ResponseEntity<Void> createMedia(@RequestBody @Valid MediaCreateRequest mediaCreateRequest) {
-        mediaCommand.createMedia(mediaCreateRequest.toServiceDto());
+    public ResponseEntity<Void> createMedia(@RequestBody @Valid MediaCreateRequest mediaCreateRequest, @LoginUser User user) {
+        mediaCommand.createMedia(mediaCreateRequest.toServiceDto(user));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
@@ -36,8 +36,8 @@ public class MediaController {
 
 
     @GetMapping("/medias/instagram/my-videos")
-    public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(HttpSession httpSession) throws JsonProcessingException {
-        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos((String) httpSession.getAttribute("instagramAccessToken"));
+    public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(@LoginUser User user) {
+        List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos(user.getInstagramUserInfo().getAccessToken());
         return ResponseEntity.ok(InstagramMyVideosResponse.of(myInstagramVideos));
     }
 
@@ -45,12 +45,15 @@ public class MediaController {
     public ResponseEntity<MediaInfosResponse> getAllMedias(@RequestParam(required = false) String mediaType) {
         List<MediaInfoDto> mediaInfos;
 
-        if(mediaType == null) {
-            mediaInfos = mediaQuery.findAll();
-        } else if(mediaType.equals("VIDEO")) {
-            mediaInfos = mediaQuery.findAllVideos();
-        } else {
-            mediaInfos = mediaQuery.findAll();
+        switch (mediaType == null ? "ALL" : mediaType.toUpperCase()) {
+            case "VIDEO":
+                mediaInfos = mediaQuery.findAllVideos();
+                break;
+
+            case "ALL":
+            default:
+                mediaInfos = mediaQuery.findAll();
+                break;
         }
 
         return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));

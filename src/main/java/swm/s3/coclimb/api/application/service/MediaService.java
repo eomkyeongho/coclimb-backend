@@ -1,6 +1,5 @@
 package swm.s3.coclimb.api.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,7 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class MediaService implements MediaQuery, MediaCommand {
     private final MediaUpdatePort mediaUpdatePort;
 
     @Override
-    public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) throws JsonProcessingException {
+    public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) {
         List<InstagramMediaResponseDto> myMedias = instagramRestApiManager.getMyMedias(accessToken);
         List<InstagramMediaResponseDto> myVideos = new ArrayList<InstagramMediaResponseDto>();
 
@@ -55,6 +55,13 @@ public class MediaService implements MediaQuery, MediaCommand {
 
     @Override
     public void createMedia(MediaCreateRequestDto mediaCreateRequestDto) {
+        if(isInstagramMediaIdDuplicated(mediaCreateRequestDto.getInstagramMediaId())) {
+            throw new InstagramMediaIdConflict();
+        }
         mediaUpdatePort.save(mediaCreateRequestDto.toEntity());
+    }
+
+    private boolean isInstagramMediaIdDuplicated(String instagramMediaId) {
+        return mediaLoadPort.findByInstagramMediaId(instagramMediaId).isPresent();
     }
 }
