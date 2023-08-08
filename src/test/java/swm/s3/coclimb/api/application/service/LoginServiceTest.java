@@ -51,7 +51,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         Long instagramUserId = 123L;
         given(instagramRestApiManager.getShortLivedTokenAndUserId(any()))
                 .willReturn(new ShortLivedTokenResponse(token, instagramUserId));
-        given(instagramRestApiManager.getNewInstagramInfo(any()))
+        given(instagramRestApiManager.getNewInstagramUserInfo(any()))
                 .willReturn(InstagramUserInfo.builder()
                         .id(instagramUserId)
                         .accessToken(token)
@@ -61,7 +61,7 @@ class LoginServiceTest extends IntegrationTestSupport {
         Long userId = loginService.loginWithInstagram(code);
         Optional<User> sut = userJpaRepository.findById(userId);
         // then
-        then(instagramRestApiManager).should().getNewInstagramInfo(any());
+        then(instagramRestApiManager).should().getNewInstagramUserInfo(any());
         assertThat(sut).isNotNull();
         assertThat(sut.get())
                 .extracting("instagramUserInfo.id", "instagramUserInfo.accessToken")
