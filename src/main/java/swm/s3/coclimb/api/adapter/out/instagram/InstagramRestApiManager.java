@@ -21,7 +21,7 @@ public class InstagramRestApiManager implements InstagramAuthPort {
 
 
     @Override
-    public InstagramUserInfo getNewInstagramInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
+    public InstagramUserInfo getNewInstagramUserInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
         LongLivedTokenResponse longLivedTokenResponse = instagramRestApi.getLongLivedToken(shortLivedTokenResponse.getToken());
         return InstagramUserInfo.builder()
                 .id(shortLivedTokenResponse.getUserId())

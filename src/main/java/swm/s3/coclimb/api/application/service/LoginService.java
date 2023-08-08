@@ -27,8 +27,8 @@ public class LoginService implements LoginCommand {
                 .orElse(null);
 
         if (user == null) {
-            InstagramUserInfo instagram = instagramAuthPort.getNewInstagramInfo(shortLivedTokenResponse);
-            return userCommand.createUserByInstagramInfo(instagram);
+            InstagramUserInfo instagramUserInfo = instagramAuthPort.getNewInstagramUserInfo(shortLivedTokenResponse);
+            return userCommand.createUserByInstagramInfo(instagramUserInfo);
         } else {
             instagramAuthPort.updateInstagramToken(user.getInstagramUserInfo(), shortLivedTokenResponse);
             return user.getId();

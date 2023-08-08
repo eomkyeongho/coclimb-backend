@@ -17,7 +17,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("새로운 인스타그램 토큰을 발급받는다.")
-    void getNewInstagram() throws Exception {
+    void getNewInstagramUserInfo() throws Exception {
         // given
         ShortLivedTokenResponse shortLivedTokenResponse = new ShortLivedTokenResponse("shortToken", 1L);
         LocalDateTime time = LocalDateTime.of(1, 1, 1, 1, 1, 1);
@@ -27,7 +27,7 @@ class InstagramRestApiManagerTest extends IntegrationTestSupport {
         given(serverClock.getDateTime()).willReturn(time);
 
         // when
-        InstagramUserInfo sut = instagramRestApiManager.getNewInstagramInfo(shortLivedTokenResponse);
+        InstagramUserInfo sut = instagramRestApiManager.getNewInstagramUserInfo(shortLivedTokenResponse);
 
         // then
         assertThat(sut)
