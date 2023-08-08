@@ -13,10 +13,7 @@ import reactor.core.publisher.Mono;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramLongLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.IssueInstagramShortLivedTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.RefreshInstagramTokenFail;
-import swm.s3.coclimb.api.exception.errortype.instagram.RetrieveInstagramMediaFail;
+import swm.s3.coclimb.api.exception.errortype.instagram.*;
 
 import java.util.List;
 import java.util.Map;
@@ -121,4 +118,25 @@ public class InstagramRestApi {
         }
     }
 
+    protected String getMyUsername(String accessToken) {
+        String targetUri = String.format("/me?fields=username&access_token=%s",
+                accessToken);
+
+        String response = graphClient.get()
+                .uri(targetUri)
+                .exchangeToMono(clientResponse -> {
+                    if (clientResponse.statusCode().is2xxSuccessful()) {
+                        return clientResponse.bodyToMono(String.class);
+                    } else {
+                        return Mono.error(new GetInstagramUsernameFail());
+                    }
+                }).block();
+
+        try {
+            Map<String, Object> map = objectMapper.readValue(response, Map.class);
+            return map.get("username").toString();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
