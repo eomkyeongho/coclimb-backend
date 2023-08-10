@@ -58,4 +58,10 @@ public class MediaController {
 
         return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));
     }
+
+    @GetMapping("/medias/my-medias")
+    public ResponseEntity<MediaInfosResponse> getMyMedias(@LoginUser User user) {
+        List<MediaInfoDto> mediaInfos = mediaQuery.findMyMedias(user.getId());
+        return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));
+    }
 }

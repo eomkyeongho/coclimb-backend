@@ -26,6 +26,11 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     }
 
     @Override
+    public List<Media> findMyMedias(Long userId) {
+        return mediaJpaRepository.findByUserId(userId);
+    }
+
+    @Override
     public void save(Media media) {
         mediaJpaRepository.save(media);
     }

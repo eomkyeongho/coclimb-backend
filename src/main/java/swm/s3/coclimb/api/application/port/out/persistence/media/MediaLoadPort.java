@@ -9,5 +9,7 @@ public interface MediaLoadPort {
     List<Media> findAll();
     List<Media> findAllVideos();
 
+    List<Media> findMyMedias(Long userId);
+
     Optional<Media> findByInstagramMediaId(String instagramMediaId);
 }
