@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
+import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -21,7 +22,9 @@ class UserControllerDocsTest extends RestDocsTestSupport {
     void getUserByToken() throws Exception {
         // given
         Long userId = userJpaRepository.save(User.builder()
-                .name("유저").build()).getId();
+                .name("유저")
+                .instagramUserInfo(InstagramUserInfo.builder().name("instagramUsername").build())
+                .build()).getId();
         String accessToken = jwtManager.issueToken(userId.toString());
 
         // when, then
@@ -36,7 +39,9 @@ class UserControllerDocsTest extends RestDocsTestSupport {
                 preprocessResponse(prettyPrint()),
                 responseFields(
                         fieldWithPath("username").type(JsonFieldType.STRING)
-                                .description("사용자이름")
+                                .description("사용자이름"),
+                        fieldWithPath("instagramUsername").type(JsonFieldType.STRING)
+                                .description("인스타그램 사용자이름")
                 )));
 
     }
