@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import swm.s3.coclimb.api.adapter.in.web.gym.GymController;
 import swm.s3.coclimb.api.adapter.in.web.login.LoginController;
+import swm.s3.coclimb.api.adapter.in.web.media.MediaController;
 import swm.s3.coclimb.api.adapter.in.web.user.UserController;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
@@ -17,12 +18,14 @@ import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.user.UserQuery;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
+import swm.s3.coclimb.config.argumentresolver.LoginUserArgumentResolver;
 import swm.s3.coclimb.config.security.JwtManager;
 
 @WebMvcTest(controllers = {
         GymController.class,
         UserController.class,
-        LoginController.class
+        LoginController.class,
+        MediaController.class
 })
 @ActiveProfiles("test")
 public abstract class ControllerTestSupport{
@@ -61,4 +64,7 @@ public abstract class ControllerTestSupport{
     // Security
     @MockBean
     protected JwtManager jwtManager;
+
+    @MockBean
+    protected LoginUserArgumentResolver loginUserArgumentResolver;
 }
