@@ -111,7 +111,7 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         //when
         mediaService.createMedia(mediaCreateRequestDto);
-        Media sut = mediaJpaRepository.findByUserId(userId).orElseThrow();
+        Media sut = mediaJpaRepository.findByUserId(userId).get(0);
 
         //then
         assertThat(sut.getUserId()).isEqualTo(userId);
@@ -136,6 +136,23 @@ class MediaServiceTest extends IntegrationTestSupport {
         //then
         assertThatThrownBy(() -> mediaService.createMedia(mediaCreateRequestDto))
                 .isInstanceOf(InstagramMediaIdConflict.class);
+    }
+
+    @Test
+    @DisplayName("본인 미디어를 조회할 수 있다.")
+    void retrieveMyMedias() {
+        //given
+        mediaJpaRepository.save(Media.builder().userId(1L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
+        mediaJpaRepository.save(Media.builder().userId(1L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
+        mediaJpaRepository.save(Media.builder().userId(2L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
+
+        //when
+        List<MediaInfoDto> sut1 = mediaService.findMyMedias(1L);
+        List<MediaInfoDto> sut2 = mediaService.findMyMedias(2L);
+
+        //then
+        assertThat(sut1).hasSize(2);
+        assertThat(sut2).hasSize(1);
     }
 
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
