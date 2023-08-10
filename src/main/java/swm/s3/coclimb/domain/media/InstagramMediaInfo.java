@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Getter
 public class InstagramMediaInfo {
     @Column(name = "instagram_media_id")
-    private String id; // mediaId vs Id
+    private String id;
     @Column(name = "instagram_user_id")
-    private String userId;
+    private Long userId;
     @Column(name = "instagram_permalink")
     private String permalink;
 
     @Builder
-    public InstagramMediaInfo(String userId, String id, String permalink) {
+    public InstagramMediaInfo(Long userId, String id, String permalink) {
         this.userId = userId;
         this.id = id;
         this.permalink = permalink;

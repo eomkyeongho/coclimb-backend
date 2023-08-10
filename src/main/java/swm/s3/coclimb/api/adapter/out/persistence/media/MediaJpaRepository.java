@@ -11,7 +11,7 @@ public interface MediaJpaRepository extends JpaRepository<Media, Long> {
     @Query(value = "SELECT * FROM medias WHERE media_type = 'VIDEO'", nativeQuery = true)
     List<Media> findAllVideos();
 
-    Optional<Media> findByUserId(Long UserId);
+    List<Media> findByUserId(Long UserId);
 
     Optional<Media> findByInstagramMediaInfoId(String instagramMediaId);
 }

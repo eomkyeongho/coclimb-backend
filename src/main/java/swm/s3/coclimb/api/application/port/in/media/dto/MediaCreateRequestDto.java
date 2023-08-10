@@ -15,11 +15,11 @@ public class MediaCreateRequestDto {
     String thumbnailUrl;
 
     String instagramMediaId;
-    String instagramUserId;
+    Long instagramUserId;
     String instagramPermalink;
 
     @Builder
-    public MediaCreateRequestDto(Long userId, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId, String platform, String instagramPermalink, String username) {
+    public MediaCreateRequestDto(Long userId, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, Long instagramUserId, String platform, String instagramPermalink, String username) {
         this.userId = userId;
         this.username = username;
         this.mediaUrl = mediaUrl;
