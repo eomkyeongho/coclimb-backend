@@ -9,4 +9,6 @@ public interface MediaQuery {
     List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken);
     List<MediaInfoDto> findAll();
     List<MediaInfoDto> findAllVideos();
+
+    List<MediaInfoDto> findMyMedias(Long userId);
 }

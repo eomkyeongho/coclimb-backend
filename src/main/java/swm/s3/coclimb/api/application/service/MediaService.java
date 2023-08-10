@@ -65,4 +65,11 @@ public class MediaService implements MediaQuery, MediaCommand {
     private boolean isInstagramMediaIdDuplicated(String instagramMediaId) {
         return mediaLoadPort.findByInstagramMediaId(instagramMediaId).isPresent();
     }
+
+    @Override
+    public List<MediaInfoDto> findMyMedias(Long userId) {
+        return mediaLoadPort.findMyMedias(userId).stream()
+                .map(MediaInfoDto::of)
+                .toList();
+    }
 }
