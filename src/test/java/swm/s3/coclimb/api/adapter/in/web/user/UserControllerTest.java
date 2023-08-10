@@ -3,6 +3,7 @@ package swm.s3.coclimb.api.adapter.in.web.user;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.ControllerTestSupport;
+import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import static org.mockito.BDDMockito.given;
@@ -20,6 +21,7 @@ class UserControllerTest extends ControllerTestSupport {
         given(jwtManager.getSubject(accessToken)).willReturn("1");
         given(userLoadPort.getById(1L)).willReturn(User.builder()
                 .name("username")
+                .instagramUserInfo(InstagramUserInfo.builder().build())
                 .build());
         // when, then
         mockMvc.perform(get("/users/me")
@@ -27,5 +29,4 @@ class UserControllerTest extends ControllerTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("username"));
     }
-
 }
