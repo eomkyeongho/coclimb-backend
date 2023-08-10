@@ -19,6 +19,7 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> getMyInfo(@LoginUser User user) {
         return ResponseEntity.ok(UserInfoResponse.builder()
                 .username(user.getName())
+                .instagramUsername(user.getInstagramUserInfo().getName())
                 .build());
     }
 }
