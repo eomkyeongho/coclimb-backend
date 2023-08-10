@@ -44,7 +44,7 @@ public class MediaCreateRequest {
                 .thumbnailUrl(thumbnailUrl)
                 .platform(platform)
                 .instagramMediaId(instagramMediaId)
-                .instagramUserId(user.getInstagramUserInfo().getId().toString())
+                .instagramUserId(user.getInstagramUserInfo().getId())
                 .instagramPermalink(instagramPermalink)
                 .build();
     }
