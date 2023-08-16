@@ -31,8 +31,11 @@ public class Media extends BaseTimeEntity {
     @Embedded
     private InstagramMediaInfo instagramMediaInfo;
 
+    @Embedded
+    private ProblemInfo problemInfo;
+
     @Builder
-    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username) {
+    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username, ProblemInfo problemInfo) {
         this.userId = userId;
         this.mediaType = mediaType;
         this.platform = platform;
@@ -40,5 +43,6 @@ public class Media extends BaseTimeEntity {
         this.thumbnailUrl = thumbnailUrl;
         this.instagramMediaInfo = instagramMediaInfo;
         this.username = username;
+        this.problemInfo = problemInfo;
     }
 }
