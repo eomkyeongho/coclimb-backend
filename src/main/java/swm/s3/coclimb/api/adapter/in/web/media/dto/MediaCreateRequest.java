@@ -21,18 +21,30 @@ public class MediaCreateRequest {
     String mediaType;
     String thumbnailUrl;
 
-    // for instagram
+    // instagram info
     String instagramMediaId;
     String instagramPermalink;
 
+    // problem info
+    String gymName;
+    String perceivedDifficulty;
+    String problemColor;
+    String problemType;
+    Boolean isClear;
+
     @Builder
-    public MediaCreateRequest(String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramPermalink) {
+    public MediaCreateRequest(String platform, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramPermalink, String gymName, String perceivedDifficulty, String problemColor, String problemType, Boolean isClear) {
         this.platform = platform;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
         this.instagramMediaId = instagramMediaId;
         this.instagramPermalink = instagramPermalink;
+        this.gymName = gymName;
+        this.perceivedDifficulty = perceivedDifficulty;
+        this.problemColor = problemColor;
+        this.problemType = problemType;
+        this.isClear = isClear;
     }
 
     public MediaCreateRequestDto toServiceDto(User user) {
@@ -46,6 +58,11 @@ public class MediaCreateRequest {
                 .instagramMediaId(instagramMediaId)
                 .instagramUserId(user.getInstagramUserInfo().getId())
                 .instagramPermalink(instagramPermalink)
+                .gymName(gymName)
+                .perceivedDifficulty(perceivedDifficulty)
+                .problemColor(problemColor)
+                .problemType(problemType)
+                .isClear(isClear)
                 .build();
     }
 }
