@@ -14,6 +14,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        create_empty_composites_enabled: true
 logging:
   level:
     swm.s3.coclimb: debug
