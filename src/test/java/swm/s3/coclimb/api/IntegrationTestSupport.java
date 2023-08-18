@@ -9,9 +9,12 @@ import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.media.MediaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserRepository;
 import swm.s3.coclimb.api.application.service.GymService;
+import swm.s3.coclimb.api.application.service.MediaService;
 import swm.s3.coclimb.api.application.service.UserService;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
@@ -29,6 +32,11 @@ public abstract class IntegrationTestSupport {
     @Autowired protected GymService gymService;
     @Autowired protected GymJpaRepository gymJpaRepository;
     @Autowired protected GymRepository gymRepository;
+
+    // Media
+    @Autowired protected MediaService mediaService;
+    @Autowired protected MediaJpaRepository mediaJpaRepository;
+    @Autowired protected MediaRepository mediaRepository;
 
     // Config
     @Autowired protected AppConfig appConfig;
