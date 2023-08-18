@@ -9,6 +9,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        create_empty_composites_enabled: true
+        create_empty_composites:
+            enabled: true
 #logging.level:
 #  org.hibernate.SQL: debug
