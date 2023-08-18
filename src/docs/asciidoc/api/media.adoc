@@ -1,4 +1,12 @@
 [[media-page]]
+=== 신규 미디어 생성
+==== HTTP Request
+include::{snippets}/media-create/http-request.adoc[]
+include::{snippets}/media-create/request-headers.adoc[]
+include::{snippets}/media-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/media-create/http-response.adoc[]
+---
 === 미디어 페이지 조회
 ==== HTTP Request
 include::{snippets}/media-page/http-request.adoc[]
@@ -8,9 +16,9 @@ include::{snippets}/media-page/response-fields.adoc[]
 ---
 === 나의 미디어 페이지 조회
 ==== HTTP Request
-include::{snippets}/my-media-page/http-request.adoc[]
-include::{snippets}/my-media-page/request-headers.adoc[]
+include::{snippets}/media-my/http-request.adoc[]
+include::{snippets}/media-my/request-headers.adoc[]
 ==== HTTP Response
-include::{snippets}/my-media-page/http-response.adoc[]
-include::{snippets}/my-media-page/response-fields.adoc[]
+include::{snippets}/media-my/http-response.adoc[]
+include::{snippets}/media-my/response-fields.adoc[]
 ---
