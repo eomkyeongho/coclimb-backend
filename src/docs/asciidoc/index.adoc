@@ -31,3 +31,7 @@ include::api/user.adoc[]
 [[Login-API]]
 == Login API
 include::api/login.adoc[]
+
+[[Media-API]]
+== Media API
+include::api/media.adoc[]

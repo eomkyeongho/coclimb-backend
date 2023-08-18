@@ -1,25 +1,19 @@
 package swm.s3.coclimb.api.application.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
-import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
-import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
-import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
-import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,22 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 class MediaServiceTest extends IntegrationTestSupport {
-    MediaService mediaService;
-
-    @Mock
-    InstagramRestApiManager instagramRestApiManager;
-
-    @Autowired
-    MediaUpdatePort mediaUpdatePort;
-    @Autowired
-    MediaLoadPort mediaLoadPort;
-    @Autowired
-    MediaJpaRepository mediaJpaRepository;
-
-    @BeforeEach
-    void setUp() {
-        mediaService = new MediaService(instagramRestApiManager, mediaLoadPort, mediaUpdatePort);
-    }
 
     @AfterEach
     void tearDown() {
@@ -52,7 +30,7 @@ class MediaServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("인스타그램 미디어 타입 중 VIDEO만 필터링하여 반환한다.")
-    void getMyInstagramVideos() throws JsonProcessingException {
+    void getMyInstagramVideos() {
         //given
         given(instagramRestApiManager.getMyMedias(any(String.class))).willReturn(List.of(
                 new TestInstagramMediaResponseDto("1", "VIDEO"),
@@ -68,38 +46,6 @@ class MediaServiceTest extends IntegrationTestSupport {
     }
 
     @Test
-    @DisplayName("모든 타입의 미디어를 반환한다.")
-    void findAllType() {
-        //given
-        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink1").build()).build());
-        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink2").build()).build());
-
-        //when
-        List<MediaInfoDto> sut = mediaService.findAll();
-
-        //then
-        assertThat(sut).hasSize(2)
-                .extracting("mediaType", "instagramPermalink")
-                .containsExactly(tuple("VIDEO", "permalink1"), tuple("IMAGE", "permalink2"));
-    }
-
-    @Test
-    @DisplayName("비디오 타입의 미디어를 반환한다.")
-    void findAllVideos() {
-        //given
-        mediaJpaRepository.save(Media.builder().mediaType("VIDEO").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink1").build()).build());
-        mediaJpaRepository.save(Media.builder().mediaType("IMAGE").instagramMediaInfo(InstagramMediaInfo.builder().permalink("permalink2").build()).build());
-
-        //when
-        List<MediaInfoDto> sut = mediaService.findAllVideos();
-
-        //then
-        assertThat(sut).hasSize(1)
-                .extracting("mediaType", "instagramPermalink")
-                .containsExactly(tuple("VIDEO", "permalink1"));
-    }
-
-    @Test
     @DisplayName("미디어를 저장할 수 있다.")
     void save() {
         //given
@@ -107,6 +53,8 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         MediaCreateRequestDto mediaCreateRequestDto = MediaCreateRequestDto.builder()
                 .userId(userId)
+                .instagramPermalink("instagramPermalink")
+                .problemColor("problemColor")
                 .build();
 
         //when
@@ -115,6 +63,8 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         //then
         assertThat(sut.getUserId()).isEqualTo(userId);
+        assertThat(sut.getInstagramMediaInfo().getPermalink()).isEqualTo("instagramPermalink");
+        assertThat(sut.getProblemInfo().getColor()).isEqualTo("problemColor");
     }
 
     @Test
@@ -139,20 +89,73 @@ class MediaServiceTest extends IntegrationTestSupport {
     }
 
     @Test
-    @DisplayName("본인 미디어를 조회할 수 있다.")
-    void retrieveMyMedias() {
+    @DisplayName("전체 미디어를 페이징 조회할 수 있다.")
+    void getPagedMedias() {
         //given
-        mediaJpaRepository.save(Media.builder().userId(1L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
-        mediaJpaRepository.save(Media.builder().userId(1L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
-        mediaJpaRepository.save(Media.builder().userId(2L).instagramMediaInfo(InstagramMediaInfo.builder().id("mediaId").build()).build());
+        mediaJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Media.builder()
+                        .instagramMediaInfo(InstagramMediaInfo.builder()
+                                .id(String.valueOf(i))
+                                .build())
+                        .build())
+                .toList());
+
+
+        MediaPageRequestDto mediaPageRequestDto0 = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+        MediaPageRequestDto mediaPageRequestDto1 = MediaPageRequestDto.builder()
+                .page(1)
+                .size(5)
+                .build();
 
         //when
-        List<MediaInfoDto> sut1 = mediaService.findMyMedias(1L);
-        List<MediaInfoDto> sut2 = mediaService.findMyMedias(2L);
+        Page<Media> sut0 = mediaService.getPagedMedias(mediaPageRequestDto0);
+        Page<Media> sut1 = mediaService.getPagedMedias(mediaPageRequestDto1);
 
         //then
-        assertThat(sut1).hasSize(2);
-        assertThat(sut2).hasSize(1);
+        assertThat(sut0.getTotalElements()).isEqualTo(10);
+        assertThat(sut0.getTotalPages()).isEqualTo(2);
+        assertThat(sut0.getContent()).hasSize(5)
+                .extracting("instagramMediaInfo.id")
+                .containsExactly("0", "1", "2", "3", "4");
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("instagramMediaInfo.id")
+                .containsExactly("5", "6", "7", "8", "9");
+    }
+
+    @Test
+    @DisplayName("UserId로 미디어를 페이징 조회할 수 있다.")
+    void getPagedMediasByUserId() {
+        //given
+        mediaJpaRepository.saveAll(IntStream.range(0,5).mapToObj(i -> Media.builder()
+                .userId(1L)
+                .build()).toList());
+        mediaJpaRepository.saveAll(IntStream.range(0,5).mapToObj(i -> Media.builder()
+                .userId(2L)
+                .build()).toList());
+
+        MediaPageRequestDto mediaPageRequestDto = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+
+        //when
+        Page<Media> sut1 = mediaService.getPagedMediasByUserId(1L, mediaPageRequestDto);
+        Page<Media> sut2 = mediaService.getPagedMediasByUserId(2L, mediaPageRequestDto);
+
+        //then
+        assertThat(sut1.getTotalElements()).isEqualTo(5);
+        assertThat(sut1.getTotalPages()).isEqualTo(1);
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("userId")
+                .containsOnly(1L);
+        assertThat(sut2.getTotalElements()).isEqualTo(5);
+        assertThat(sut2.getTotalPages()).isEqualTo(1);
+        assertThat(sut2.getContent()).hasSize(5)
+                .extracting("userId")
+                .containsOnly(2L);
     }
 
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
