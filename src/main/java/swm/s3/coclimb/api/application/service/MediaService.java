@@ -1,6 +1,8 @@
 package swm.s3.coclimb.api.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
@@ -8,10 +10,12 @@ import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
+import swm.s3.coclimb.domain.media.Media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,5 +75,23 @@ public class MediaService implements MediaQuery, MediaCommand {
         return mediaLoadPort.findMyMedias(userId).stream()
                 .map(MediaInfoDto::of)
                 .toList();
+    }
+
+    @Override
+    public Page<Media> getPagedMedias(MediaPageRequestDto requestDto) {
+        PageRequest pageRequest = PageRequest.of(
+                requestDto.getPage(),
+                requestDto.getSize());
+
+        return mediaLoadPort.findAllPaged(pageRequest);
+    }
+
+    @Override
+    public Page<Media> getPagedMediasByUserId(Long userId, MediaPageRequestDto requestDto) {
+        PageRequest pageRequest = PageRequest.of(
+                requestDto.getPage(),
+                requestDto.getSize());
+
+        return mediaLoadPort.findPagedByUserId(userId, pageRequest);
     }
 }
