@@ -13,10 +13,13 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.domain.gym.Location;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -324,5 +327,30 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(jsonPath("$.fields").isMap())
                 .andExpect(jsonPath("$.fields.page").value(FieldErrorType.MIN(0)));
         then(gymQuery).shouldHaveNoInteractions();
+    }
+
+    @Test
+    @DisplayName("위치 거리 기반으로 가까운 암장을 조회할 수 있다.")
+    void getNearbyGyms() throws Exception {
+        // given
+        // will return list of GymNearbyResponseDto
+        given(gymQuery.getNearbyGyms(any(float.class), any(float.class), any(float.class))).willReturn(IntStream.range(0, 5)
+                .mapToObj(i -> GymNearbyResponseDto.builder()
+                        .name("암장" + i)
+                        .location(Location.of((float) i, (float) i))
+                        .distance((float) i)
+                        .build())
+                .collect(Collectors.toList()));
+
+        //when
+        //then
+        mockMvc.perform(get("/gyms/nearby")
+                        .param("latitude", String.valueOf(0))
+                        .param("longitude", String.valueOf(0))
+                        .param("distance", String.valueOf(5)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(5));
     }
 }
