@@ -8,6 +8,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.media.MediaController;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.domain.media.Media;
@@ -17,15 +18,17 @@ import swm.s3.coclimb.domain.user.User;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,28 +46,82 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         userJpaRepository.deleteAll();
     }
 
-//    @Test
-//    @DisplayName("미디어를 등록할 수 있다.")
-//    void createMedia() throws Exception {
-//        //given
-//        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
-//                .willReturn(User.builder().instagramUserInfo(InstagramUserInfo.builder().build()).build());
-//        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
-//        willDoNothing().given(mediaCommand).createMedia(any());
-//
-//        MediaCreateRequest request = MediaCreateRequest.builder()
-//                .mediaType("VIDEO")
-//                .mediaUrl("mediaUrl")
-//                .platform("platform")
-//                .build();
-//
-//        //when
-//        //then
-//        mockMvc.perform(post("/medias")
-//                        .contentType(APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isCreated());
-//    }
+    @Test
+    @DisplayName("미디어를 등록할 수 있다.")
+    void createMedia() throws Exception {
+        //given
+        MediaCreateRequest request = MediaCreateRequest.builder()
+                .platform("instagram")
+                .mediaType("VIDEO")
+                .mediaUrl("mediaUrl")
+                .thumbnailUrl("thumbnailUrl")
+                .instagramMediaId("instagramMediaId")
+                .instagramPermalink("instagramPermalink")
+                .gymName("gymName")
+                .problemColor("color")
+                .problemType("problemType")
+                .perceivedDifficulty("perceivedDifficulty")
+                .isClear(true)
+                .build();
+        userJpaRepository.save(User.builder().build());
+        Long userId = userJpaRepository.findAll().get(0).getId();
+
+        //when
+        ResultActions result = mockMvc.perform(post("/medias")
+                .header("Authorization", jwtManager.issueToken(String.valueOf(userId)))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+        Media media = mediaJpaRepository.findByUserId(userId).get(0);
+
+        //then
+        result.andExpect(status().isCreated());
+        assertThat(media.getProblemInfo().getColor()).isEqualTo("color");
+
+        //docs
+        result.andDo(document("media-create",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName("Authorization").description("JWT 인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("platform")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 플랫폼 (ex. instagram, original)"),
+                        fieldWithPath("mediaType")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 타입"),
+                        fieldWithPath("mediaUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 URL"),
+                        fieldWithPath("thumbnailUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 썸네일 URL"),
+                        fieldWithPath("instagramMediaId")
+                                .type(JsonFieldType.STRING)
+                                .description("인스타그램 미디어 ID"),
+                        fieldWithPath("instagramPermalink")
+                                .type(JsonFieldType.STRING)
+                                .description("인스타그램 미디어 URL"),
+                        fieldWithPath("gymName")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 내 암장명"),
+                        fieldWithPath("problemColor")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 색상"),
+                        fieldWithPath("problemType")
+                                .type(JsonFieldType.STRING)
+                                .optional()
+                                .description("문제 타입"),
+                        fieldWithPath("perceivedDifficulty")
+                                .type(JsonFieldType.STRING)
+                                .optional()
+                                .description("체감 난이도"),
+                        fieldWithPath("isClear")
+                                .type(JsonFieldType.BOOLEAN)
+                                .description("문제 클리어 여부")
+                )));
+    }
 
     @Test
     @DisplayName("전체 미디어를 페이징 조회할 수 있다.")
@@ -169,7 +226,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.totalPage").value(2));
 
         //docs
-        result.andDo(document("my-media-page",
+        result.andDo(document("media-my",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
