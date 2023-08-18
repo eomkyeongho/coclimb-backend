@@ -1,6 +1,6 @@
 package swm.s3.coclimb.api.docs;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,10 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     @Autowired
     UserJpaRepository userJpaRepository;
 
-    @BeforeEach
-    void setUp() {
-        mediaJpaRepository.deleteAll();
-        userJpaRepository.deleteAll();
+    @AfterEach
+    void tearDown() {
+        mediaJpaRepository.deleteAllInBatch();
+        userJpaRepository.deleteAllInBatch();
     }
 
     @Test

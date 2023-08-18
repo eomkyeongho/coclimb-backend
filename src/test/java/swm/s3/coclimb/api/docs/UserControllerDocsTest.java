@@ -1,5 +1,6 @@
 package swm.s3.coclimb.api.docs;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -16,6 +17,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerDocsTest extends RestDocsTestSupport {
+
+    @AfterEach
+    void tearDown() {
+        userJpaRepository.deleteAllInBatch();
+    }
 
     @Test
     @DisplayName("엑세스 토큰으로 현재 로그인 유저의 정보를 조회하는 API")
