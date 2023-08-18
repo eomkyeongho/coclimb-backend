@@ -1,5 +1,6 @@
 package swm.s3.coclimb.api.docs;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -22,6 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class LoginControllerDocsTest extends RestDocsTestSupport {
+
+    @AfterEach
+    void tearDown() {
+        userJpaRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("/login/instagram 으로 접속하면 인스타그램 로그인 페이지로 리다이렉트 하는 API")
