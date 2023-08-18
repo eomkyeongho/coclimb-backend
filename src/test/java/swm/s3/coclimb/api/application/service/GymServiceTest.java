@@ -198,4 +198,30 @@ class GymServiceTest extends IntegrationTestSupport {
                 .containsExactly("암장5", "암장6", "암장7", "암장8", "암장9");
     }
 
+
+    // 37.5454, 126.9882
+    // 37.5567, 126.9709
+    // 약 1.976km 지점 예시
+    @Test
+    @DisplayName("위치와 거리 기반으로 가까운 암장을 조회할 수 있다.")
+    void getNearbyGyms() {
+        // given
+        gymJpaRepository.save(Gym.builder()
+                .name("암장1")
+                .location(Location.of(37.5454f, 126.9882f))
+                .build());
+
+        float latitude = 37.5567f;
+        float longitude = 126.9709f;
+
+        // when
+        List<GymNearbyResponseDto> sut1 = gymService.getNearbyGyms(latitude, longitude, 2.0f);
+        List<GymNearbyResponseDto> sut2 = gymService.getNearbyGyms(latitude, longitude, 1.0f);
+
+        // then
+        assertThat(sut1).hasSize(1)
+                .extracting("name")
+                .containsExactly("암장1");
+        assertThat(sut2).isEmpty();
+    }
 }
