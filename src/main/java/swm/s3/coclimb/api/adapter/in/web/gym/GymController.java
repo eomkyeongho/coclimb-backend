@@ -1,6 +1,8 @@
 package swm.s3.coclimb.api.adapter.in.web.gym;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,11 +12,14 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
-import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.config.interceptor.Auth;
+import swm.s3.coclimb.domain.gym.Gym;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -88,5 +93,17 @@ public class GymController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GymPageResponse.of(pagedGyms));
+    }
+
+    @GetMapping("/gyms/nearby")
+    public ResponseEntity<GymNearbyResponse> getNearbyGyms(@RequestParam @Min(-90)  @Max(90) float latitude,
+                                                           @RequestParam @Min(-180) @Max(180) float longitude,
+                                                           @RequestParam @Min(0) float distance) {
+
+        List<GymNearbyResponseDto> nearbyGyms = gymQuery.getNearbyGyms(latitude, longitude, distance);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GymNearbyResponse.of(nearbyGyms));
     }
 }

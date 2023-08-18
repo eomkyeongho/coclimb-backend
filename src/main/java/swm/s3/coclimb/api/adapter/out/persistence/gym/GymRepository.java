@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymUpdatePort;
 import swm.s3.coclimb.domain.gym.Gym;
@@ -40,4 +41,8 @@ public class GymRepository implements GymUpdatePort, GymLoadPort {
     public Page<Gym> findPage(PageRequest pageRequest){
         return gymJpaRepository.findAll(pageRequest);}
 
+    @Override
+    public List<GymNearby> findNearby(float latitude, float longitude, float distance) {
+        return gymJpaRepository.findNearby(latitude, longitude, distance);
+    }
 }
