@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
@@ -76,5 +77,12 @@ public class GymService implements GymCommand, GymQuery {
         return gymLoadPort.findPage(pageRequest);
     }
 
+    @Override
+    public List<GymNearbyResponseDto> getNearbyGyms(float latitude, float longitude, float distance) {
+        List<GymNearby> gyms = gymLoadPort.findNearby(latitude, longitude, distance);
 
+        return gyms.stream()
+                .map(GymNearbyResponseDto::of)
+                .toList();
+    }
 }
