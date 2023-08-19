@@ -333,12 +333,12 @@ class GymControllerTest extends ControllerTestSupport{
     @DisplayName("위치 거리 기반으로 가까운 암장을 조회할 수 있다.")
     void getNearbyGyms() throws Exception {
         // given
-        // will return list of GymNearbyResponseDto
         given(gymQuery.getNearbyGyms(any(float.class), any(float.class), any(float.class))).willReturn(IntStream.range(0, 5)
                 .mapToObj(i -> GymNearbyResponseDto.builder()
                         .name("암장" + i)
                         .location(Location.of((float) i, (float) i))
                         .distance((float) i)
+                        .address("주소" + i)
                         .build())
                 .collect(Collectors.toList()));
 
