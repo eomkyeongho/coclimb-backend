@@ -5,4 +5,5 @@ public interface GymNearby {
     float getLatitude();
     float getLongitude();
     float getDistance();
+    String getAddress();
 }
