@@ -52,6 +52,16 @@ include::{snippets}/gym-page/http-request.adoc[]
 include::{snippets}/gym-page/http-response.adoc[]
 include::{snippets}/gym-page/response-fields.adoc[]
 
+[[gym-nearby]]
+=== 가까운 암장 조회
+==== HTTP Request
+include::{snippets}/gym-nearby/http-request.adoc[]
+include::{snippets}/gym-nearby/query-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/gym-nearby/http-response.adoc[]
+include::{snippets}/gym-nearby/response-fields.adoc[]
+
+
 
 
 

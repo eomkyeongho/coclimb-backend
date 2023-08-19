@@ -23,8 +23,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -278,5 +277,55 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 )
 
         ));
+    }
+
+    @Test
+    @DisplayName("경도, 위도, 거리를 기반으로 가까운 암장을 찾을 수 있다.")
+    void getNearbyGyms() throws Exception {
+        //given
+        gymJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Gym.builder()
+                        .name("암장" + i)
+                        .address("주소" + i)
+                        .location(Location.of((34f + (float)i/100f), 127f + (float)i/100f))
+                        .build())
+                .toList());
+
+        // when
+        // then
+        ResultActions result = mockMvc.perform(get("/gyms/nearby")
+                        .param("latitude", "34.005")
+                        .param("longitude", "127.005")
+                        .param("distance", "5.2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(5));
+
+        // docs
+        result.andDo(document("gym-nearby",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("latitude").description("위도"),
+                        parameterWithName("longitude").description("경도"),
+                        parameterWithName("distance").description("거리 (km)")
+                ),
+                responseFields(
+                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                                .description("가까운 암장들 (거리 정렬)"),
+                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                                .description("암장 이름"),
+                        fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
+                                .description("주소"),
+                        fieldWithPath("gyms[].location.latitude").type(JsonFieldType.NUMBER)
+                                .description("위도"),
+                        fieldWithPath("gyms[].location.longitude").type(JsonFieldType.NUMBER)
+                                .description("경도"),
+                        fieldWithPath("gyms[].distance").type(JsonFieldType.NUMBER)
+                                .description("거리 (km)"),
+                        fieldWithPath("count").type(JsonFieldType.NUMBER)
+                                .description("조회된 암장의 수")
+                )));
     }
 }
