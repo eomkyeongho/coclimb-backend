@@ -2,9 +2,11 @@ package swm.s3.coclimb.api.adapter.out.instagram;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
 import java.time.LocalDateTime;
@@ -14,6 +16,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 class InstagramRestApiManagerTest extends IntegrationTestSupport {
+
+    @MockBean
+    InstagramRestApi instagramRestApi;
+    @MockBean
+    ServerClock serverClock;
 
     @Test
     @DisplayName("새로운 인스타그램 토큰을 발급받는다.")

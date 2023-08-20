@@ -1,17 +1,11 @@
 package swm.s3.coclimb.api.application.service;
 
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.api.application.port.in.user.UserCommand;
-import swm.s3.coclimb.api.application.port.in.user.UserQuery;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
@@ -23,24 +17,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 
-@Transactional
 class LoginServiceTest extends IntegrationTestSupport {
 
-    LoginService loginService;
-
-    @Mock
+    @MockBean
     InstagramRestApiManager instagramRestApiManager;
-    @Autowired UserCommand userCommand;
-    @Autowired UserQuery userQuery;
-    @BeforeEach
-    void setUP(){
-        loginService = new LoginService(instagramRestApiManager, userCommand, userQuery);
-    }
 
-    @AfterEach
-    void tearDown() {
-        userJpaRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("인스타그램으로 첫 로그인 시 새로운 유저를 생성한 뒤 인스타그램 정보를 저장한다.")

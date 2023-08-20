@@ -3,7 +3,9 @@ package swm.s3.coclimb.security;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import swm.s3.coclimb.api.IntegrationTestSupport;
+import swm.s3.coclimb.config.ServerClock;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.time.LocalTime;
 import static org.mockito.BDDMockito.given;
 
 class JwtManagerTest extends IntegrationTestSupport {
+    @Mock
+    ServerClock serverClock;
 
     @Test
     @DisplayName("새로운 JWT 토큰을 발급한다.")

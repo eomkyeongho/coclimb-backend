@@ -8,7 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import swm.s3.coclimb.api.IntegrationTestSupport;
+import swm.s3.coclimb.config.ServerClock;
 
 import javax.crypto.SecretKey;
 import java.sql.Timestamp;
@@ -23,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 public class JwtLearningTest extends IntegrationTestSupport {
+    @Mock
+    ServerClock serverClock;
 
     @Test
     @DisplayName("jwt를 생성한다.")

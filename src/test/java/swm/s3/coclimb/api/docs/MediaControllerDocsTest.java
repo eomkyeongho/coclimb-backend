@@ -1,16 +1,11 @@
 package swm.s3.coclimb.api.docs;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
-import swm.s3.coclimb.api.adapter.in.web.media.MediaController;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
-import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
-import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.media.ProblemInfo;
 import swm.s3.coclimb.domain.user.User;
@@ -33,18 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MediaControllerDocsTest extends RestDocsTestSupport {
-    @Autowired
-    MediaController mediaController;
-    @Autowired
-    MediaJpaRepository mediaJpaRepository;
-    @Autowired
-    UserJpaRepository userJpaRepository;
-
-    @AfterEach
-    void tearDown() {
-        mediaJpaRepository.deleteAllInBatch();
-        userJpaRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("미디어를 등록할 수 있다.")

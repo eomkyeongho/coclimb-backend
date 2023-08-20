@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
+import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
+import swm.s3.coclimb.config.interceptor.AuthInterceptor;
 import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.media.ProblemInfo;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
@@ -34,6 +36,8 @@ class MediaControllerTest extends ControllerTestSupport {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(mediaController)
                 .setCustomArgumentResolvers(loginUserArgumentResolver)
+                .setControllerAdvice(ExceptionControllerAdvice.class)
+                .addInterceptors(new AuthInterceptor(jwtManager))
                 .build();
     }
 
@@ -92,11 +96,11 @@ class MediaControllerTest extends ControllerTestSupport {
     @DisplayName("내 미디어를 페이징 조회할 수 있다.")
     void getPagedMediasByUserId() throws Exception {
         //given
-        int pageSize = 5;
-
         given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(User.builder().build());
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+
+        int pageSize = 5;
 
         Page<Media> page = new PageImpl<>(IntStream.range(0, pageSize).mapToObj(i -> Media.builder()
                         .problemInfo(ProblemInfo.builder().gymName("암장" + String.valueOf(i)).build())

@@ -1,21 +1,26 @@
 package swm.s3.coclimb.api.adapter.in.web.gym;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymLikesResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
+import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
 import swm.s3.coclimb.api.exception.FieldErrorType;
+import swm.s3.coclimb.config.interceptor.AuthInterceptor;
 import swm.s3.coclimb.domain.gym.Location;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,13 +29,26 @@ import java.util.stream.IntStream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class GymControllerTest extends ControllerTestSupport{
+class GymControllerTest extends ControllerTestSupport {
+    @Autowired
+    private GymController gymController;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(gymController)
+                .setControllerAdvice(ExceptionControllerAdvice.class)
+                .addInterceptors(new AuthInterceptor(jwtManager))
+                .setCustomArgumentResolvers(loginUserArgumentResolver)
+                .build();
+    }
 
     @Test
     @DisplayName("신규 암장을 등록한다.")
@@ -352,5 +370,75 @@ class GymControllerTest extends ControllerTestSupport{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gyms").isArray())
                 .andExpect(jsonPath("$.count").value(5));
+    }
+
+    @Test
+    @DisplayName("암장을 찜할 수 있다.")
+    void likeGym() throws Exception {
+        // given
+        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(User.builder().build());
+        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        doNothing().when(gymCommand).likeGym(any());
+        GymLikeRequest request = GymLikeRequest.builder()
+                .gymId(1L)
+                .build();
+
+        // when
+        // then
+        mockMvc.perform(post("/gyms/likes").contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+        then(gymCommand).should(times(1)).likeGym(any());
+    }
+
+    @Test
+    @DisplayName("찜한 암장을 조회할 수 있다.")
+    void retrieveLikedGyms() throws Exception {
+        // given
+        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(User.builder().build());
+        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        given(gymQuery.getLikedGyms(any())).willReturn(IntStream.range(0, 5)
+                .mapToObj(i -> GymLikesResponseDto.builder()
+                        .id((long) i)
+                        .name("암장" + i)
+                        .build())
+                .collect(Collectors.toList()));
+
+        // when
+        // then
+        mockMvc.perform(get("/gyms/likes"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(5))
+                .andExpect(jsonPath("$.gyms[0].id").value(0))
+                .andExpect(jsonPath("$.gyms[0].name").value("암장0"))
+                .andExpect(jsonPath("$.gyms[1].id").value(1))
+                .andExpect(jsonPath("$.gyms[1].name").value("암장1"));
+    }
+
+    @Test
+    @DisplayName("암장 찜하기를 취소할 수 있다.")
+    void unlikeGym() throws Exception {
+        // given
+        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(User.builder().build());
+        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        doNothing().when(gymCommand).likeGym(any());
+        GymUnlikeRequest request = GymUnlikeRequest.builder()
+                .gymId(1L)
+                .build();
+
+        // when
+        // then
+        mockMvc.perform(delete("/gyms/likes")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        then(gymCommand).should(times(1)).unlikeGym(any());
     }
 }

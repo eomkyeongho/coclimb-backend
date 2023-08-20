@@ -1,10 +1,11 @@
 package swm.s3.coclimb.api.application.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
+import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
@@ -23,10 +24,8 @@ import static org.mockito.BDDMockito.given;
 
 class MediaServiceTest extends IntegrationTestSupport {
 
-    @AfterEach
-    void tearDown() {
-        mediaJpaRepository.deleteAllInBatch();
-    }
+    @MockBean
+    private InstagramRestApiManager instagramRestApiManager;
 
     @Test
     @DisplayName("인스타그램 미디어 타입 중 VIDEO만 필터링하여 반환한다.")

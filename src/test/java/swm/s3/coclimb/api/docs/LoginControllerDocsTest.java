@@ -1,13 +1,14 @@
 package swm.s3.coclimb.api.docs;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
+import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
@@ -24,10 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class LoginControllerDocsTest extends RestDocsTestSupport {
 
-    @AfterEach
-    void tearDown() {
-        userJpaRepository.deleteAll();
-    }
+    @MockBean
+    InstagramRestApiManager instagramRestApiManager;
 
     @Test
     @DisplayName("/login/instagram 으로 접속하면 인스타그램 로그인 페이지로 리다이렉트 하는 API")
