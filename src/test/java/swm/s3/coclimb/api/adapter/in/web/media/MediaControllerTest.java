@@ -8,11 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateProblemInfo;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
 import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
 import swm.s3.coclimb.config.interceptor.AuthInterceptor;
 import swm.s3.coclimb.domain.media.Media;
-import swm.s3.coclimb.domain.media.ProblemInfo;
+import swm.s3.coclimb.domain.media.MediaProblemInfo;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
@@ -54,6 +55,8 @@ class MediaControllerTest extends ControllerTestSupport {
                 .mediaType("VIDEO")
                 .mediaUrl("mediaUrl")
                 .platform("platform")
+                .thumbnailUrl("thumbnailUrl")
+                .problem(MediaCreateProblemInfo.builder().gymName("gym").build())
                 .build();
 
         //when
@@ -71,7 +74,7 @@ class MediaControllerTest extends ControllerTestSupport {
         int pageSize = 5;
 
         Page<Media> page = new PageImpl<>(IntStream.range(0, pageSize).mapToObj(i -> Media.builder()
-                .problemInfo(ProblemInfo.builder().gymName("암장" + String.valueOf(i)).build())
+                .mediaProblemInfo(MediaProblemInfo.builder().gymName("암장" + String.valueOf(i)).build())
                 .build())
                 .collect(Collectors.toList()));
 
@@ -103,7 +106,7 @@ class MediaControllerTest extends ControllerTestSupport {
         int pageSize = 5;
 
         Page<Media> page = new PageImpl<>(IntStream.range(0, pageSize).mapToObj(i -> Media.builder()
-                        .problemInfo(ProblemInfo.builder().gymName("암장" + String.valueOf(i)).build())
+                        .mediaProblemInfo(MediaProblemInfo.builder().gymName("암장" + String.valueOf(i)).build())
                         .build())
                 .collect(Collectors.toList()));
 
