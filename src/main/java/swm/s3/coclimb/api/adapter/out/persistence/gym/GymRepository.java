@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymUpdatePort;
+import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
@@ -44,5 +45,10 @@ public class GymRepository implements GymUpdatePort, GymLoadPort {
     @Override
     public List<GymNearby> findNearby(float latitude, float longitude, float distance) {
         return gymJpaRepository.findNearby(latitude, longitude, distance);
+    }
+
+    @Override
+    public Gym getById(Long id) {
+        return gymJpaRepository.findById(id).orElseThrow(GymNotFound::new);
     }
 }

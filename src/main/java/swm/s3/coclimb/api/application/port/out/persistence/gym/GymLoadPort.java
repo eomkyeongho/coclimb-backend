@@ -13,6 +13,8 @@ public interface GymLoadPort {
 
     Optional<Gym> findByName(String name);
 
+    Gym getById(Long id);
+
     List<Gym> findAll();
 
     Page<Gym> findPage(PageRequest pageRequest);

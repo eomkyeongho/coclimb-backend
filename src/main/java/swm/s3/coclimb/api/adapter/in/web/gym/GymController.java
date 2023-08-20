@@ -12,12 +12,15 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymLikesResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
+import swm.s3.coclimb.config.argumentresolver.LoginUser;
 import swm.s3.coclimb.config.interceptor.Auth;
 import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
 
@@ -105,5 +108,32 @@ public class GymController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GymNearbyResponse.of(nearbyGyms));
+    }
+
+    @PostMapping("/gyms/likes")
+    public ResponseEntity<Void> likeGym(@RequestBody @Valid GymLikeRequest request, @LoginUser User user) {
+        gymCommand.likeGym(request.toServiceDto(user));
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @GetMapping("/gyms/likes")
+    public ResponseEntity<GymLikesResponse> getLikedGyms(@LoginUser User user) {
+        List<GymLikesResponseDto> likedGyms = gymQuery.getLikedGyms(user.getId());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GymLikesResponse.of(likedGyms));
+    }
+
+    @DeleteMapping("/gyms/likes")
+    public ResponseEntity<Void> unlikeGym(@RequestBody @Valid GymUnlikeRequest request, @LoginUser User user) {
+        gymCommand.unlikeGym(request.toServiceDto(user.getId()));
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }
