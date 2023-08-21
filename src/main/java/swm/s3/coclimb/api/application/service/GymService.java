@@ -113,4 +113,13 @@ public class GymService implements GymCommand, GymQuery {
         GymLike gymLike = gymLikeLoadPort.getByUserIdAndGymId(request.getUserId(), request.getGymId());
         gymLike.remove();
     }
+
+    @Override
+    public List<GymSearchResponseDto> searchGyms(String keyword) {
+        List<Gym> gyms = gymLoadPort.searchByName(keyword);
+
+        return gyms.stream()
+                .map(GymSearchResponseDto::of)
+                .toList();
+    }
 }

@@ -51,4 +51,9 @@ public class GymRepository implements GymUpdatePort, GymLoadPort {
     public Gym getById(Long id) {
         return gymJpaRepository.findById(id).orElseThrow(GymNotFound::new);
     }
+
+    @Override
+    public List<Gym> searchByName(String keyword) {
+        return gymJpaRepository.findByNameLike(keyword);
+    }
 }
