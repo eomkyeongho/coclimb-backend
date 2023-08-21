@@ -36,9 +36,9 @@ public abstract class RestDocsTestSupport {
 
     @AfterEach
     void clearDB() {
-        gymLikeJpaRepository.deleteAll();
-        mediaJpaRepository.deleteAll();
-        gymJpaRepository.deleteAll();
-        userJpaRepository.deleteAll();
+        gymLikeJpaRepository.deleteAllInBatch();
+        mediaJpaRepository.deleteAllInBatch();
+        gymJpaRepository.deleteAllInBatch();
+        userJpaRepository.deleteAllInBatch();
     }
 }
