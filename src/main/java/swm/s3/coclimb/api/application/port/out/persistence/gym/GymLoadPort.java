@@ -2,6 +2,7 @@ package swm.s3.coclimb.api.application.port.out.persistence.gym;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
 import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
@@ -12,7 +13,11 @@ public interface GymLoadPort {
 
     Optional<Gym> findByName(String name);
 
+    Gym getById(Long id);
+
     List<Gym> findAll();
 
     Page<Gym> findPage(PageRequest pageRequest);
+
+    List<GymNearby> findNearby(float latitude, float longitude, float distance);
 }

@@ -1,9 +1,7 @@
 package swm.s3.coclimb.api.application.port.in.gym;
 
 import org.springframework.data.domain.Page;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;
@@ -14,4 +12,8 @@ public interface GymQuery {
     List<GymLocationResponseDto> getGymLocations();
 
     Page<Gym> getPagedGyms(GymPageRequestDto request);
+
+    List<GymNearbyResponseDto> getNearbyGyms(float latitude, float longitude, float distance);
+
+    List<GymLikesResponseDto> getLikedGyms(Long userId);
 }

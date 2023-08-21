@@ -10,7 +10,7 @@ spring:
       url: ${local.db.url}
       username: ${local.db.username}
       password: ${local.db.password}
-      driver-class-name: org.h2.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create
@@ -18,6 +18,8 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        create_empty_composites:
+            enabled: true
 logging:
   level:
     swm.s3.coclimb: debug

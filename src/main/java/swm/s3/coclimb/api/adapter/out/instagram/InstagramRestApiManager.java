@@ -6,6 +6,7 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramAuthPort;
+import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
@@ -14,17 +15,19 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class InstagramRestApiManager implements InstagramAuthPort {
+public class InstagramRestApiManager implements InstagramAuthPort, InstagramDataPort {
 
     private final InstagramRestApi instagramRestApi;
     private final ServerClock serverClock;
 
 
     @Override
-    public InstagramUserInfo getNewInstagramInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
+    public InstagramUserInfo getNewInstagramUserInfo(ShortLivedTokenResponse shortLivedTokenResponse) {
         LongLivedTokenResponse longLivedTokenResponse = instagramRestApi.getLongLivedToken(shortLivedTokenResponse.getToken());
+        String username = instagramRestApi.getMyUsername(longLivedTokenResponse.getToken());
         return InstagramUserInfo.builder()
                 .id(shortLivedTokenResponse.getUserId())
+                .name(username)
                 .accessToken(longLivedTokenResponse.getToken())
                 .tokenExpireTime(serverClock.getDateTime().plusSeconds(longLivedTokenResponse.getExpiresIn()))
                 .build();
@@ -54,9 +57,8 @@ public class InstagramRestApiManager implements InstagramAuthPort {
         return instagramRestApi.getLongLivedToken(shortLivedToken);
     }
 
-    // TODO 수정필요
+    @Override
     public List<InstagramMediaResponseDto> getMyMedias(String accessToken) {
         return instagramRestApi.getMyMedias(accessToken);
     }
-
 }

@@ -2,18 +2,22 @@ package swm.s3.coclimb.api.adapter.in.web.media;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.InstagramMyVideosResponse;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
-import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaInfosResponse;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaPageResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
-import swm.s3.coclimb.api.application.port.in.media.dto.MediaInfoDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
+import swm.s3.coclimb.api.exception.FieldErrorType;
+import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 import swm.s3.coclimb.config.argumentresolver.LoginUser;
+import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
@@ -34,7 +38,6 @@ public class MediaController {
                 .build();
     }
 
-
     @GetMapping("/medias/instagram/my-videos")
     public ResponseEntity<InstagramMyVideosResponse> getMyInstagramVideos(@LoginUser User user) {
         List<InstagramMediaResponseDto> myInstagramVideos = mediaQuery.getMyInstagramVideos(user.getInstagramUserInfo().getAccessToken());
@@ -42,20 +45,35 @@ public class MediaController {
     }
 
     @GetMapping("/medias")
-    public ResponseEntity<MediaInfosResponse> getAllMedias(@RequestParam(required = false) String mediaType) {
-        List<MediaInfoDto> mediaInfos;
-
-        switch (mediaType == null ? "ALL" : mediaType.toUpperCase()) {
-            case "VIDEO":
-                mediaInfos = mediaQuery.findAllVideos();
-                break;
-
-            case "ALL":
-            default:
-                mediaInfos = mediaQuery.findAll();
-                break;
+    public ResponseEntity<MediaPageResponse> getAllMedias(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
+        if (page < 0) {
+            throw ValidationFail.onRequest()
+                    .addField("page", FieldErrorType.MIN(0));
         }
 
-        return ResponseEntity.ok(MediaInfosResponse.of(mediaInfos));
+        Page<Media> pagedMedias = mediaQuery.getPagedMedias(MediaPageRequestDto.builder()
+                .page(page)
+                .size(size)
+                .build());
+
+        return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
+    }
+
+    @GetMapping("/medias/me")
+    public ResponseEntity<MediaPageResponse> getMyMedias(@LoginUser User user,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+        if (page < 0) {
+            throw ValidationFail.onRequest()
+                    .addField("page", FieldErrorType.MIN(0));
+        }
+
+        Page<Media> pagedMedias = mediaQuery.getPagedMediasByUserId(user.getId(), MediaPageRequestDto.builder()
+                .page(page)
+                .size(size)
+                .build());
+
+        return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
     }
 }

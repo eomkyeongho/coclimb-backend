@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
+import swm.s3.coclimb.domain.media.MediaProblemInfo;
 
 @Getter
 public class MediaCreateRequestDto {
@@ -14,21 +15,19 @@ public class MediaCreateRequestDto {
     String mediaType;
     String thumbnailUrl;
 
-    String instagramMediaId;
-    String instagramUserId;
-    String instagramPermalink;
+    InstagramMediaInfo instagramMediaInfo;
+    MediaProblemInfo mediaProblemInfo;
 
     @Builder
-    public MediaCreateRequestDto(Long userId, String mediaUrl, String mediaType, String thumbnailUrl, String instagramMediaId, String instagramUserId, String platform, String instagramPermalink, String username) {
+    public MediaCreateRequestDto(Long userId, String username, String platform, String mediaUrl, String mediaType, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, MediaProblemInfo mediaProblemInfo) {
         this.userId = userId;
         this.username = username;
+        this.platform = platform;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
-        this.platform = platform;
-        this.instagramMediaId = instagramMediaId;
-        this.instagramUserId = instagramUserId;
-        this.instagramPermalink = instagramPermalink;
+        this.instagramMediaInfo = instagramMediaInfo;
+        this.mediaProblemInfo = mediaProblemInfo;
     }
 
     public Media toEntity() {
@@ -39,11 +38,8 @@ public class MediaCreateRequestDto {
                 .mediaUrl(mediaUrl)
                 .mediaType(mediaType)
                 .thumbnailUrl(thumbnailUrl)
-                .instagramMediaInfo(InstagramMediaInfo.builder()
-                        .id(instagramMediaId)
-                        .userId(instagramUserId)
-                        .permalink(instagramPermalink)
-                        .build())
+                .instagramMediaInfo(instagramMediaInfo)
+                .mediaProblemInfo(mediaProblemInfo)
                 .build();
     }
 }

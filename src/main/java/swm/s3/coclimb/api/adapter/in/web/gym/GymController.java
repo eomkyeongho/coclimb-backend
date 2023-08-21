@@ -1,6 +1,8 @@
 package swm.s3.coclimb.api.adapter.in.web.gym;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -10,11 +12,17 @@ import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymLikesResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
-import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.config.argumentresolver.LoginUser;
 import swm.s3.coclimb.config.interceptor.Auth;
+import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.user.User;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -88,5 +96,44 @@ public class GymController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(GymPageResponse.of(pagedGyms));
+    }
+
+    @GetMapping("/gyms/nearby")
+    public ResponseEntity<GymNearbyResponse> getNearbyGyms(@RequestParam @Min(-90)  @Max(90) float latitude,
+                                                           @RequestParam @Min(-180) @Max(180) float longitude,
+                                                           @RequestParam @Min(0) @Max(15) float distance) {
+
+        List<GymNearbyResponseDto> nearbyGyms = gymQuery.getNearbyGyms(latitude, longitude, distance);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GymNearbyResponse.of(nearbyGyms));
+    }
+
+    @PostMapping("/gyms/likes")
+    public ResponseEntity<Void> likeGym(@RequestBody @Valid GymLikeRequest request, @LoginUser User user) {
+        gymCommand.likeGym(request.toServiceDto(user));
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @GetMapping("/gyms/likes")
+    public ResponseEntity<GymLikesResponse> getLikedGyms(@LoginUser User user) {
+        List<GymLikesResponseDto> likedGyms = gymQuery.getLikedGyms(user.getId());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GymLikesResponse.of(likedGyms));
+    }
+
+    @DeleteMapping("/gyms/likes")
+    public ResponseEntity<Void> unlikeGym(@RequestBody @Valid GymUnlikeRequest request, @LoginUser User user) {
+        gymCommand.unlikeGym(request.toServiceDto(user.getId()));
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

@@ -1,18 +1,17 @@
 package swm.s3.coclimb.api.application.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.domain.gym.Location;
+import swm.s3.coclimb.domain.gymlike.GymLike;
+import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,14 +20,6 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.*;
 
 class GymServiceTest extends IntegrationTestSupport {
-
-    @Autowired GymJpaRepository gymJpaRepository;
-    @Autowired GymService gymService;
-    
-    @AfterEach
-    void tearDown() {
-        gymJpaRepository.deleteAllInBatch();
-    }
     
     @Test
     @DisplayName("신규 암장을 등록한다.")
@@ -198,4 +189,102 @@ class GymServiceTest extends IntegrationTestSupport {
                 .containsExactly("암장5", "암장6", "암장7", "암장8", "암장9");
     }
 
+
+    // 37.5454, 126.9882
+    // 37.5567, 126.9709
+    // 약 1.976km 지점 예시
+    @Test
+    @DisplayName("위치와 거리 기반으로 가까운 암장을 조회할 수 있다.")
+    void getNearbyGyms() {
+        // given
+        gymJpaRepository.save(Gym.builder()
+                .name("암장1")
+                .location(Location.of(37.5454f, 126.9882f))
+                .build());
+
+        float latitude = 37.5567f;
+        float longitude = 126.9709f;
+
+        // when
+        List<GymNearbyResponseDto> sut1 = gymService.getNearbyGyms(latitude, longitude, 2.0f);
+        List<GymNearbyResponseDto> sut2 = gymService.getNearbyGyms(latitude, longitude, 1.0f);
+
+        // then
+        assertThat(sut1).hasSize(1)
+                .extracting("name")
+                .containsExactly("암장1");
+        assertThat(sut2).isEmpty();
+    }
+
+    @Test
+    @DisplayName("암장을 찜할 수 있다.")
+    void likeGym() {
+        // given
+        User user = User.builder().build();
+        Gym gym = Gym.builder().build();
+        userJpaRepository.save(user);
+        gymJpaRepository.save(gym);
+        Long userId = userJpaRepository.findAll().get(0).getId();
+        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        GymLikeRequestDto request = GymLikeRequestDto.builder()
+                .user(user)
+                .gymId(gymId)
+                .build();
+
+        // when
+        gymService.likeGym(request);
+        GymLike sut = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+
+        // then
+        assertThat(sut).isNotNull();
+        assertThat(sut.getUser().getId()).isEqualTo(userId);
+        assertThat(sut.getGym().getId()).isEqualTo(gymId);
+    }
+
+    @Test
+    @DisplayName("찜한 암장 리스트를 조회할 수 있다.")
+    void getLikedGyms() {
+        // given
+        User user = User.builder().build();
+        Gym gym1 = Gym.builder().name("암장1").build();
+        Gym gym2 = Gym.builder().name("암장2").build();
+        userJpaRepository.save(user);
+        gymJpaRepository.save(gym1);
+        gymJpaRepository.save(gym2);
+        Long userId = userJpaRepository.findAll().get(0).getId();
+
+        gymLikeJpaRepository.saveAll(List.of(GymLike.builder().user(user).gym(gym1).build(),
+                GymLike.builder().user(user).gym(gym2).build()));
+
+        // when
+        List<GymLikesResponseDto> sut = gymService.getLikedGyms(userId);
+
+        // then
+        assertThat(sut).hasSize(2)
+                .extracting("name")
+                .containsExactly("암장1", "암장2");
+    }
+
+    @Test
+    @DisplayName("암장 찜하기를 취소할 수 있다.")
+    void unlikeGym() {
+        // given
+        User user = User.builder().build();
+        Gym gym = Gym.builder().build();
+        userJpaRepository.save(user);
+        gymJpaRepository.save(gym);
+        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym).build());
+
+        Long userId = userJpaRepository.findAll().get(0).getId();
+        Long gymId = gymJpaRepository.findAll().get(0).getId();
+
+        // when
+        gymService.unlikeGym(GymUnlikeRequestDto.builder()
+                .userId(userId)
+                .gymId(gymId)
+                .build());
+
+        // then
+        assertThat(gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId)).isEmpty();
+    }
 }

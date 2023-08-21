@@ -6,12 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import swm.s3.coclimb.domain.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="medias")
-public class Media {
+public class Media extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,8 +31,11 @@ public class Media {
     @Embedded
     private InstagramMediaInfo instagramMediaInfo;
 
+    @Embedded
+    private MediaProblemInfo mediaProblemInfo;
+
     @Builder
-    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username) {
+    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username, MediaProblemInfo mediaProblemInfo) {
         this.userId = userId;
         this.mediaType = mediaType;
         this.platform = platform;
@@ -39,5 +43,6 @@ public class Media {
         this.thumbnailUrl = thumbnailUrl;
         this.instagramMediaInfo = instagramMediaInfo;
         this.username = username;
+        this.mediaProblemInfo = mediaProblemInfo;
     }
 }
