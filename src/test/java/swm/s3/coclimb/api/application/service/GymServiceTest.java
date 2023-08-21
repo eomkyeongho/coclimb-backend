@@ -287,4 +287,33 @@ class GymServiceTest extends IntegrationTestSupport {
         // then
         assertThat(gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId)).isEmpty();
     }
+
+    @Test
+    @DisplayName("키워드를 포함하는 암장을 찾을 수 있다.")
+    void searchGym() {
+        // given
+        String keyword1 = "더클라임";
+        String keyword2 = "강남";
+        String keyword3 = "클라이밍";
+        gymJpaRepository.save(Gym.builder().name("더 클라임 신촌점").build());
+        gymJpaRepository.save(Gym.builder().name("더 클라임 강남점").build());
+        gymJpaRepository.save(Gym.builder().name("서울숲 클라이밍").build());
+        gymJpaRepository.save(Gym.builder().name("강남 클라이밍").build());
+
+        // when
+        List<GymSearchResponseDto> sut1 = gymService.searchGyms(keyword1);
+        List<GymSearchResponseDto> sut2 = gymService.searchGyms(keyword2);
+        List<GymSearchResponseDto> sut3 = gymService.searchGyms(keyword3);
+
+        // then
+        assertThat(sut1).hasSize(2)
+                .extracting("name")
+                .contains("더 클라임 신촌점", "더 클라임 강남점");
+        assertThat(sut2).hasSize(2)
+                .extracting("name")
+                .contains("더 클라임 강남점", "강남 클라이밍");
+        assertThat(sut3).hasSize(2)
+                .extracting("name")
+                .contains("강남 클라이밍", "서울숲 클라이밍");
+    }
 }
