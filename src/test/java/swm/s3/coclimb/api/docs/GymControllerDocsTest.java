@@ -285,7 +285,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("경도, 위도, 거리를 기반으로 가까운 암장을 찾을 수 있다.")
+    @DisplayName("경도, 위도, 거리를 기반으로 가까운 암장을 찾는 API")
     void getNearbyGyms() throws Exception {
         //given
         gymJpaRepository.saveAll(IntStream.range(0, 10)
@@ -337,7 +337,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("암장을 찜할 수 있다.")
+    @DisplayName("암장을 찜하는 API")
     void likeGym() throws Exception {
         // given
         User user = User.builder().build();
@@ -376,7 +376,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("암장 찜하기를 취소할 수 있다.")
+    @DisplayName("암장 찜하기를 취소하는 API")
     void unlikeGym() throws Exception {
         // given
         User user = User.builder().build();
@@ -416,7 +416,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("찜한 암장을 조회할 수 있다.")
+    @DisplayName("찜한 암장을 조회하는 API")
     void retrieveLikedGyms() throws Exception {
         // given
         User user = User.builder().build();
@@ -452,6 +452,44 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("찜한 암장들"),
                         fieldWithPath("gyms[].id").type(JsonFieldType.NUMBER)
                                 .description("암장 ID"),
+                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                                .description("암장 이름"),
+                        fieldWithPath("count").type(JsonFieldType.NUMBER)
+                                .description("조회된 암장의 수")
+                )));
+    }
+
+    @Test
+    @DisplayName("암장을 검색하는 API")
+    void searchGyms() throws Exception {
+        // given
+        gymJpaRepository.save(Gym.builder().name("더 클라이밍 강남점").build());
+        gymJpaRepository.save(Gym.builder().name("더 클라이밍 홍대점").build());
+        gymJpaRepository.save(Gym.builder().name("서울숲 클라이밍 본점").build());
+        gymJpaRepository.save(Gym.builder().name("서울숲 클라이밍 서초점").build());
+        gymJpaRepository.save(Gym.builder().name("클라이밍 파크 강남점").build());
+        gymJpaRepository.save(Gym.builder().name("클라이밍 파크 연남점").build());
+
+        // when
+        // then
+        ResultActions result = mockMvc.perform(get("/gyms/demo/search")
+                .param("keyword", "더클라이밍"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(2))
+                .andExpect(jsonPath("$.gyms[*].name").value(containsInAnyOrder("더 클라이밍 강남점", "더 클라이밍 홍대점")));
+
+        // docs
+        result.andDo(document("gym-demo-search",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("keyword").description("암장 검색어")
+                ),
+                responseFields(
+                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                                .description("검색된 암장들"),
                         fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
                         fieldWithPath("count").type(JsonFieldType.NUMBER)

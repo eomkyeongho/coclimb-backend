@@ -56,6 +56,7 @@ include::{snippets}/gym-page/response-fields.adoc[]
 === 가까운 암장 조회
 ==== HTTP Request
 include::{snippets}/gym-nearby/http-request.adoc[]
+==== Request Parameters
 include::{snippets}/gym-nearby/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-nearby/http-response.adoc[]
@@ -90,6 +91,16 @@ include::{snippets}/gym-my-like/request-headers.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-my-like/http-response.adoc[]
 include::{snippets}/gym-my-like/response-fields.adoc[]
+
+[[gym-demo-search]]
+=== 암장 검색
+==== HTTP Request
+include::{snippets}/gym-demo-search/http-request.adoc[]
+==== Request Parameters
+include::{snippets}/gym-demo-search/query-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/gym-demo-search/http-response.adoc[]
+include::{snippets}/gym-demo-search/response-fields.adoc[]
 
 
 
