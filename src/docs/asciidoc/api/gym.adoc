@@ -61,6 +61,35 @@ include::{snippets}/gym-nearby/query-parameters.adoc[]
 include::{snippets}/gym-nearby/http-response.adoc[]
 include::{snippets}/gym-nearby/response-fields.adoc[]
 
+[[gym-like]]
+=== 암장 찜하기
+==== HTTP Request
+include::{snippets}/gym-like/http-request.adoc[]
+==== Request Headers
+include::{snippets}/gym-like/request-headers.adoc[]
+include::{snippets}/gym-like/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/gym-like/http-response.adoc[]
+
+[[gym-unlike]]
+=== 암장 찜하기 취소
+==== HTTP Request
+include::{snippets}/gym-unlike/http-request.adoc[]
+==== Request Headers
+include::{snippets}/gym-unlike/request-headers.adoc[]
+include::{snippets}/gym-unlike/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/gym-unlike/http-response.adoc[]
+
+[[gym-my-like]]
+=== 내가 찜한 암장 조회
+==== HTTP Request
+include::{snippets}/gym-my-like/http-request.adoc[]
+==== Request Headers
+include::{snippets}/gym-my-like/request-headers.adoc[]
+==== HTTP Response
+include::{snippets}/gym-my-like/http-response.adoc[]
+include::{snippets}/gym-my-like/response-fields.adoc[]
 
 
 

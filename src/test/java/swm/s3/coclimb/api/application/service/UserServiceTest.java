@@ -1,6 +1,5 @@
 package swm.s3.coclimb.api.application.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
@@ -12,11 +11,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserServiceTest extends IntegrationTestSupport {
-
-    @AfterEach
-    void tearDown(){
-        userJpaRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("InstagramUserId 로 사용자를 조회한다.")

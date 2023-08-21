@@ -1,23 +1,26 @@
 package swm.s3.coclimb.api.docs;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import swm.s3.coclimb.api.RestDocsTestSupport;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymCreateRequest;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymRemoveRequest;
-import swm.s3.coclimb.api.adapter.in.web.gym.dto.GymUpdateRequest;
-import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
+import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.domain.gym.Location;
+import swm.s3.coclimb.domain.gymlike.GymLike;
+import swm.s3.coclimb.domain.user.User;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
@@ -31,13 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class GymControllerDocsTest extends RestDocsTestSupport {
-
-    @Autowired GymJpaRepository gymJpaRepository;
-
-    @AfterEach
-    void tearDown() {
-        gymJpaRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("신규 암장을 등록하는 API")
@@ -314,6 +310,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 responseFields(
                         fieldWithPath("gyms").type(JsonFieldType.ARRAY)
                                 .description("가까운 암장들 (거리 정렬)"),
+                        fieldWithPath("gyms[].id").type(JsonFieldType.NUMBER)
+                                .description("암장 ID"),
                         fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
                         fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
@@ -324,6 +322,129 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("경도"),
                         fieldWithPath("gyms[].distance").type(JsonFieldType.NUMBER)
                                 .description("거리 (km)"),
+                        fieldWithPath("count").type(JsonFieldType.NUMBER)
+                                .description("조회된 암장의 수")
+                )));
+    }
+
+    @Test
+    @DisplayName("암장을 찜할 수 있다.")
+    void likeGym() throws Exception {
+        // given
+        User user = User.builder().build();
+        Gym gym = Gym.builder().name("암장").build();
+        userJpaRepository.save(user);
+        gymJpaRepository.save(gym);
+        Long userId = userJpaRepository.findAll().get(0).getId();
+        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        GymLikeRequest request = GymLikeRequest.builder()
+                .gymId(gymId)
+                .build();
+
+        // when
+        ResultActions result = mockMvc.perform(post("/gyms/likes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId))))
+                .andDo(print());
+        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+
+        // then
+        result.andExpect(status().isCreated());
+        assertThat(gymLike).isNotNull();
+
+        // docs
+        result.andDo(document("gym-like",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName("Authorization").description("JWT 인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("gymId").type(JsonFieldType.NUMBER)
+                                .description("암장 ID")
+                )));
+    }
+
+    @Test
+    @DisplayName("암장 찜하기를 취소할 수 있다.")
+    void unlikeGym() throws Exception {
+        // given
+        User user = User.builder().build();
+        Gym gym = Gym.builder().name("암장").build();
+        userJpaRepository.save(user);
+        gymJpaRepository.save(gym);
+        Long userId = userJpaRepository.findAll().get(0).getId();
+        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym).build());
+        GymUnlikeRequest request = GymUnlikeRequest.builder()
+                .gymId(gymId)
+                .build();
+
+        // when
+        ResultActions result = mockMvc.perform(delete("/gyms/likes")
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print());
+        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+
+        // then
+        result.andExpect(status().isNoContent());
+        assertThat(gymLike).isNull();
+
+        // docs
+        result.andDo(document("gym-unlike",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName("Authorization").description("JWT 인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("gymId").type(JsonFieldType.NUMBER)
+                                .description("암장 ID")
+                )));
+    }
+
+    @Test
+    @DisplayName("찜한 암장을 조회할 수 있다.")
+    void retrieveLikedGyms() throws Exception {
+        // given
+        User user = User.builder().build();
+        Gym gym1 = Gym.builder().name("암장1").build();
+        Gym gym2 = Gym.builder().name("암장2").build();
+        Gym gym3 = Gym.builder().name("암장3").build();
+        userJpaRepository.save(user);
+        gymJpaRepository.saveAll(List.of(gym1, gym2, gym3));
+        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym1).build());
+        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym2).build());
+        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym3).build());
+        Long userId = userJpaRepository.findAll().get(0).getId();
+
+        // when
+        // then
+        ResultActions result = mockMvc.perform(get("/gyms/likes")
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(3))
+                .andExpect(jsonPath("$.gyms[*].name").value(containsInAnyOrder("암장1", "암장2", "암장3")));
+
+        // docs
+        result.andDo(document("gym-my-like",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName("Authorization").description("JWT 인증 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                                .description("찜한 암장들"),
+                        fieldWithPath("gyms[].id").type(JsonFieldType.NUMBER)
+                                .description("암장 ID"),
+                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                                .description("암장 이름"),
                         fieldWithPath("count").type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
                 )));

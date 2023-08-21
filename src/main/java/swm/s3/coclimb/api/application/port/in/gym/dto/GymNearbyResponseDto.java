@@ -9,13 +9,15 @@ import swm.s3.coclimb.domain.gym.Location;
 @Getter
 @NoArgsConstructor
 public class GymNearbyResponseDto {
+    private Long id;
     private String name;
     private Location location;
     private float distance;
     private String address;
 
     @Builder
-    public GymNearbyResponseDto(String name, Location location, float distance, String address) {
+    public GymNearbyResponseDto(Long id, String name, Location location, float distance, String address) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.distance = distance;
@@ -24,6 +26,7 @@ public class GymNearbyResponseDto {
 
     public static GymNearbyResponseDto of(GymNearby gymNearby) {
         return GymNearbyResponseDto.builder()
+                .id(gymNearby.getId())
                 .name(gymNearby.getName())
                 .location(Location.of(gymNearby.getLatitude(), gymNearby.getLongitude()))
                 .distance(gymNearby.getDistance())

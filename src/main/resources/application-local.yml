@@ -10,7 +10,7 @@ spring:
       url: ${local.db.url}
       username: ${local.db.username}
       password: ${local.db.password}
-      driver-class-name: org.h2.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create

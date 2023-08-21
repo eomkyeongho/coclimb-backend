@@ -1,19 +1,21 @@
 package swm.s3.coclimb.api;
 
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.gymlike.GymLikeJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserRepository;
 import swm.s3.coclimb.api.application.service.GymService;
+import swm.s3.coclimb.api.application.service.LoginService;
 import swm.s3.coclimb.api.application.service.MediaService;
 import swm.s3.coclimb.api.application.service.UserService;
 import swm.s3.coclimb.config.AppConfig;
@@ -32,15 +34,19 @@ public abstract class IntegrationTestSupport {
     @Autowired protected GymService gymService;
     @Autowired protected GymJpaRepository gymJpaRepository;
     @Autowired protected GymRepository gymRepository;
+    @Autowired protected GymLikeJpaRepository gymLikeJpaRepository;
 
     // Media
     @Autowired protected MediaService mediaService;
     @Autowired protected MediaJpaRepository mediaJpaRepository;
     @Autowired protected MediaRepository mediaRepository;
 
+    // Login
+    @Autowired protected LoginService loginService;
+
     // Config
     @Autowired protected AppConfig appConfig;
-    @MockBean protected ServerClock serverClock;
+    @Autowired protected ServerClock serverClock;
 
     // Login
     @Autowired protected JwtManager jwtManager;
@@ -48,6 +54,13 @@ public abstract class IntegrationTestSupport {
     // Instagram
     @Autowired protected InstagramOAuthRecord instagramOAuthRecord;
     @Autowired protected InstagramRestApiManager instagramRestApiManager;
-    @MockBean protected InstagramRestApi instagramRestApi;
+    @Autowired protected InstagramRestApi instagramRestApi;
 
+    @AfterEach
+    void clearDB() {
+        gymLikeJpaRepository.deleteAll();
+        mediaJpaRepository.deleteAll();
+        gymJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
+    }
 }

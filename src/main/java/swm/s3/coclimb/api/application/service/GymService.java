@@ -11,9 +11,12 @@ import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymUpdatePort;
+import swm.s3.coclimb.api.application.port.out.persistence.gymlike.GymLikeLoadPort;
+import swm.s3.coclimb.api.application.port.out.persistence.gymlike.GymLikeUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gymlike.GymLike;
 
 import java.util.List;
 
@@ -24,6 +27,8 @@ public class GymService implements GymCommand, GymQuery {
 
     private final GymUpdatePort gymUpdatePort;
     private final GymLoadPort gymLoadPort;
+    private final GymLikeUpdatePort gymLikeUpdatePort;
+    private final GymLikeLoadPort gymLikeLoadPort;
 
     @Override
     @Transactional
@@ -84,5 +89,28 @@ public class GymService implements GymCommand, GymQuery {
         return gyms.stream()
                 .map(GymNearbyResponseDto::of)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void likeGym(GymLikeRequestDto request) {
+        Gym gym = gymLoadPort.getById(request.getGymId());
+        gymLikeUpdatePort.save(GymLike.builder().user(request.getUser()).gym(gym).build());
+    }
+
+    @Override
+    public List<GymLikesResponseDto> getLikedGyms(Long userId) {
+        List<GymLike> gymLikes = gymLikeLoadPort.findByUserId(userId);
+
+        return gymLikes.stream()
+                .map(GymLikesResponseDto::of)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void unlikeGym(GymUnlikeRequestDto request) {
+        GymLike gymLike = gymLikeLoadPort.getByUserIdAndGymId(request.getUserId(), request.getGymId());
+        gymLike.remove();
     }
 }
