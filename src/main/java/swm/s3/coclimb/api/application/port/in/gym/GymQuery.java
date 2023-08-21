@@ -16,4 +16,6 @@ public interface GymQuery {
     List<GymNearbyResponseDto> getNearbyGyms(float latitude, float longitude, float distance);
 
     List<GymLikesResponseDto> getLikedGyms(Long userId);
+
+    List<GymSearchResponseDto> searchGyms(String keyword);
 }

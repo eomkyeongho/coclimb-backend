@@ -20,4 +20,6 @@ public interface GymLoadPort {
     Page<Gym> findPage(PageRequest pageRequest);
 
     List<GymNearby> findNearby(float latitude, float longitude, float distance);
+
+    List<Gym> searchByName(String name);
 }

@@ -3,6 +3,7 @@ package swm.s3.coclimb.api.adapter.in.web.gym;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLikesResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymPageRequestDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 import swm.s3.coclimb.config.argumentresolver.LoginUser;
@@ -135,5 +133,14 @@ public class GymController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping("/gyms/demo/search")
+    public ResponseEntity<GymSearchResponse> searchGyms(@RequestParam @NotNull(message = "keyword is required") String keyword) {
+        List<GymSearchResponseDto> gyms = gymQuery.searchGyms(keyword);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(GymSearchResponse.of(gyms));
     }
 }

@@ -18,4 +18,7 @@ public interface GymJpaRepository extends JpaRepository<Gym, Long> {
     @Query(value = "SELECT ID, NAME, ADDRESS, LATITUDE, LONGITUDE, ST_DISTANCE_SPHERE(POINT(LONGITUDE, LATITUDE), POINT(:longitude, :latitude))/1000.0 AS DISTANCE " +
             "FROM GYMS HAVING DISTANCE < :distance ORDER BY DISTANCE", nativeQuery = true)
     List<GymNearby> findNearby(@Param("latitude") float latitude, @Param("longitude") float longitude, @Param("distance") float distance);
+
+    @Query(value = "SELECT * FROM GYMS WHERE REPLACE(NAME,' ', '') LIKE %:keyword%", nativeQuery = true)
+    List<Gym> findByNameLike(@Param("keyword") String keyword);
 }
