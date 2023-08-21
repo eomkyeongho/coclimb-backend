@@ -567,7 +567,7 @@ Content-Length: 124
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.FC6nxG17ZOT0kzU_O6F0jgB6pyG0biNBDVuyUecBrXROzMDL3FVNrDJnVohehh90lpfAnD_mmfpGEEpQrFrpLw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMywiZXhwIjoxNjkyNjA0ODIzfQ.RscEPGAz2jGyEeZaTA-ACd6TalvJhr53_Y99SR1YzflarFXoPKJ_pUUX6-lU5YY3s6FHKNrg1rBfFTl2DJ1COA
 Content-Length: 155
 Host: localhost:8080
 
@@ -661,7 +661,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.FC6nxG17ZOT0kzU_O6F0jgB6pyG0biNBDVuyUecBrXROzMDL3FVNrDJnVohehh90lpfAnD_mmfpGEEpQrFrpLw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMywiZXhwIjoxNjkyNjA0ODIzfQ.RscEPGAz2jGyEeZaTA-ACd6TalvJhr53_Y99SR1YzflarFXoPKJ_pUUX6-lU5YY3s6FHKNrg1rBfFTl2DJ1COA
 Content-Length: 32
 Host: localhost:8080
 
@@ -719,7 +719,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.FC6nxG17ZOT0kzU_O6F0jgB6pyG0biNBDVuyUecBrXROzMDL3FVNrDJnVohehh90lpfAnD_mmfpGEEpQrFrpLw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMiwiZXhwIjoxNjkyNjA0ODIyfQ.6hrhjXpTDsZatyerXQG_AN5GyIZjDnx7n1wwGITLj3WCPOkK1WUYL3qij8WOKyQ2HhatsoDG28RBFUt8vtprog
 Content-Length: 212
 Host: localhost:8080
 
@@ -850,12 +850,16 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 84
+Content-Length: 213
 
 {
   "name" : "암장이름",
   "address" : "주소",
-  "phone" : "02-000-0000"
+  "phone" : "02-000-0000",
+  "image" : "imageurl",
+  "instagramUrl" : "instaUrl",
+  "homepageUrl" : "homepageUrl",
+  "gradingSystem" : "gradingSystem"
 }</code></pre>
 </div>
 </div>
@@ -895,6 +899,30 @@ Content-Length: 84
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">연락처</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">대표 이미지 url</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagramUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 url</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>homepageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">홈페이지 url</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gradingSystem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">매장 난이도 분류 체</p></td>
 </tr>
 </tbody>
 </table>
@@ -1019,29 +1047,34 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 524
+Content-Length: 649
 
 {
   "gyms" : [ {
     "name" : "암장5",
     "address" : "주소",
-    "phone" : "010-1111-1111"
+    "phone" : "02-000-0000",
+    "image" : "imageurl"
   }, {
     "name" : "암장6",
     "address" : "주소",
-    "phone" : "010-1111-1111"
+    "phone" : "02-000-0000",
+    "image" : "imageurl"
   }, {
     "name" : "암장7",
     "address" : "주소",
-    "phone" : "010-1111-1111"
+    "phone" : "02-000-0000",
+    "image" : "imageurl"
   }, {
     "name" : "암장8",
     "address" : "주소",
-    "phone" : "010-1111-1111"
+    "phone" : "02-000-0000",
+    "image" : "imageurl"
   }, {
     "name" : "암장9",
     "address" : "주소",
-    "phone" : "010-1111-1111"
+    "phone" : "02-000-0000",
+    "image" : "imageurl"
   } ],
   "page" : 1,
   "size" : 5,
@@ -1091,6 +1124,12 @@ Content-Length: 524
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">대표 이미지</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
@@ -1292,7 +1331,7 @@ Content-Length: 969
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /gyms/likes HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.BIqhGB9u7Q341ELRqA6F6mfciCux-ZZiKQ-IkyAFAo2LE_I4VUsOI-6ODJJ6AlH7qFe7u02cZlVJxChU-3Hjbw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMywiZXhwIjoxNjkyNjA0ODIzfQ.d9MY37oCWGUFQozoiO5VOrwT9q9LRFCAnTJZi3giK6MK946iyUeSxpsYlXoGoIMN92ZqChs15yEfRRCH4gQfhA
 Content-Length: 20
 Host: localhost:8080
 
@@ -1370,7 +1409,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /gyms/likes HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.dqAqcLo4iI-S8RrjrOlR0cBHXskrINuKi3VJZ7TaJn3z0F9yE9wD9whbvwLlKvmTSeADLtHA1bPumqs7958KHw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMywiZXhwIjoxNjkyNjA0ODIzfQ.wUW4YOjdCyTfwH5tJnumP12ylCHohmXTo-tx8s3czde2_7JE9LpxnYvE58UD1A2sQkMvhhWHc9pRLyehEzfH6w
 Content-Length: 20
 Host: localhost:8080
 
@@ -1447,7 +1486,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /gyms/likes HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwMywiZXhwIjoxNjkyNTU0MzAzfQ.4QfXwqV1fXFXCVAQikPeHlRl932SfWV-DmQop02topxdWKu0_-I3odSURE2DWaF4oJ2Pa3MPfiALg--xUWtELA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyMiwiZXhwIjoxNjkyNjA0ODIyfQ.Dir9xEuqkHlx2p-4oZzjYwWxFnxQhiBqCtx04PC4cwezIwGiuzTGoMoNiHMb5648qPZGae-KYm8ZBiu6-nF1iQ
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1558,7 +1597,7 @@ Content-Length: 176
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /users/me HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiNCIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwNCwiZXhwIjoxNjkyNTU0MzA0fQ.k3gPwIWrCmioITX9u4S2wjXiQ53ccelw8qDksONlrftGQ2vBwo_oTVS4nyWc4-kHA0phneXbcJWf1ULPGaSJoA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiNCIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyNCwiZXhwIjoxNjkyNjA0ODI0fQ.oLsSqEscTSGMcN2kCm6Ee5xUojU1a7wU6QiXfDOiLVsvbH8HuV8WkMH1CrTOL-zBhoyK7S8kG6TlQctGz6Qflg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1702,7 +1741,7 @@ Content-Type: application/json
 Content-Length: 232
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwNCwiZXhwIjoxNjkyNTU0MzA0fQ.qTvZrysRwhf1vNcbQEkIcUfQRDVNcDsC8YhPq8Mmxf_AeKs-OBR_vs_oHLBghiuXgfCkaAuBmO7E6FF9-Q7pxA"
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyNCwiZXhwIjoxNjkyNjA0ODI0fQ.G-BFHxjDCrRkuC9NIUQC4BTjSz65IQUKVZ0UsANKY4gx8CCYvz2Mpu9Lbh2h1jiEFCbtVS-VwVRYN67uatQ2qw"
 }</code></pre>
 </div>
 </div>
@@ -1748,7 +1787,7 @@ Content-Length: 232
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /medias HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwNCwiZXhwIjoxNjkyNTU0MzA0fQ.WxSNtesQT_J5-H8B-p9WgB-VHrlVLyNJbxZVCXk2FCy3_TSW4nsXpUCAFXM-PEASRUzqSXty8j_liA8serWKKw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyNCwiZXhwIjoxNjkyNjA0ODI0fQ.GmMSeE1V0n-k7_0h4fwVjilJ_nuURx40LAoLkNPN0S7gvW0SZJ1Sdrx6--nxX-8id58IVbJuSJTCD9r8JNyOQg
 Content-Length: 402
 Host: localhost:8080
 
@@ -2027,7 +2066,7 @@ Content-Length: 666
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /medias/me?page=0&amp;size=5 HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjU1MDcwNCwiZXhwIjoxNjkyNTU0MzA0fQ.fggTFyhUJFOFMiEfM9E_ip6KYsmxCU5J1He4fWS6OrgDYze96HfolcIJyA0L3mzZa_-H9zkin-iB6BjAo1xC1g
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjYwMTIyNCwiZXhwIjoxNjkyNjA0ODI0fQ.Nn6ASK2Ti5-0m_PHS8wF0k9FWQOtGLqhqL7AsNl5IvaquqbJktKrJb8-EzCC9eBI_G_ahWT2JpN2wr__gTDEgw
 Host: localhost:8080</code></pre>
 </div>
 </div>
