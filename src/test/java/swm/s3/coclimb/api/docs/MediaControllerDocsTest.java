@@ -108,28 +108,31 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 썸네일 CDN URL"),
                         fieldWithPath("description")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("미디어 설명"),
                         fieldWithPath("instagram.mediaId")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
                                 .description("인스타그램 미디어 ID"),
                         fieldWithPath("instagram.permalink")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
                                 .description("인스타그램 미디어 게시물 URL"),
                         fieldWithPath("problem.gymName")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 내 암장명"),
                         fieldWithPath("problem.clearDate")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
                                 .description("문제 클리어 날짜"),
                         fieldWithPath("problem.color")
                                 .type(JsonFieldType.STRING)
                                 .description("문제 색상"),
                         fieldWithPath("problem.type")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("문제 타입"),
                         fieldWithPath("problem.perceivedDifficulty")
-                                .type(JsonFieldType.STRING).optional()
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("체감 난이도"),
                         fieldWithPath("problem.isClear")
                                 .type(JsonFieldType.BOOLEAN)
@@ -345,7 +348,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                                 .description("미디어 업로드 유저명"),
                         fieldWithPath("platform")
                                 .type(JsonFieldType.STRING)
-                                .description("미디어 원본 플랫폼"),
+                                .description("미디어 플랫폼 (ex. instagram, original)"),
                         fieldWithPath("mediaUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 URL"),
@@ -357,6 +360,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                                 .description("미디어 타입"),
                         fieldWithPath("description")
                                 .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("미디어 설명"),
                         fieldWithPath("instagram.permalink")
                                 .type(JsonFieldType.STRING)
@@ -372,12 +376,14 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                                 .description("문제 난이도 색상"),
                         fieldWithPath("problem.type")
                                 .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("문제 타입"),
                         fieldWithPath("problem.isClear")
                                 .type(JsonFieldType.BOOLEAN)
                                 .description("문제 클리어 여부"),
                         fieldWithPath("problem.perceivedDifficulty")
                                 .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("문제 체감 난이도")
                 )));
     }
