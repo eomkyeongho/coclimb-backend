@@ -7,4 +7,6 @@ public interface GymNearby {
     float getLongitude();
     float getDistance();
     String getAddress();
+
+    String getImageUrl();
 }

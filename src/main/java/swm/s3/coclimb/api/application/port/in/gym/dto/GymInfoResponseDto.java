@@ -10,8 +10,8 @@ public class GymInfoResponseDto {
     private String name;
     private String address;
     private String phone;
-    private String image;
-    private String instagramUrl;
+    private String imageUrl;
+    private String instagramId;
     private String homepageUrl;
     private String gradingSystem;
 
@@ -21,8 +21,8 @@ public class GymInfoResponseDto {
                 .name(gym.getName())
                 .address(gym.getAddress())
                 .phone(gym.getPhone())
-                .image(gym.getImage())
-                .instagramUrl(gym.getInstagramUrl())
+                .imageUrl(gym.getImageUrl())
+                .instagramId(gym.getInstagramId())
                 .homepageUrl(gym.getHomepageUrl())
                 .gradingSystem(gym.getGradingSystem())
                 .build();

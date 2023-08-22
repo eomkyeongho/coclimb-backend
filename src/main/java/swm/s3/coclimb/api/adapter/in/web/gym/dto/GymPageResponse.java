@@ -42,7 +42,7 @@ public class GymPageResponse {
             this.name = gym.getName();
             this.address = gym.getAddress();
             this.phone = gym.getPhone();
-            this.image = gym.getImage();
+            this.image = gym.getImageUrl();
         }
     }
 }

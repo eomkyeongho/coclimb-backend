@@ -14,14 +14,16 @@ public class GymNearbyResponseDto {
     private Location location;
     private float distance;
     private String address;
+    private String imageUrl;
 
     @Builder
-    public GymNearbyResponseDto(Long id, String name, Location location, float distance, String address) {
+    public GymNearbyResponseDto(Long id, String name, Location location, float distance, String address, String imageUrl) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.distance = distance;
         this.address = address;
+        this.imageUrl = imageUrl;
     }
 
     public static GymNearbyResponseDto of(GymNearby gymNearby) {
@@ -31,6 +33,7 @@ public class GymNearbyResponseDto {
                 .location(Location.of(gymNearby.getLatitude(), gymNearby.getLongitude()))
                 .distance(gymNearby.getDistance())
                 .address(gymNearby.getAddress())
+                .imageUrl(gymNearby.getImageUrl())
                 .build();
     }
 }

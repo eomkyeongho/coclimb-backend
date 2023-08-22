@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.InstagramMyVideosResponse;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaInfoResponse;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaPageResponse;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
@@ -75,5 +76,11 @@ public class MediaController {
                 .build());
 
         return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
+    }
+
+    @GetMapping("/medias/{mediaId}")
+    public ResponseEntity<MediaInfoResponse> getMediaInfo(@PathVariable Long mediaId) {
+        Media media = mediaQuery.getMediaById(mediaId);
+        return ResponseEntity.ok(MediaInfoResponse.of(media));
     }
 }

@@ -18,4 +18,6 @@ public interface MediaLoadPort {
     Page<Media> findAllPaged(PageRequest pageRequest);
 
     Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest);
+
+    Optional<Media> findById(Long mediaId);
 }

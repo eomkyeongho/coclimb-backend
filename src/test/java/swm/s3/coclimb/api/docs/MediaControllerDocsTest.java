@@ -13,10 +13,12 @@ import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateProblemInfo;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
+import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.media.MediaProblemInfo;
 import swm.s3.coclimb.domain.user.User;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -28,8 +30,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +58,9 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .mediaType("VIDEO")
                 .mediaUrl("mediaUrl")
                 .thumbnailUrl("thumbnailUrl")
+                .description("description")
                 .problem(MediaCreateProblemInfo.builder()
+                        .clearDate(LocalDate.now())
                         .gymName("gymName")
                         .color("color")
                         .perceivedDifficulty("perceivedDifficulty")
@@ -104,6 +107,9 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("thumbnailUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 썸네일 CDN URL"),
+                        fieldWithPath("description")
+                                .type(JsonFieldType.STRING).optional()
+                                .description("미디어 설명"),
                         fieldWithPath("instagram.mediaId")
                                 .type(JsonFieldType.STRING).optional()
                                 .description("인스타그램 미디어 ID"),
@@ -113,6 +119,9 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("problem.gymName")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 내 암장명"),
+                        fieldWithPath("problem.clearDate")
+                                .type(JsonFieldType.STRING).optional()
+                                .description("문제 클리어 날짜"),
                         fieldWithPath("problem.color")
                                 .type(JsonFieldType.STRING)
                                 .description("문제 색상"),
@@ -135,6 +144,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         int pageSize = 5;
 
         mediaJpaRepository.saveAll(IntStream.range(0, 10).mapToObj(i -> Media.builder()
+                        .username("username" + String.valueOf(i))
                         .thumbnailUrl("thumbnailUrl" + String.valueOf(i))
                         .mediaProblemInfo(MediaProblemInfo.builder()
                                 .gymName("gym" + String.valueOf(i))
@@ -183,6 +193,9 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("medias[].id")
                                 .type(JsonFieldType.NUMBER)
                                 .description("미디어 ID"),
+                        fieldWithPath("medias[].username")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 업로드 유저명"),
                         fieldWithPath("medias[].thumbnailUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 썸네일 URL"),
@@ -205,6 +218,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
 
         mediaJpaRepository.saveAll(IntStream.range(0, 10).mapToObj(i -> Media.builder()
                         .userId(userId)
+                        .username("me")
                         .thumbnailUrl("thumbnailUrl" + String.valueOf(i))
                         .mediaProblemInfo(MediaProblemInfo.builder()
                                 .gymName("gym" + String.valueOf(i))
@@ -257,6 +271,9 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("medias[].id")
                                 .type(JsonFieldType.NUMBER)
                                 .description("미디어 ID"),
+                        fieldWithPath("medias[].username")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 업로드 유저명"),
                         fieldWithPath("medias[].thumbnailUrl")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 썸네일 URL"),
@@ -266,6 +283,102 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("medias[].problemColor")
                                 .type(JsonFieldType.STRING)
                                 .description("미디어 내 문제 난이도 색상")
+                )));
+    }
+
+    @Test
+    @DisplayName("미디어 ID로 미디어 정보 조회하는 API")
+    void getMediaById() throws Exception {
+        //given
+        Media media = mediaJpaRepository.save(Media.builder()
+                .thumbnailUrl("thumbnailUrl")
+                .username("username")
+                .mediaUrl("mediaUrl")
+                .username("username")
+                .mediaType("VIDEO")
+                .description("description")
+                .platform("INSTAGRAM")
+                .instagramMediaInfo(InstagramMediaInfo.builder()
+                        .permalink("permalink")
+                        .build())
+                .mediaProblemInfo(MediaProblemInfo.builder()
+                        .clearDate(LocalDate.now())
+                        .gymName("gymName")
+                        .color("color")
+                        .isClear(true)
+                        .type("type")
+                        .perceivedDifficulty("perceivedDifficulty")
+                        .build())
+                .build());
+        Long mediaId = mediaJpaRepository.findAll().get(0).getId();
+
+        //when
+        //then
+        ResultActions result = mockMvc.perform(get("/medias/{mediaId}", mediaId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mediaId").value(mediaId))
+                .andExpect(jsonPath("$.thumbnailUrl").value("thumbnailUrl"))
+                .andExpect(jsonPath("$.username").value("username"))
+                .andExpect(jsonPath("$.mediaUrl").value("mediaUrl"))
+                .andExpect(jsonPath("$.mediaType").value("VIDEO"))
+                .andExpect(jsonPath("$.description").value("description"))
+                .andExpect(jsonPath("$.instagram.permalink").value("permalink"))
+                .andExpect(jsonPath("$.problem.clearDate").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.problem.gymName").value("gymName"))
+                .andExpect(jsonPath("$.problem.color").value("color"))
+                .andExpect(jsonPath("$.problem.isClear").value(true))
+                .andExpect(jsonPath("$.problem.perceivedDifficulty").value("perceivedDifficulty"));
+
+        //docs
+        result.andDo(document("media-info",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("mediaId").description("미디어 ID")
+                ),
+                responseFields(
+                        fieldWithPath("mediaId")
+                                .type(JsonFieldType.NUMBER)
+                                .description("미디어 ID"),
+                        fieldWithPath("username")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 업로드 유저명"),
+                        fieldWithPath("platform")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 원본 플랫폼"),
+                        fieldWithPath("mediaUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 URL"),
+                        fieldWithPath("thumbnailUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 썸네일 URL"),
+                        fieldWithPath("mediaType")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 타입"),
+                        fieldWithPath("description")
+                                .type(JsonFieldType.STRING)
+                                .description("미디어 설명"),
+                        fieldWithPath("instagram.permalink")
+                                .type(JsonFieldType.STRING)
+                                .description("인스타그램 미디어 게시물 URL"),
+                        fieldWithPath("problem.clearDate")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 클리어 날짜"),
+                        fieldWithPath("problem.gymName")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 암장 이름"),
+                        fieldWithPath("problem.color")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 난이도 색상"),
+                        fieldWithPath("problem.type")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 타입"),
+                        fieldWithPath("problem.isClear")
+                                .type(JsonFieldType.BOOLEAN)
+                                .description("문제 클리어 여부"),
+                        fieldWithPath("problem.perceivedDifficulty")
+                                .type(JsonFieldType.STRING)
+                                .description("문제 체감 난이도")
                 )));
     }
 }

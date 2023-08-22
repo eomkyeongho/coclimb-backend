@@ -18,4 +18,6 @@ public interface MediaQuery {
     Page<Media> getPagedMedias(MediaPageRequestDto requestDto);
 
     Page<Media> getPagedMediasByUserId(Long userId, MediaPageRequestDto requestDto);
+
+    Media getMediaById(Long mediaId);
 }

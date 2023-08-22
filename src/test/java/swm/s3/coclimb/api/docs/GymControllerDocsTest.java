@@ -44,6 +44,10 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .address("주소")
                 .phone("02-000-0000")
                 .location(Location.of(0f,0f))
+                .imageUrl("imageUrl")
+                .homepageUrl("homepageUrl")
+                .instagramId("instagramId")
+                .gradingSystem("gradingSystem")
                 .build();
         String accessToken = jwtManager.issueToken("docs");
 
@@ -71,6 +75,18 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("location").type(JsonFieldType.OBJECT)
                                 .optional()
                                 .description("암장 위치"),
+                        fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .optional()
+                                .description("암장 대표 이미지 URL"),
+                        fieldWithPath("homepageUrl").type(JsonFieldType.STRING)
+                                .optional()
+                                .description("암장 홈페이지 URL"),
+                        fieldWithPath("instagramId").type(JsonFieldType.STRING)
+                                .optional()
+                                .description("암장 인스타그램 ID"),
+                        fieldWithPath("gradingSystem").type(JsonFieldType.STRING)
+                                .optional()
+                                .description("암장 난이도 체계"),
                         fieldWithPath("location.latitude").type(JsonFieldType.NUMBER)
                                 .optional()
                                 .description("위도"),
@@ -85,8 +101,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .name(name)
                 .address("주소")
                 .phone("02-000-0000")
-                .image("imageurl")
-                .instagramUrl("instaUrl")
+                .imageUrl("imageUrl")
+                .instagramId("instagramId")
                 .homepageUrl("homepageUrl")
                 .gradingSystem("gradingSystem")
                 .location(Location.of(0f, 0f))
@@ -193,12 +209,12 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("주소"),
                         fieldWithPath("phone").type(JsonFieldType.STRING)
                                 .description("연락처"),
-                        fieldWithPath("image").type(JsonFieldType.STRING)
-                                .description("대표 이미지 url"),
-                        fieldWithPath("instagramUrl").type(JsonFieldType.STRING)
-                                .description("인스타그램 url"),
+                        fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                                .description("대표 이미지 URL"),
+                        fieldWithPath("instagramId").type(JsonFieldType.STRING)
+                                .description("인스타그램 ID"),
                         fieldWithPath("homepageUrl").type(JsonFieldType.STRING)
-                                .description("홈페이지 url"),
+                                .description("홈페이지 URL"),
                         fieldWithPath("gradingSystem").type(JsonFieldType.STRING)
                                 .description("매장 난이도 분류 체")
                 )
@@ -292,6 +308,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .mapToObj(i -> Gym.builder()
                         .name("암장" + i)
                         .address("주소" + i)
+                        .imageUrl("이미지" + i)
                         .location(Location.of((34f + (float)i/100f), 127f + (float)i/100f))
                         .build())
                 .toList());
@@ -323,6 +340,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("암장 ID"),
                         fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
+                        fieldWithPath("gyms[].imageUrl").type(JsonFieldType.STRING)
+                                .description("암장 대표 이미지 URL"),
                         fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
                                 .description("주소"),
                         fieldWithPath("gyms[].location.latitude").type(JsonFieldType.NUMBER)

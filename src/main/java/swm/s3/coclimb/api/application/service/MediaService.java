@@ -15,6 +15,7 @@ import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
+import swm.s3.coclimb.api.exception.errortype.media.MediaNotFound;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 
@@ -95,5 +96,10 @@ public class MediaService implements MediaQuery, MediaCommand {
                 requestDto.getSize());
 
         return mediaLoadPort.findPagedByUserId(userId, pageRequest);
+    }
+
+    @Override
+    public Media getMediaById(Long mediaId) {
+        return mediaLoadPort.findById(mediaId).orElseThrow(MediaNotFound::new);
     }
 }

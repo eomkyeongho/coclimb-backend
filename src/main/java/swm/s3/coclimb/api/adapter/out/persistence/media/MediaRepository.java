@@ -51,4 +51,9 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     public Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest) {
         return mediaJpaRepository.findPagedByUserId(userId, pageRequest);
     }
+
+    @Override
+    public Optional<Media> findById(Long mediaId) {
+        return mediaJpaRepository.findById(mediaId);
+    }
 }
