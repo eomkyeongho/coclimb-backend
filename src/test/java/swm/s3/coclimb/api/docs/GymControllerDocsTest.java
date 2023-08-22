@@ -67,14 +67,16 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("name").type(JsonFieldType.STRING)
                                 .description("암장 이름"),
                         fieldWithPath("address").type(JsonFieldType.STRING)
-                                .optional()
                                 .description("암장 주소"),
                         fieldWithPath("phone").type(JsonFieldType.STRING)
                                 .optional()
                                 .description("암장 연락처"),
                         fieldWithPath("location").type(JsonFieldType.OBJECT)
-                                .optional()
                                 .description("암장 위치"),
+                        fieldWithPath("location.latitude").type(JsonFieldType.NUMBER)
+                                .description("위도"),
+                        fieldWithPath("location.longitude").type(JsonFieldType.NUMBER)
+                                .description("경도"),
                         fieldWithPath("imageUrl").type(JsonFieldType.STRING)
                                 .optional()
                                 .description("암장 대표 이미지 URL"),
@@ -86,13 +88,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("암장 인스타그램 ID"),
                         fieldWithPath("gradingSystem").type(JsonFieldType.STRING)
                                 .optional()
-                                .description("암장 난이도 체계"),
-                        fieldWithPath("location.latitude").type(JsonFieldType.NUMBER)
-                                .optional()
-                                .description("위도"),
-                        fieldWithPath("location.longitude").type(JsonFieldType.NUMBER)
-                                .optional()
-                                .description("경도")
+                                .description("암장 난이도 체계")
                 )
         ));
     }
@@ -203,20 +199,32 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         parameterWithName("name").description("조회할 암장 이름")
                 ),
                 responseFields(
-                        fieldWithPath("name").type(JsonFieldType.STRING)
+                        fieldWithPath("name")
+                                .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("address").type(JsonFieldType.STRING)
+                        fieldWithPath("address")
+                                .type(JsonFieldType.STRING)
                                 .description("주소"),
-                        fieldWithPath("phone").type(JsonFieldType.STRING)
+                        fieldWithPath("phone")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("연락처"),
-                        fieldWithPath("imageUrl").type(JsonFieldType.STRING)
+                        fieldWithPath("imageUrl")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("대표 이미지 URL"),
-                        fieldWithPath("instagramId").type(JsonFieldType.STRING)
+                        fieldWithPath("instagramId")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("인스타그램 ID"),
-                        fieldWithPath("homepageUrl").type(JsonFieldType.STRING)
+                        fieldWithPath("homepageUrl")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("홈페이지 URL"),
-                        fieldWithPath("gradingSystem").type(JsonFieldType.STRING)
-                                .description("매장 난이도 분류 체")
+                        fieldWithPath("gradingSystem")
+                                .type(JsonFieldType.STRING)
+                                .optional()
+                                .description("매장 난이도 분류 체계")
                 )
         ));
 
@@ -240,15 +248,20 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                        fieldWithPath("locations").type(JsonFieldType.ARRAY)
+                        fieldWithPath("locations")
+                                .type(JsonFieldType.ARRAY)
                                 .description("암장 위치 정보"),
-                        fieldWithPath("locations[].name").type(JsonFieldType.STRING)
+                        fieldWithPath("locations[].name")
+                                .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("locations[].location").type(JsonFieldType.OBJECT)
+                        fieldWithPath("locations[].location")
+                                .type(JsonFieldType.OBJECT)
                                 .description("위치"),
-                        fieldWithPath("locations[].location.latitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("locations[].location.latitude")
+                                .type(JsonFieldType.NUMBER)
                                 .description("위도"),
-                        fieldWithPath("locations[].location.longitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("locations[].location.longitude")
+                                .type(JsonFieldType.NUMBER)
                                 .description("경도"),
                         fieldWithPath("count").type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
@@ -279,21 +292,31 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
-                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                        fieldWithPath("gyms")
+                                .type(JsonFieldType.ARRAY)
                                 .description("페이지 포함된 암장들"),
-                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].name")
+                                .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].address")
+                                .type(JsonFieldType.STRING)
                                 .description("주소"),
-                        fieldWithPath("gyms[].phone").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].phone")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("전화번호"),
-                        fieldWithPath("gyms[].image").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].image")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("대표 이미지"),
-                        fieldWithPath("page").type(JsonFieldType.NUMBER)
+                        fieldWithPath("page")
+                                .type(JsonFieldType.NUMBER)
                                 .description("페이지 번호"),
-                        fieldWithPath("size").type(JsonFieldType.NUMBER)
+                        fieldWithPath("size")
+                                .type(JsonFieldType.NUMBER)
                                 .description("페이지 크기"),
-                        fieldWithPath("totalPage").type(JsonFieldType.NUMBER)
+                        fieldWithPath("totalPage")
+                                .type(JsonFieldType.NUMBER)
                                 .description("전체 페이지 수")
                 )
 
@@ -336,19 +359,27 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 responseFields(
                         fieldWithPath("gyms").type(JsonFieldType.ARRAY)
                                 .description("가까운 암장들 (거리 정렬)"),
-                        fieldWithPath("gyms[].id").type(JsonFieldType.NUMBER)
+                        fieldWithPath("gyms[].id")
+                                .type(JsonFieldType.NUMBER)
                                 .description("암장 ID"),
-                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].name")
+                                .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("gyms[].imageUrl").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].imageUrl")
+                                .type(JsonFieldType.STRING)
+                                .optional()
                                 .description("암장 대표 이미지 URL"),
-                        fieldWithPath("gyms[].address").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].address")
+                                .type(JsonFieldType.STRING)
                                 .description("주소"),
-                        fieldWithPath("gyms[].location.latitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("gyms[].location.latitude")
+                                .type(JsonFieldType.NUMBER)
                                 .description("위도"),
-                        fieldWithPath("gyms[].location.longitude").type(JsonFieldType.NUMBER)
+                        fieldWithPath("gyms[].location.longitude")
+                                .type(JsonFieldType.NUMBER)
                                 .description("경도"),
-                        fieldWithPath("gyms[].distance").type(JsonFieldType.NUMBER)
+                        fieldWithPath("gyms[].distance")
+                                .type(JsonFieldType.NUMBER)
                                 .description("거리 (km)"),
                         fieldWithPath("count").type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
@@ -467,13 +498,17 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         headerWithName("Authorization").description("JWT 인증 토큰")
                 ),
                 responseFields(
-                        fieldWithPath("gyms").type(JsonFieldType.ARRAY)
+                        fieldWithPath("gyms")
+                                .type(JsonFieldType.ARRAY)
                                 .description("찜한 암장들"),
-                        fieldWithPath("gyms[].id").type(JsonFieldType.NUMBER)
+                        fieldWithPath("gyms[].id")
+                                .type(JsonFieldType.NUMBER)
                                 .description("암장 ID"),
-                        fieldWithPath("gyms[].name").type(JsonFieldType.STRING)
+                        fieldWithPath("gyms[].name")
+                                .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
-                        fieldWithPath("count").type(JsonFieldType.NUMBER)
+                        fieldWithPath("count")
+                                .type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")
                 )));
     }
