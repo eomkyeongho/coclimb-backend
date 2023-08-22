@@ -12,6 +12,10 @@ public class GymCreateRequestDto {
     private String address;
     private String phone;
     private Location location;
+    private String imageUrl;
+    private String homepageUrl;
+    private String instagramId;
+    private String gradingSystem;
 
     public Gym toEntity() {
         return Gym.builder()
@@ -19,6 +23,10 @@ public class GymCreateRequestDto {
                 .address(address)
                 .phone(phone)
                 .location(location)
+                .imageUrl(imageUrl)
+                .homepageUrl(homepageUrl)
+                .instagramId(instagramId)
+                .gradingSystem(gradingSystem)
                 .build();
     }
 }

@@ -24,3 +24,10 @@ include::{snippets}/media-my/request-headers.adoc[]
 include::{snippets}/media-my/http-response.adoc[]
 include::{snippets}/media-my/response-fields.adoc[]
 ---
+=== 미디어 정보 조회
+==== HTTP Request
+include::{snippets}/media-info/http-request.adoc[]
+include::{snippets}/media-info/path-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/media-info/http-response.adoc[]
+include::{snippets}/media-info/response-fields.adoc[]

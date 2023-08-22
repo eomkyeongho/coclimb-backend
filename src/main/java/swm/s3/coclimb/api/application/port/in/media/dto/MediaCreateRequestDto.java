@@ -14,18 +14,20 @@ public class MediaCreateRequestDto {
     String mediaUrl;
     String mediaType;
     String thumbnailUrl;
+    String description;
 
     InstagramMediaInfo instagramMediaInfo;
     MediaProblemInfo mediaProblemInfo;
 
     @Builder
-    public MediaCreateRequestDto(Long userId, String username, String platform, String mediaUrl, String mediaType, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, MediaProblemInfo mediaProblemInfo) {
+    public MediaCreateRequestDto(Long userId, String username, String platform, String mediaUrl, String mediaType, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, MediaProblemInfo mediaProblemInfo, String description) {
         this.userId = userId;
         this.username = username;
         this.platform = platform;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
+        this.description = description;
         this.instagramMediaInfo = instagramMediaInfo;
         this.mediaProblemInfo = mediaProblemInfo;
     }
@@ -40,6 +42,7 @@ public class MediaCreateRequestDto {
                 .thumbnailUrl(thumbnailUrl)
                 .instagramMediaInfo(instagramMediaInfo)
                 .mediaProblemInfo(mediaProblemInfo)
+                .description(description)
                 .build();
     }
 }

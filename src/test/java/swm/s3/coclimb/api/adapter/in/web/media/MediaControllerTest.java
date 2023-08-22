@@ -12,6 +12,7 @@ import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateProblemInfo;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
 import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
 import swm.s3.coclimb.config.interceptor.AuthInterceptor;
+import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.media.MediaProblemInfo;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
@@ -125,5 +126,18 @@ class MediaControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(pageSize))
                 .andExpect(jsonPath("$.totalPage").value(1));
+    }
+
+    @Test
+    @DisplayName("미디어 ID로 미디어 정보를 조회할 수 있다.")
+    void getMediaDetail() throws Exception {
+        //given
+        given(mediaQuery.getMediaById(any())).willReturn(Media.builder().instagramMediaInfo(InstagramMediaInfo.builder().build()).mediaProblemInfo(MediaProblemInfo.builder().gymName("암장1").build()).build());
+
+        //when
+        //then
+        mockMvc.perform(get("/medias/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.problem.gymName").value("암장1"));
     }
 }

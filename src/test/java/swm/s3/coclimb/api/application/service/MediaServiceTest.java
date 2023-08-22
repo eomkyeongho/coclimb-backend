@@ -164,6 +164,20 @@ class MediaServiceTest extends IntegrationTestSupport {
                 .containsOnly(2L);
     }
 
+    @Test
+    @DisplayName("미디어 ID로 조회할 수 있다.")
+    void getById() {
+        //given
+        mediaJpaRepository.save(Media.builder().build());
+        Long mediaId = mediaJpaRepository.findAll().get(0).getId();
+
+        //when
+        Media sut = mediaService.getMediaById(mediaId);
+
+        //then
+        assertThat(sut.getId()).isEqualTo(mediaId);
+    }
+
     private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
         String mediaId;
         String mediaType;

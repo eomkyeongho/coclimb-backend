@@ -26,6 +26,8 @@ public class Media extends BaseTimeEntity {
     private String mediaUrl;
     @Length(max = 2048)
     private String thumbnailUrl;
+    @Length(max = 1024)
+    private String description;
 
     // for instagram
     @Embedded
@@ -35,7 +37,7 @@ public class Media extends BaseTimeEntity {
     private MediaProblemInfo mediaProblemInfo;
 
     @Builder
-    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username, MediaProblemInfo mediaProblemInfo) {
+    public Media(Long userId, String mediaType, String platform, String mediaUrl, String thumbnailUrl, InstagramMediaInfo instagramMediaInfo, String username, MediaProblemInfo mediaProblemInfo, String description) {
         this.userId = userId;
         this.mediaType = mediaType;
         this.platform = platform;
@@ -44,5 +46,6 @@ public class Media extends BaseTimeEntity {
         this.instagramMediaInfo = instagramMediaInfo;
         this.username = username;
         this.mediaProblemInfo = mediaProblemInfo;
+        this.description = description;
     }
 }
