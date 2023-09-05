@@ -15,7 +15,7 @@ public interface GymJpaRepository extends JpaRepository<Gym, Long> {
 
     Optional<Gym> findByName(String name);
 
-    @Query(value = "select id, name, address, latitude, longitude, image_url as imageUrl, st_distance_sphere(point(longitude, latitude), point(:longitude, :latitude))/1000.0 as distance " +
+    @Query(value = "select name, address, phone, image_url as imageUrl, instagram_id as instagramId, st_distance_sphere(point(longitude, latitude), point(:longitude, :latitude))/1000.0 as distance " +
             "from gyms having distance < :distance order by distance", nativeQuery = true)
     List<GymNearby> findNearby(@Param("latitude") float latitude, @Param("longitude") float longitude, @Param("distance") float distance);
 

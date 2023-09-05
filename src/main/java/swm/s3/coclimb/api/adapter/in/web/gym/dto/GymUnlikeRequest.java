@@ -10,17 +10,17 @@ import swm.s3.coclimb.api.application.port.in.gym.dto.GymUnlikeRequestDto;
 @NoArgsConstructor
 public class GymUnlikeRequest {
     @NotNull
-    Long gymId;
+    String name;
 
     @Builder
-    public GymUnlikeRequest(Long gymId) {
-        this.gymId = gymId;
+    public GymUnlikeRequest(String name) {
+        this.name = name;
     }
 
     public GymUnlikeRequestDto toServiceDto(Long userId) {
         return GymUnlikeRequestDto.builder()
                 .userId(userId)
-                .gymId(gymId)
+                .gymName(name)
                 .build();
     }
 }

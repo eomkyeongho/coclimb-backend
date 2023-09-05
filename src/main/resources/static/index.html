@@ -484,6 +484,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_미디어_페이지_조회">5.2. 미디어 페이지 조회</a></li>
 <li><a href="#_나의_미디어_페이지_조회">5.3. 나의 미디어 페이지 조회</a></li>
 <li><a href="#_미디어_정보_조회">5.4. 미디어 정보 조회</a></li>
+<li><a href="#_미디어_정보_수정">5.5. 미디어 정보 수정</a></li>
+<li><a href="#_미디어_삭제">5.6. 미디어 삭제</a></li>
 </ul>
 </li>
 </ul>
@@ -569,8 +571,8 @@ Content-Length: 124
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcwOSwiZXhwIjoxNjkyNzMxMzA5fQ.a73WFT4Je-US7mTUVCtJCz_Xe2CB9jLLk56CBZOEFabguEh0WrGjhjIjabX5Ft1_GAJi15o3X7ZgmkDVygQUSg
-Content-Length: 289
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NywiZXhwIjoxNjkzOTQ1NDY3fQ.trksQxWi1TPKgc5Vt8E1xWSaTYfkaJpUnYqyNodXMpHW1xKYQE4GSmOGBIcrZ5jE_1QAb4gr-w9fL-agPgvWUQ
+Content-Length: 307
 Host: localhost:8080
 
 {
@@ -581,8 +583,8 @@ Host: localhost:8080
     "latitude" : 0.0,
     "longitude" : 0.0
   },
-  "imageUrl" : "imageUrl",
-  "homepageUrl" : "homepageUrl",
+  "imageUrl" : "https://image.com",
+  "homepageUrl" : "https://homepage.com",
   "instagramId" : "instagramId",
   "gradingSystem" : "gradingSystem"
 }</code></pre>
@@ -616,7 +618,7 @@ Host: localhost:8080
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>address</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">암장 주소</p></td>
 </tr>
 <tr>
@@ -628,8 +630,20 @@ Host: localhost:8080
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>location</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">암장 위치</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">경도</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageUrl</code></p></td>
@@ -655,18 +669,6 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">암장 난이도 체계</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.latitude</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">위도</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.longitude</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">경도</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -691,7 +693,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMCwiZXhwIjoxNjkyNzMxMzEwfQ.L3blQDx1DTTko-ARU6QQZDuWSnH4L8zLsAmk6ccb-1oomlIvibeUvtJzECOv8xHuKW-qroL7KVpOiTdmcOD7-w
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NywiZXhwIjoxNjkzOTQ1NDY3fQ.trksQxWi1TPKgc5Vt8E1xWSaTYfkaJpUnYqyNodXMpHW1xKYQE4GSmOGBIcrZ5jE_1QAb4gr-w9fL-agPgvWUQ
 Content-Length: 32
 Host: localhost:8080
 
@@ -749,7 +751,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /gyms HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcwOSwiZXhwIjoxNjkyNzMxMzA5fQ.a73WFT4Je-US7mTUVCtJCz_Xe2CB9jLLk56CBZOEFabguEh0WrGjhjIjabX5Ft1_GAJi15o3X7ZgmkDVygQUSg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiZG9jcyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NiwiZXhwIjoxNjkzOTQ1NDY2fQ.3Q8wNS-4bc-BZ3lisXCFxcxmWI9-ftV3sJcapfa6fhWzABE5HXY3MFB3Y3z4r_Y4AUet4kLEI5dsbDS3y5guYg
 Content-Length: 212
 Host: localhost:8080
 
@@ -839,6 +841,7 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -880,15 +883,15 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 218
+Content-Length: 236
 
 {
   "name" : "암장이름",
   "address" : "주소",
   "phone" : "02-000-0000",
-  "imageUrl" : "imageUrl",
+  "imageUrl" : "https://image.com",
   "instagramId" : "instagramId",
-  "homepageUrl" : "homepageUrl",
+  "homepageUrl" : "https://homepage.com",
   "gradingSystem" : "gradingSystem"
 }</code></pre>
 </div>
@@ -927,35 +930,36 @@ Content-Length: 218
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>phone</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">연락처</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대표 이미지 URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagramId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>homepageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">홈페이지 URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gradingSystem</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">매장 난이도 분류 체</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">매장 난이도 분류 체계</p></td>
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1055,6 +1059,7 @@ Content-Length: 260
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1077,34 +1082,34 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 649
+Content-Length: 694
 
 {
   "gyms" : [ {
     "name" : "암장5",
     "address" : "주소",
     "phone" : "02-000-0000",
-    "image" : "imageUrl"
+    "image" : "https://image.com"
   }, {
     "name" : "암장6",
     "address" : "주소",
     "phone" : "02-000-0000",
-    "image" : "imageUrl"
+    "image" : "https://image.com"
   }, {
     "name" : "암장7",
     "address" : "주소",
     "phone" : "02-000-0000",
-    "image" : "imageUrl"
+    "image" : "https://image.com"
   }, {
     "name" : "암장8",
     "address" : "주소",
     "phone" : "02-000-0000",
-    "image" : "imageUrl"
+    "image" : "https://image.com"
   }, {
     "name" : "암장9",
     "address" : "주소",
     "phone" : "02-000-0000",
-    "image" : "imageUrl"
+    "image" : "https://image.com"
   } ],
   "page" : 1,
   "size" : 5,
@@ -1152,13 +1157,13 @@ Content-Length: 649
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].phone</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">전화번호</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].image</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">대표 이미지</p></td>
 </tr>
 <tr>
@@ -1181,6 +1186,7 @@ Content-Length: 649
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1232,59 +1238,44 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 1133
+Content-Length: 1015
 
 {
   "gyms" : [ {
-    "id" : 13,
     "name" : "암장1",
-    "location" : {
-      "latitude" : 34.01,
-      "longitude" : 127.01
-    },
     "distance" : 0.7221446,
     "address" : "주소1",
-    "imageUrl" : "이미지1"
+    "imageUrl" : "https://image1.com",
+    "instagramId" : "instagram1",
+    "phone" : "010-1234-5671"
   }, {
-    "id" : 12,
     "name" : "암장0",
-    "location" : {
-      "latitude" : 34.0,
-      "longitude" : 127.0
-    },
     "distance" : 0.7221799,
     "address" : "주소0",
-    "imageUrl" : "이미지0"
+    "imageUrl" : "https://image0.com",
+    "instagramId" : "instagram0",
+    "phone" : "010-1234-5670"
   }, {
-    "id" : 14,
     "name" : "암장2",
-    "location" : {
-      "latitude" : 34.02,
-      "longitude" : 127.02
-    },
     "distance" : 2.1662774,
     "address" : "주소2",
-    "imageUrl" : "이미지2"
+    "imageUrl" : "https://image2.com",
+    "instagramId" : "instagram2",
+    "phone" : "010-1234-5672"
   }, {
-    "id" : 15,
     "name" : "암장3",
-    "location" : {
-      "latitude" : 34.03,
-      "longitude" : 127.03
-    },
     "distance" : 3.6104634,
     "address" : "주소3",
-    "imageUrl" : "이미지3"
+    "imageUrl" : "https://image3.com",
+    "instagramId" : "instagram3",
+    "phone" : "010-1234-5673"
   }, {
-    "id" : 16,
     "name" : "암장4",
-    "location" : {
-      "latitude" : 34.04,
-      "longitude" : 127.04
-    },
     "distance" : 5.0549064,
     "address" : "주소4",
-    "imageUrl" : "이미지4"
+    "imageUrl" : "https://image4.com",
+    "instagramId" : "instagram4",
+    "phone" : "010-1234-5674"
   } ],
   "count" : 5
 }</code></pre>
@@ -1316,12 +1307,6 @@ Content-Length: 1133
 <td class="tableblock halign-left valign-top"><p class="tableblock">가까운 암장들 (거리 정렬)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">암장 ID</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -1330,7 +1315,7 @@ Content-Length: 1133
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].imageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">암장 대표 이미지 URL</p></td>
 </tr>
 <tr>
@@ -1340,16 +1325,16 @@ Content-Length: 1133
 <td class="tableblock halign-left valign-top"><p class="tableblock">주소</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].location.latitude</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">위도</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전화번호</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].location.longitude</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].instagramId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">경도</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].distance</code></p></td>
@@ -1365,6 +1350,7 @@ Content-Length: 1133
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1375,12 +1361,12 @@ Content-Length: 1133
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /gyms/likes HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcwOSwiZXhwIjoxNjkyNzMxMzA5fQ.lSi01aeoERvQk-VIhbjnWJqa8ex5wTjlcRLbL8xKft1oZhFNMXgXf0dY_mam0SAudcWc9Ec5twHfaQYkc2Ci3Q
-Content-Length: 20
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NywiZXhwIjoxNjkzOTQ1NDY3fQ.MEsJ9J7sxZUuYInQpNg0guivzl0b5v2a1qBAvr9ZyLQ26FYWpbp4AgQA1321v8Uh7ClOXzqokvCWAG20w14wuw
+Content-Length: 22
 Host: localhost:8080
 
 {
-  "gymId" : 22
+  "name" : "gym"
 }</code></pre>
 </div>
 </div>
@@ -1425,10 +1411,10 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gymId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">암장 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">암장명</p></td>
 </tr>
 </tbody>
 </table>
@@ -1443,6 +1429,7 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1453,12 +1440,12 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /gyms/likes HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMCwiZXhwIjoxNjkyNzMxMzEwfQ.y3iIb40kjWhCptuyRvW3eluYxl8y9NuRxVm36SFC8sGoO7Sm4Mj4OfmZK6z76DCYw9GdlGJhuymO1Xm0SCNKKw
-Content-Length: 20
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NywiZXhwIjoxNjkzOTQ1NDY3fQ.K5yXWaVXMI3AmKgPGxyE_FNBvbDrIRiDutPu0D7MxoNmZ4CSSVf9TDGl6G1QrDNHGHQlCY8jbqlTaItpXo8HAA
+Content-Length: 22
 Host: localhost:8080
 
 {
-  "gymId" : 37
+  "name" : "gym"
 }</code></pre>
 </div>
 </div>
@@ -1503,10 +1490,10 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gymId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">암장 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">암장명</p></td>
 </tr>
 </tbody>
 </table>
@@ -1521,6 +1508,7 @@ Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1530,7 +1518,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /gyms/likes HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcwOSwiZXhwIjoxNjkyNzMxMzA5fQ.IlLS4QIQ2qnzZtgBK6HQ50jPPe_c8WuRUESM2qzF8pA3BHMw4Qh8-wt9ZiQfFGKOdJK6r4tijX9y3DjkDJOuww
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2NiwiZXhwIjoxNjkzOTQ1NDY2fQ.eud9x8cA4FhYMmixriiwclKXNpAkYGmJMtQUeRxkfMHWDSaOa0Pm17ayvezsgpGvFi5tFs5Bz7xyGyTErQa5Zg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1565,18 +1553,39 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 176
+Content-Length: 791
 
 {
   "gyms" : [ {
-    "id" : 1,
-    "name" : "암장1"
+    "name" : "암장0",
+    "address" : "주소0",
+    "phone" : "010-1234-5670",
+    "instagramId" : "instagram0",
+    "imageUrl" : "http://image0.com",
+    "location" : {
+      "latitude" : 37.1235,
+      "longitude" : 127.123
+    }
   }, {
-    "id" : 2,
-    "name" : "암장2"
+    "name" : "암장1",
+    "address" : "주소1",
+    "phone" : "010-1234-5671",
+    "instagramId" : "instagram1",
+    "imageUrl" : "http://image1.com",
+    "location" : {
+      "latitude" : 37.1245,
+      "longitude" : 127.124
+    }
   }, {
-    "id" : 3,
-    "name" : "암장3"
+    "name" : "암장2",
+    "address" : "주소2",
+    "phone" : "010-1234-5672",
+    "instagramId" : "instagram2",
+    "imageUrl" : "http://image2.com",
+    "location" : {
+      "latitude" : 37.1255,
+      "longitude" : 127.125
+    }
   } ],
   "count" : 3
 }</code></pre>
@@ -1608,16 +1617,46 @@ Content-Length: 176
 <td class="tableblock halign-left valign-top"><p class="tableblock">찜한 암장들</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">암장 ID</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].name</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">암장 이름</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].instagramId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].imageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">대표 이미지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].location.latitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">위도</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gyms[].location.longitude</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">경도</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
@@ -1627,6 +1666,7 @@ Content-Length: 176
 </tr>
 </tbody>
 </table>
+<hr>
 </div>
 </div>
 <div class="sect2">
@@ -1735,7 +1775,7 @@ Content-Length: 137
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /users/me HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiNCIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMSwiZXhwIjoxNjkyNzMxMzExfQ.uIjiGfg-L4ypuL_ZFRy0q5TS73q8pvZO9YdMqJkAn7FSSPDlJOkJbAny7BVlk5JxJEn3hKjAmLW_4MRoBEfYIg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMTciLCJhdWQiOiJhbGwiLCJpYXQiOjE2OTM5NDE4NjksImV4cCI6MTY5Mzk0NTQ2OX0.leOGBbtB5BXopOFY3U1l0nY31av3YVm8KY7XUbs80a2ye0G1oktFPBgdjsdvWqmX5zFI2fvohfzjlZxBYkDBag
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1879,7 +1919,7 @@ Content-Type: application/json
 Content-Length: 232
 
 {
-  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMCwiZXhwIjoxNjkyNzMxMzEwfQ.uTAPnl4n4Z2iC09e644Y8765Gw-QskH4DcFeUxHVpf_129MVkBsbJGgTSUqzPs9jqpEONkriwbMMQ5qQ-BiG9A"
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2OCwiZXhwIjoxNjkzOTQ1NDY4fQ.piMtd8pdzln1XBIyY-vtKuLtxTewvi3TDHFHamDgalxSVmgqXJlbigDStaxZEkwbx2_oL4kipWJU17Oc8TzJUw"
 }</code></pre>
 </div>
 </div>
@@ -1925,7 +1965,7 @@ Content-Length: 232
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /medias HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMCwiZXhwIjoxNjkyNzMxMzEwfQ.HrlFiFqru_5A3_FOWZ8dC7y5nlg4CwjRAMfhEIbV_fGJhYU0WEqLA5deH_qSuIujNH-DTWyS_KC6_kdbVcD8bA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiNCIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2OSwiZXhwIjoxNjkzOTQ1NDY5fQ.R1lo3I974ysrkFwxJl2GOrWjZpvIhgk0UoqgY41bdm-qJfO3R56K6bTTlrOciO6jCSXsoyx1EiAULzA6Vaee-g
 Content-Length: 469
 Host: localhost:8080
 
@@ -1940,7 +1980,7 @@ Host: localhost:8080
     "permalink" : "instagramPermalink"
   },
   "problem" : {
-    "clearDate" : "2023-08-23",
+    "clearDate" : "2023-09-06",
     "gymName" : "gymName",
     "color" : "color",
     "isClear" : true,
@@ -2023,13 +2063,13 @@ Host: localhost:8080
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagram.mediaId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 미디어 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagram.permalink</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 미디어 게시물 URL</p></td>
 </tr>
 <tr>
@@ -2041,7 +2081,7 @@ Host: localhost:8080
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>problem.clearDate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제 클리어 날짜</p></td>
 </tr>
 <tr>
@@ -2104,39 +2144,39 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 821
+Content-Length: 801
 
 {
   "medias" : [ {
-    "id" : 12,
+    "id" : 14,
     "thumbnailUrl" : "thumbnailUrl0",
     "gymName" : "gym0",
     "problemColor" : "color0",
-    "username" : "username0"
+    "username" : "user0"
   }, {
-    "id" : 13,
+    "id" : 15,
     "thumbnailUrl" : "thumbnailUrl1",
     "gymName" : "gym1",
     "problemColor" : "color1",
-    "username" : "username1"
+    "username" : "user1"
   }, {
-    "id" : 14,
+    "id" : 16,
     "thumbnailUrl" : "thumbnailUrl2",
     "gymName" : "gym2",
     "problemColor" : "color2",
-    "username" : "username2"
+    "username" : "user2"
   }, {
-    "id" : 15,
+    "id" : 17,
     "thumbnailUrl" : "thumbnailUrl3",
     "gymName" : "gym3",
     "problemColor" : "color3",
-    "username" : "username3"
+    "username" : "user3"
   }, {
-    "id" : 16,
+    "id" : 18,
     "thumbnailUrl" : "thumbnailUrl4",
     "gymName" : "gym4",
     "problemColor" : "color4",
-    "username" : "username4"
+    "username" : "user4"
   } ],
   "page" : 0,
   "size" : 5,
@@ -2229,7 +2269,7 @@ Content-Length: 821
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /medias/me?page=0&amp;size=5 HTTP/1.1
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5MjcyNzcxMSwiZXhwIjoxNjkyNzMxMzExfQ.kAMbsytzQhKDDecFs1uv3GBX3fTafXx_KnJ6BbFrs-oXQMZtEiyOOWj9V7O-scynT2x02PsfVdE-pu550QMnIQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiNSIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2OSwiZXhwIjoxNjkzOTQ1NDY5fQ.XPM9D9Tg68Ix-9_YlWBJ9vUIsinGxnggHjctACH2RJvEK2GlzGa8zToe3X_3Xji1RhJU6iIswgcVKsdGIqIZ1A
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2268,31 +2308,31 @@ Content-Length: 781
 
 {
   "medias" : [ {
-    "id" : 2,
+    "id" : 4,
     "thumbnailUrl" : "thumbnailUrl0",
     "gymName" : "gym0",
     "problemColor" : "color0",
     "username" : "me"
   }, {
-    "id" : 3,
+    "id" : 5,
     "thumbnailUrl" : "thumbnailUrl1",
     "gymName" : "gym1",
     "problemColor" : "color1",
     "username" : "me"
   }, {
-    "id" : 4,
+    "id" : 6,
     "thumbnailUrl" : "thumbnailUrl2",
     "gymName" : "gym2",
     "problemColor" : "color2",
     "username" : "me"
   }, {
-    "id" : 5,
+    "id" : 7,
     "thumbnailUrl" : "thumbnailUrl3",
     "gymName" : "gym3",
     "problemColor" : "color3",
     "username" : "me"
   }, {
-    "id" : 6,
+    "id" : 8,
     "thumbnailUrl" : "thumbnailUrl4",
     "gymName" : "gym4",
     "problemColor" : "color4",
@@ -2388,12 +2428,12 @@ Content-Length: 781
 <h4 id="_http_request_18"><a class="link" href="#_http_request_18">5.4.1. HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /medias/22 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /medias/24 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /medias/{mediaId}</caption>
+<caption class="title">Table 2. /medias/{id}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2406,7 +2446,7 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">미디어 ID</p></td>
 </tr>
 </tbody>
@@ -2421,26 +2461,22 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 463
+Content-Length: 376
 
 {
-  "mediaId" : 22,
+  "id" : 24,
   "username" : "username",
-  "mediaType" : "VIDEO",
   "platform" : "INSTAGRAM",
   "mediaUrl" : "mediaUrl",
   "thumbnailUrl" : "thumbnailUrl",
   "description" : "description",
   "problem" : {
-    "clearDate" : "2023-08-23",
+    "clearDate" : "2023-09-06",
     "gymName" : "gymName",
     "color" : "color",
     "isClear" : true,
     "perceivedDifficulty" : "perceivedDifficulty",
     "type" : "type"
-  },
-  "instagram" : {
-    "permalink" : "permalink"
   }
 }</code></pre>
 </div>
@@ -2465,7 +2501,7 @@ Content-Length: 463
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">미디어 ID</p></td>
@@ -2480,7 +2516,7 @@ Content-Length: 463
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>platform</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">미디어 원본 플랫폼</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">미디어 플랫폼 (ex. instagram, original)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaUrl</code></p></td>
@@ -2495,22 +2531,10 @@ Content-Length: 463
 <td class="tableblock halign-left valign-top"><p class="tableblock">미디어 썸네일 URL</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mediaType</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">미디어 타입</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">미디어 설명</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instagram.permalink</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">인스타그램 미디어 게시물 URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>problem.clearDate</code></p></td>
@@ -2533,7 +2557,7 @@ Content-Length: 463
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>problem.type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제 타입</p></td>
 </tr>
 <tr>
@@ -2545,11 +2569,174 @@ Content-Length: 463
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>problem.perceivedDifficulty</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">문제 체감 난이도</p></td>
 </tr>
 </tbody>
 </table>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_미디어_정보_수정"><a class="link" href="#_미디어_정보_수정">5.5. 미디어 정보 수정</a></h3>
+<div class="sect3">
+<h4 id="_http_request_19"><a class="link" href="#_http_request_19">5.5.1. HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /medias/2 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMyIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2OCwiZXhwIjoxNjkzOTQ1NDY4fQ.imKXxSnq5UyS2A6fOvViq8k8Zqf8BbiQnn1Bu50u_kBtU8940Dbh0_cFJCSyfrAHFO4pfOERnsdtazW2_thqBQ
+Content-Length: 30
+Host: localhost:8080
+
+{
+  "description" : "edit"
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. /medias/{id}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">미디어 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_request_headers_6"><a class="link" href="#_request_headers_6">5.5.2. Request Headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_request_fields_8"><a class="link" href="#_request_fields_8">5.5.3. Request Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Optional</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업데이트할 본문 내용</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_20"><a class="link" href="#_http_response_20">5.5.4. HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_미디어_삭제"><a class="link" href="#_미디어_삭제">5.6. 미디어 삭제</a></h3>
+<div class="sect3">
+<h4 id="_http_request_20"><a class="link" href="#_http_request_20">5.6.1. HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /medias/1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJDb0NsaW1iIiwic3ViIjoiMiIsImF1ZCI6ImFsbCIsImlhdCI6MTY5Mzk0MTg2OCwiZXhwIjoxNjkzOTQ1NDY4fQ.NrUHOiaF15Uc_re7GxrdIls-aTVexA6tw8nZyq2x9Wokh2CUIGvTwhYNrxdhvWN0BlDZ-0O3HmpgQx0qNnshMQ
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. /medias/{id}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">미디어 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_request_headers_7"><a class="link" href="#_request_headers_7">5.6.2. Request Headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_21"><a class="link" href="#_http_response_21">5.6.3. HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

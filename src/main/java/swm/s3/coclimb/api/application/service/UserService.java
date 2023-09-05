@@ -11,7 +11,6 @@ import swm.s3.coclimb.domain.user.InstagramUserInfo;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class UserService implements UserQuery, UserCommand {
     @Transactional
     public Long createUserByInstagramInfo(InstagramUserInfo instagramUserInfo) {
         return userUpdatePort.save((User.builder()
-                .name(UUID.randomUUID().toString().substring(8))
+                .name(instagramUserInfo.getName())
                 .instagramUserInfo(instagramUserInfo)
                 .build()));
     }

@@ -94,7 +94,7 @@ public class GymService implements GymCommand, GymQuery {
     @Override
     @Transactional
     public void likeGym(GymLikeRequestDto request) {
-        Gym gym = gymLoadPort.getById(request.getGymId());
+        Gym gym = gymLoadPort.findByName(request.getGymName()).orElseThrow(GymNotFound::new);
         gymLikeUpdatePort.save(GymLike.builder().user(request.getUser()).gym(gym).build());
     }
 
@@ -110,8 +110,8 @@ public class GymService implements GymCommand, GymQuery {
     @Override
     @Transactional
     public void unlikeGym(GymUnlikeRequestDto request) {
-        GymLike gymLike = gymLikeLoadPort.getByUserIdAndGymId(request.getUserId(), request.getGymId());
-        gymLike.remove();
+        GymLike gymLike = gymLikeLoadPort.getByUserIdAndGymName(request.getUserId(), request.getGymName());
+        gymLikeUpdatePort.delete(gymLike);
     }
 
     @Override

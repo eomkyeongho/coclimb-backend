@@ -9,12 +9,15 @@ import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaDeleteRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaUpdateRequestDto;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
 import swm.s3.coclimb.api.exception.errortype.media.MediaNotFound;
+import swm.s3.coclimb.api.exception.errortype.media.MediaOwnerNotMatched;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 
@@ -80,5 +83,25 @@ public class MediaService implements MediaQuery, MediaCommand {
     @Override
     public Media getMediaById(Long mediaId) {
         return mediaLoadPort.findById(mediaId).orElseThrow(MediaNotFound::new);
+    }
+
+    @Override
+    @Transactional
+    public void updateMedia(MediaUpdateRequestDto mediaUpdateRequestDto) {
+        Media media = mediaLoadPort.findById(mediaUpdateRequestDto.getMediaId()).orElseThrow(MediaNotFound::new);
+        if(!media.getUser().getId().equals(mediaUpdateRequestDto.getUser().getId())) {
+            throw new MediaOwnerNotMatched();
+        }
+        media.update(mediaUpdateRequestDto.getDescription());
+    }
+
+    @Override
+    @Transactional
+    public void deleteMedia(MediaDeleteRequestDto mediaDeleteRequestDto) {
+        Media media = mediaLoadPort.findById(mediaDeleteRequestDto.getMediaId()).orElseThrow(MediaNotFound::new);
+        if(!media.getUser().getId().equals(mediaDeleteRequestDto.getUser().getId())) {
+            throw new MediaOwnerNotMatched();
+        }
+        mediaUpdatePort.delete(media);
     }
 }

@@ -14,6 +14,7 @@ import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,8 +45,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .address("주소")
                 .phone("02-000-0000")
                 .location(Location.of(0f,0f))
-                .imageUrl("imageUrl")
-                .homepageUrl("homepageUrl")
+                .imageUrl("https://image.com")
+                .homepageUrl("https://homepage.com")
                 .instagramId("instagramId")
                 .gradingSystem("gradingSystem")
                 .build();
@@ -97,9 +98,9 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .name(name)
                 .address("주소")
                 .phone("02-000-0000")
-                .imageUrl("imageUrl")
+                .imageUrl("https://image.com")
                 .instagramId("instagramId")
-                .homepageUrl("homepageUrl")
+                .homepageUrl("https://homepage.com")
                 .gradingSystem("gradingSystem")
                 .location(Location.of(0f, 0f))
                 .build());
@@ -331,8 +332,10 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .mapToObj(i -> Gym.builder()
                         .name("암장" + i)
                         .address("주소" + i)
-                        .imageUrl("이미지" + i)
+                        .imageUrl("https://image" + i + ".com")
                         .location(Location.of((34f + (float)i/100f), 127f + (float)i/100f))
+                        .instagramId("instagram" + i)
+                        .phone("010-1234-567" + i)
                         .build())
                 .toList());
 
@@ -359,9 +362,6 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 responseFields(
                         fieldWithPath("gyms").type(JsonFieldType.ARRAY)
                                 .description("가까운 암장들 (거리 정렬)"),
-                        fieldWithPath("gyms[].id")
-                                .type(JsonFieldType.NUMBER)
-                                .description("암장 ID"),
                         fieldWithPath("gyms[].name")
                                 .type(JsonFieldType.STRING)
                                 .description("암장 이름"),
@@ -372,12 +372,12 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("gyms[].address")
                                 .type(JsonFieldType.STRING)
                                 .description("주소"),
-                        fieldWithPath("gyms[].location.latitude")
-                                .type(JsonFieldType.NUMBER)
-                                .description("위도"),
-                        fieldWithPath("gyms[].location.longitude")
-                                .type(JsonFieldType.NUMBER)
-                                .description("경도"),
+                        fieldWithPath("gyms[].phone")
+                                .type(JsonFieldType.STRING)
+                                .description("전화번호"),
+                        fieldWithPath("gyms[].instagramId")
+                                .type(JsonFieldType.STRING)
+                                .description("인스타그램 ID"),
                         fieldWithPath("gyms[].distance")
                                 .type(JsonFieldType.NUMBER)
                                 .description("거리 (km)"),
@@ -390,23 +390,22 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("암장을 찜하는 API")
     void likeGym() throws Exception {
         // given
-        User user = User.builder().build();
-        Gym gym = Gym.builder().name("암장").build();
-        userJpaRepository.save(user);
+        String gymName = "gym";
+        Gym gym = Gym.builder().name(gymName).build();
+        userJpaRepository.save(User.builder().build());
         gymJpaRepository.save(gym);
-        Long userId = userJpaRepository.findAll().get(0).getId();
-        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        User user = userJpaRepository.findAll().get(0);
         GymLikeRequest request = GymLikeRequest.builder()
-                .gymId(gymId)
+                .name(gymName)
                 .build();
 
         // when
         ResultActions result = mockMvc.perform(post("/gyms/likes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId))))
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
                 .andDo(print());
-        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymName(user.getId(), gymName).orElse(null);
 
         // then
         result.andExpect(status().isCreated());
@@ -420,8 +419,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         headerWithName("Authorization").description("JWT 인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("gymId").type(JsonFieldType.NUMBER)
-                                .description("암장 ID")
+                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                .description("암장명")
                 )));
     }
 
@@ -429,24 +428,23 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("암장 찜하기를 취소하는 API")
     void unlikeGym() throws Exception {
         // given
-        User user = User.builder().build();
-        Gym gym = Gym.builder().name("암장").build();
-        userJpaRepository.save(user);
+        String gymName = "gym";
+        Gym gym = Gym.builder().name(gymName).build();
+        userJpaRepository.save(User.builder().build());
         gymJpaRepository.save(gym);
-        Long userId = userJpaRepository.findAll().get(0).getId();
-        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        User user = userJpaRepository.findAll().get(0);
         gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym).build());
         GymUnlikeRequest request = GymUnlikeRequest.builder()
-                .gymId(gymId)
+                .name(gymName)
                 .build();
 
         // when
         ResultActions result = mockMvc.perform(delete("/gyms/likes")
-                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId)))
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId())))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print());
-        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+        GymLike gymLike = gymLikeJpaRepository.findByUserIdAndGymName(user.getId(), gymName).orElse(null);
 
         // then
         result.andExpect(status().isNoContent());
@@ -460,8 +458,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         headerWithName("Authorization").description("JWT 인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("gymId").type(JsonFieldType.NUMBER)
-                                .description("암장 ID")
+                        fieldWithPath("name").type(JsonFieldType.STRING)
+                                .description("암장명")
                 )));
     }
 
@@ -469,26 +467,36 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("찜한 암장을 조회하는 API")
     void retrieveLikedGyms() throws Exception {
         // given
-        User user = User.builder().build();
-        Gym gym1 = Gym.builder().name("암장1").build();
-        Gym gym2 = Gym.builder().name("암장2").build();
-        Gym gym3 = Gym.builder().name("암장3").build();
-        userJpaRepository.save(user);
-        gymJpaRepository.saveAll(List.of(gym1, gym2, gym3));
-        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym1).build());
-        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym2).build());
-        gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym3).build());
-        Long userId = userJpaRepository.findAll().get(0).getId();
+        userJpaRepository.save(User.builder().build());
+        List<Gym> gyms = IntStream.range(0, 3).mapToObj(i -> Gym.builder()
+                        .name("암장" + i)
+                        .address("주소" + i)
+                        .phone("010-1234-567" + i)
+                        .instagramId("instagram" + i)
+                        .imageUrl("http://image" + i + ".com")
+                        .location(Location.builder()
+                                .latitude(37.123456F + (float)i/1000)
+                                .longitude(127.123456F + (float)i/1000)
+                                .build())
+                        .build())
+                .collect(Collectors.toList());
+        gymJpaRepository.saveAll(gyms);
+        User user = userJpaRepository.findAll().get(0);
+        gymLikeJpaRepository.saveAll(IntStream.range(0,3).mapToObj(i -> GymLike.builder()
+                        .user(user)
+                        .gym(gyms.get(i))
+                        .build())
+                .collect(Collectors.toList()));
 
         // when
         // then
         ResultActions result = mockMvc.perform(get("/gyms/likes")
-                        .header("Authorization", jwtManager.issueToken(String.valueOf(userId))))
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gyms").isArray())
                 .andExpect(jsonPath("$.count").value(3))
-                .andExpect(jsonPath("$.gyms[*].name").value(containsInAnyOrder("암장1", "암장2", "암장3")));
+                .andExpect(jsonPath("$.gyms[*].name").value(containsInAnyOrder("암장0", "암장1", "암장2")));
 
         // docs
         result.andDo(document("gym-my-like",
@@ -501,12 +509,27 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("gyms")
                                 .type(JsonFieldType.ARRAY)
                                 .description("찜한 암장들"),
-                        fieldWithPath("gyms[].id")
-                                .type(JsonFieldType.NUMBER)
-                                .description("암장 ID"),
                         fieldWithPath("gyms[].name")
                                 .type(JsonFieldType.STRING)
-                                .description("암장 이름"),
+                                .description("이름"),
+                        fieldWithPath("gyms[].address")
+                                .type(JsonFieldType.STRING)
+                                .description("주소"),
+                        fieldWithPath("gyms[].phone")
+                                .type(JsonFieldType.STRING)
+                                .description("전화번호"),
+                        fieldWithPath("gyms[].instagramId")
+                                .type(JsonFieldType.STRING)
+                                .description("인스타그램 ID"),
+                        fieldWithPath("gyms[].imageUrl")
+                                .type(JsonFieldType.STRING)
+                                .description("대표 이미지 URL"),
+                        fieldWithPath("gyms[].location.latitude")
+                                .type(JsonFieldType.NUMBER)
+                                .description("위도"),
+                        fieldWithPath("gyms[].location.longitude")
+                                .type(JsonFieldType.NUMBER)
+                                .description("경도"),
                         fieldWithPath("count")
                                 .type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")

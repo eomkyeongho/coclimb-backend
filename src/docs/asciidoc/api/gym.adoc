@@ -26,7 +26,7 @@ include::{snippets}/gym-update/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-update/http-response.adoc[]
 // include::{snippets}/gym-update/response-fields.adoc[]
-
+---
 [[gym-info]]
 === 암장 정보 조회
 ==== HTTP Request
@@ -35,7 +35,7 @@ include::{snippets}/gym-info/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-info/http-response.adoc[]
 include::{snippets}/gym-info/response-fields.adoc[]
-
+---
 [[gym-locations]]
 === 암장 위치정보 조회
 ==== HTTP Request
@@ -43,7 +43,7 @@ include::{snippets}/gym-locations/http-request.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-locations/http-response.adoc[]
 include::{snippets}/gym-locations/response-fields.adoc[]
-
+---
 [[gym-page]]
 === 암장 페이지 조회
 ==== HTTP Request
@@ -51,7 +51,7 @@ include::{snippets}/gym-page/http-request.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-page/http-response.adoc[]
 include::{snippets}/gym-page/response-fields.adoc[]
-
+---
 [[gym-nearby]]
 === 가까운 암장 조회
 ==== HTTP Request
@@ -61,7 +61,7 @@ include::{snippets}/gym-nearby/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-nearby/http-response.adoc[]
 include::{snippets}/gym-nearby/response-fields.adoc[]
-
+---
 [[gym-like]]
 === 암장 찜하기
 ==== HTTP Request
@@ -71,7 +71,7 @@ include::{snippets}/gym-like/request-headers.adoc[]
 include::{snippets}/gym-like/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-like/http-response.adoc[]
-
+---
 [[gym-unlike]]
 === 암장 찜하기 취소
 ==== HTTP Request
@@ -81,7 +81,7 @@ include::{snippets}/gym-unlike/request-headers.adoc[]
 include::{snippets}/gym-unlike/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-unlike/http-response.adoc[]
-
+---
 [[gym-my-like]]
 === 내가 찜한 암장 조회
 ==== HTTP Request
@@ -91,7 +91,7 @@ include::{snippets}/gym-my-like/request-headers.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-my-like/http-response.adoc[]
 include::{snippets}/gym-my-like/response-fields.adoc[]
-
+---
 [[gym-demo-search]]
 === 암장 검색
 ==== HTTP Request

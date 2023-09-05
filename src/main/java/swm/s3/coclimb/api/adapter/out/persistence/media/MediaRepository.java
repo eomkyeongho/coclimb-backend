@@ -40,4 +40,9 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     public Optional<Media> findById(Long mediaId) {
         return mediaJpaRepository.findById(mediaId);
     }
+
+    @Override
+    public void delete(Media media) {
+        mediaJpaRepository.delete(media);
+    }
 }

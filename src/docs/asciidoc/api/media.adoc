@@ -31,3 +31,22 @@ include::{snippets}/media-info/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/media-info/http-response.adoc[]
 include::{snippets}/media-info/response-fields.adoc[]
+---
+=== 미디어 정보 수정
+==== HTTP Request
+include::{snippets}/media-update/http-request.adoc[]
+include::{snippets}/media-update/path-parameters.adoc[]
+==== Request Headers
+include::{snippets}/media-update/request-headers.adoc[]
+include::{snippets}/media-update/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/media-update/http-response.adoc[]
+---
+=== 미디어 삭제
+==== HTTP Request
+include::{snippets}/media-delete/http-request.adoc[]
+include::{snippets}/media-delete/path-parameters.adoc[]
+==== Request Headers
+include::{snippets}/media-delete/request-headers.adoc[]
+==== HTTP Response
+include::{snippets}/media-delete/http-response.adoc[]
