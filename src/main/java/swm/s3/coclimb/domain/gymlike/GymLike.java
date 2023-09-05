@@ -22,17 +22,12 @@ public class GymLike {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gym_id")
+    @JoinColumn(name = "gym_name", referencedColumnName = "name")
     private Gym gym;
 
     @Builder
     public GymLike(User user, Gym gym) {
         this.user = user;
         this.gym = gym;
-    }
-
-    public void remove() {
-        this.user = null;
-        this.gym = null;
     }
 }

@@ -7,13 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import swm.s3.coclimb.api.adapter.in.web.media.dto.InstagramMyVideosResponse;
-import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
-import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaInfoResponse;
-import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaPageResponse;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.*;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaDeleteRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.ValidationFail;
@@ -78,9 +76,33 @@ public class MediaController {
         return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
     }
 
-    @GetMapping("/medias/{mediaId}")
-    public ResponseEntity<MediaInfoResponse> getMediaInfo(@PathVariable Long mediaId) {
-        Media media = mediaQuery.getMediaById(mediaId);
+    @GetMapping("/medias/{id}")
+    public ResponseEntity<MediaInfoResponse> getMediaInfo(@PathVariable Long id) {
+        Media media = mediaQuery.getMediaById(id);
         return ResponseEntity.ok(MediaInfoResponse.of(media));
+    }
+
+    @DeleteMapping("/medias/{id}")
+    public ResponseEntity<Void> deleteMedia(@PathVariable Long id, @LoginUser User user) {
+        mediaCommand.deleteMedia(MediaDeleteRequestDto.builder()
+                .mediaId(id)
+                .user(user)
+                .build());
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @PatchMapping("/medias/{id}")
+    public ResponseEntity<Void> updateMedia(@PathVariable Long id,
+                                            @RequestBody @Valid MediaUpdateRequest mediaUpdateRequest,
+                                            @LoginUser User user) {
+
+        mediaCommand.updateMedia(mediaUpdateRequest.toServiceDto(id, user));
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

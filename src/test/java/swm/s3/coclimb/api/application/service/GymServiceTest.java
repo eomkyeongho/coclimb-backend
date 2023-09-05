@@ -220,25 +220,23 @@ class GymServiceTest extends IntegrationTestSupport {
     @DisplayName("암장을 찜할 수 있다.")
     void likeGym() {
         // given
-        User user = User.builder().build();
-        Gym gym = Gym.builder().build();
-        userJpaRepository.save(user);
-        gymJpaRepository.save(gym);
-        Long userId = userJpaRepository.findAll().get(0).getId();
-        Long gymId = gymJpaRepository.findAll().get(0).getId();
+        String gymName = "gym";
+        userJpaRepository.save(User.builder().build());
+        gymJpaRepository.save(Gym.builder().name(gymName).build());
+        User user = userJpaRepository.findAll().get(0);
         GymLikeRequestDto request = GymLikeRequestDto.builder()
                 .user(user)
-                .gymId(gymId)
+                .gymName(gymName)
                 .build();
 
         // when
         gymService.likeGym(request);
-        GymLike sut = gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElse(null);
+        GymLike sut = gymLikeJpaRepository.findByUserIdAndGymName(user.getId(), gymName).orElse(null);
 
         // then
         assertThat(sut).isNotNull();
-        assertThat(sut.getUser().getId()).isEqualTo(userId);
-        assertThat(sut.getGym().getId()).isEqualTo(gymId);
+        assertThat(sut.getUser().getId()).isEqualTo(user.getId());
+        assertThat(sut.getGym().getName()).isEqualTo(gymName);
     }
 
     @Test
@@ -269,23 +267,23 @@ class GymServiceTest extends IntegrationTestSupport {
     @DisplayName("암장 찜하기를 취소할 수 있다.")
     void unlikeGym() {
         // given
-        User user = User.builder().build();
-        Gym gym = Gym.builder().build();
-        userJpaRepository.save(user);
-        gymJpaRepository.save(gym);
+        String gymName = "gym";
+        userJpaRepository.save(User.builder().build());
+        gymJpaRepository.save(Gym.builder().name(gymName).build());
+        User user = userJpaRepository.findAll().get(0);
+        Gym gym = gymJpaRepository.findByName(gymName).orElse(null);
         gymLikeJpaRepository.save(GymLike.builder().user(user).gym(gym).build());
-
-        Long userId = userJpaRepository.findAll().get(0).getId();
-        Long gymId = gymJpaRepository.findAll().get(0).getId();
 
         // when
         gymService.unlikeGym(GymUnlikeRequestDto.builder()
-                .userId(userId)
-                .gymId(gymId)
+                .userId(user.getId())
+                .gymName(gymName)
                 .build());
 
+        GymLike sut = gymLikeJpaRepository.findByUserIdAndGymName(user.getId(), gymName).orElse(null);
+
         // then
-        assertThat(gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId)).isEmpty();
+        assertThat(sut).isNull();
     }
 
     @Test

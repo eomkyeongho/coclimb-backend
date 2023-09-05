@@ -34,4 +34,13 @@ public class MediaProblemInfo {
         this.perceivedDifficulty = perceivedDifficulty;
         this.type = type;
     }
+
+    protected void remove() {
+        this.clearDate = null;
+        this.gymName = null;
+        this.color = null;
+        this.isClear = null;
+        this.perceivedDifficulty = null;
+        this.type = null;
+    }
 }

@@ -351,9 +351,11 @@ class GymControllerTest extends ControllerTestSupport {
         given(gymQuery.getNearbyGyms(any(float.class), any(float.class), any(float.class))).willReturn(IntStream.range(0, 5)
                 .mapToObj(i -> GymNearbyResponseDto.builder()
                         .name("암장" + i)
-                        .location(Location.of((float) i, (float) i))
                         .distance((float) i)
                         .address("주소" + i)
+                        .phone("010-1234-567" + i)
+                        .instagramId("instagram" + i)
+                        .imageUrl("imageUrl" + i)
                         .build())
                 .collect(Collectors.toList()));
 
@@ -378,7 +380,7 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         doNothing().when(gymCommand).likeGym(any());
         GymLikeRequest request = GymLikeRequest.builder()
-                .gymId(1L)
+                .name("gym")
                 .build();
 
         // when
@@ -399,7 +401,6 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         given(gymQuery.getLikedGyms(any())).willReturn(IntStream.range(0, 5)
                 .mapToObj(i -> GymLikesResponseDto.builder()
-                        .id((long) i)
                         .name("암장" + i)
                         .build())
                 .collect(Collectors.toList()));
@@ -411,9 +412,7 @@ class GymControllerTest extends ControllerTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gyms").isArray())
                 .andExpect(jsonPath("$.count").value(5))
-                .andExpect(jsonPath("$.gyms[0].id").value(0))
                 .andExpect(jsonPath("$.gyms[0].name").value("암장0"))
-                .andExpect(jsonPath("$.gyms[1].id").value(1))
                 .andExpect(jsonPath("$.gyms[1].name").value("암장1"));
     }
 
@@ -426,7 +425,7 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         doNothing().when(gymCommand).likeGym(any());
         GymUnlikeRequest request = GymUnlikeRequest.builder()
-                .gymId(1L)
+                .name("gym")
                 .build();
 
         // when

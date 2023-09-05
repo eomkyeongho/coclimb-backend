@@ -22,7 +22,7 @@ public class Media extends BaseTimeEntity {
     @JoinColumn(name="user_id")
     private User user;
     private String mediaType;
-    private String platform; // instagram or original
+    private String platform;
     @Length(max = 2048)
     private String mediaUrl;
     @Length(max = 2048)
@@ -46,5 +46,9 @@ public class Media extends BaseTimeEntity {
         this.description = description;
         this.instagramMediaInfo = instagramMediaInfo;
         this.mediaProblemInfo = mediaProblemInfo;
+    }
+
+    public void update(String description) {
+        this.description = description;
     }
 }

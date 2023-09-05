@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateProblemInfo;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
+import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaUpdateRequest;
 import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
 import swm.s3.coclimb.config.interceptor.AuthInterceptor;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
@@ -25,8 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -145,5 +145,39 @@ class MediaControllerTest extends ControllerTestSupport {
         mockMvc.perform(get("/medias/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.problem.gymName").value("암장1"));
+    }
+
+    @Test
+    @DisplayName("미디어를 삭제할 수 있다.")
+    void deleteMedia() throws Exception {
+        //given
+        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(User.builder().build());
+        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        willDoNothing().given(mediaCommand).deleteMedia(any());
+
+        //when
+        //then
+        mockMvc.perform(delete("/medias/1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("미디어를 수정할 수 있다.")
+    void updateMedia() throws Exception {
+        //given
+        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .willReturn(User.builder().build());
+        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        willDoNothing().given(mediaCommand).updateMedia(any());
+
+        //when
+        //then
+        mockMvc.perform(patch("/medias/1")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(MediaUpdateRequest.builder()
+                                        .description("description")
+                                        .build())))
+                .andExpect(status().isNoContent());
     }
 }

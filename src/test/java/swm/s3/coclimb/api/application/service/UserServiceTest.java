@@ -37,6 +37,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void createUserByInstagramInfo() throws Exception {
         // given
         InstagramUserInfo instagramUserInfo = InstagramUserInfo.builder()
+                .name("user")
                 .id(1L)
                 .build();
 

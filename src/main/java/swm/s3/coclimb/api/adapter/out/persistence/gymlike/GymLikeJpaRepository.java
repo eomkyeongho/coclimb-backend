@@ -12,5 +12,6 @@ public interface GymLikeJpaRepository extends JpaRepository<GymLike, Long> {
     @EntityGraph(attributePaths = {"user", "gym"})
     List<GymLike> findByUserId(Long userId);
 
-    Optional<GymLike> findByUserIdAndGymId(Long userId, Long gymId);
+    @EntityGraph(attributePaths = {"user", "gym"})
+    Optional<GymLike> findByUserIdAndGymName(Long userId, String gymName);
 }

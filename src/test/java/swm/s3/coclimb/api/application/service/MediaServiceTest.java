@@ -8,7 +8,9 @@ import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaDeleteRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
+import swm.s3.coclimb.api.application.port.in.media.dto.MediaUpdateRequestDto;
 import swm.s3.coclimb.api.exception.errortype.media.InstagramMediaIdConflict;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
@@ -34,8 +36,8 @@ class MediaServiceTest extends IntegrationTestSupport {
     void getMyInstagramVideos() {
         //given
         given(instagramRestApiManager.getMyMedias(any(String.class))).willReturn(List.of(
-                new TestInstagramMediaResponseDto("1", "VIDEO"),
-                new TestInstagramMediaResponseDto("2", "IMAGE")
+                InstagramMediaResponseDto.builder().mediaId("1").mediaType("VIDEO").build(),
+                InstagramMediaResponseDto.builder().mediaId("2").mediaType("IMAGE").build()
         ));
         //when
         List<InstagramMediaResponseDto> sut = mediaService.getMyInstagramVideos("accessToken");
@@ -51,8 +53,7 @@ class MediaServiceTest extends IntegrationTestSupport {
     void save() {
         //given
         userJpaRepository.save(User.builder().build());
-        Long userId = userJpaRepository.findAll().get(0).getId();
-        User user = userJpaRepository.findById(userId).get();
+        User user = userJpaRepository.findAll().get(0);
 
         MediaCreateRequestDto mediaCreateRequestDto = MediaCreateRequestDto.builder()
                 .user(user)
@@ -66,10 +67,10 @@ class MediaServiceTest extends IntegrationTestSupport {
 
         //when
         mediaService.createMedia(mediaCreateRequestDto);
-        Media sut = mediaJpaRepository.findByUserId(userId).get(0);
+        Media sut = mediaJpaRepository.findByUserId(user.getId()).get(0);
 
         //then
-        assertThat(sut.getUser().getId()).isEqualTo(userId);
+        assertThat(sut.getUser().getId()).isEqualTo(user.getId());
         assertThat(sut.getInstagramMediaInfo().getPermalink()).isEqualTo("instagramPermalink");
         assertThat(sut.getMediaProblemInfo().getColor()).isEqualTo("problemColor");
     }
@@ -140,10 +141,9 @@ class MediaServiceTest extends IntegrationTestSupport {
         //given
         userJpaRepository.save(User.builder().build());
         userJpaRepository.save(User.builder().build());
-        Long userId1 = userJpaRepository.findAll().get(0).getId();
-        Long userId2 = userJpaRepository.findAll().get(1).getId();
-        User user1 = userJpaRepository.findById(userId1).get();
-        User user2 = userJpaRepository.findById(userId2).get();
+        User user1 = userJpaRepository.findAll().get(0);
+        User user2 = userJpaRepository.findAll().get(1);
+
 
         mediaJpaRepository.saveAll(IntStream.range(0,5).mapToObj(i -> Media.builder()
                 .user(user1)
@@ -158,20 +158,20 @@ class MediaServiceTest extends IntegrationTestSupport {
                 .build();
 
         //when
-        Page<Media> sut1 = mediaService.getPagedMediasByUserId(userId1, mediaPageRequestDto);
-        Page<Media> sut2 = mediaService.getPagedMediasByUserId(userId2, mediaPageRequestDto);
+        Page<Media> sut1 = mediaService.getPagedMediasByUserId(user1.getId(), mediaPageRequestDto);
+        Page<Media> sut2 = mediaService.getPagedMediasByUserId(user2.getId(), mediaPageRequestDto);
 
         //then
         assertThat(sut1.getTotalElements()).isEqualTo(5);
         assertThat(sut1.getTotalPages()).isEqualTo(1);
         assertThat(sut1.getContent()).hasSize(5)
                 .extracting("user.id")
-                .containsOnly(userId1);
+                .containsOnly(user1.getId());
         assertThat(sut2.getTotalElements()).isEqualTo(5);
         assertThat(sut2.getTotalPages()).isEqualTo(1);
         assertThat(sut2.getContent()).hasSize(5)
                 .extracting("user.id")
-                .containsOnly(userId2);
+                .containsOnly(user2.getId());
     }
 
     @Test
@@ -188,27 +188,44 @@ class MediaServiceTest extends IntegrationTestSupport {
         assertThat(sut.getId()).isEqualTo(mediaId);
     }
 
-    private class TestInstagramMediaResponseDto extends InstagramMediaResponseDto{
-        String mediaId;
-        String mediaType;
+    @Test
+    @DisplayName("미디어 업데이트를 할 수 있다.")
+    void update() {
+        //given
+        userJpaRepository.save(User.builder().build());
+        User user = userJpaRepository.findAll().get(0);
+        mediaJpaRepository.save(Media.builder().user(user).description("test").build());
+        Long mediaId = mediaJpaRepository.findByUserId(user.getId()).get(0).getId();
 
-        public TestInstagramMediaResponseDto() {
-            super();
-        }
+        //when
+        mediaService.updateMedia(MediaUpdateRequestDto.builder()
+                .mediaId(mediaId)
+                .user(user)
+                .description("edit")
+                .build());
+        Media sut = mediaJpaRepository.findById(mediaId).get();
 
-        public TestInstagramMediaResponseDto(String mediaId, String mediaType) {
-            this.mediaId = mediaId;
-            this.mediaType = mediaType;
-        }
+        //then
+        assertThat(sut.getDescription()).isEqualTo("edit");
+    }
 
-        @Override
-        public String getMediaId() {
-            return mediaId;
-        }
+    @Test
+    @DisplayName("미디어를 삭제할 수 있다.")
+    void delete() {
+        //given
+        userJpaRepository.save(User.builder().build());
+        User user = userJpaRepository.findAll().get(0);
+        mediaJpaRepository.save(Media.builder().user(user).build());
+        Long mediaId = mediaJpaRepository.findByUserId(user.getId()).get(0).getId();
 
-        @Override
-        public String getMediaType() {
-            return mediaType;
-        }
+        //when
+        mediaService.deleteMedia(MediaDeleteRequestDto.builder()
+                .mediaId(mediaId)
+                .user(user)
+                .build());
+        Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+
+        //then
+        assertThat(sut).isNull();
     }
 }
