@@ -53,7 +53,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("미디어를 등록할 수 있다.")
+    @DisplayName("미디어를 등록하는 API")
     void createMedia() throws Exception {
         //given
         MediaCreateRequest request = MediaCreateRequest.builder()
@@ -144,7 +144,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     }
 
     @Test
-    @DisplayName("전체 미디어를 페이징 조회할 수 있다.")
+    @DisplayName("전체 미디어 페이지 조회하는 API")
     void getPagedMedias() throws Exception {
         //given
         int pageSize = 5;
@@ -216,7 +216,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 )));
     }
     @Test
-    @DisplayName("내 미디어를 페이징 조회할 수 있다.")
+    @DisplayName("본인 미디어 페이지 조회하는 API")
     void getPagedMediasByUserId() throws Exception {
         //given
         int pageSize = 5;

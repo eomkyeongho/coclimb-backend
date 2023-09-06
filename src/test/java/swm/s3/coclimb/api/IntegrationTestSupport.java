@@ -1,9 +1,11 @@
 package swm.s3.coclimb.api;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import swm.s3.coclimb.api.adapter.out.elasticsearch.ElasticsearchClientManager;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
@@ -21,10 +23,17 @@ import swm.s3.coclimb.api.application.service.UserService;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.config.security.JwtManager;
+import swm.s3.coclimb.docker.DockerComposeRunner;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public abstract class IntegrationTestSupport {
+public abstract class IntegrationTestSupport{
+    static DockerComposeRunner dockerRunner = new DockerComposeRunner();
+    @BeforeAll
+    static void setUpContainer() {
+        dockerRunner.runTestContainers();
+    }
+
     // User
     @Autowired protected UserService userService;
     @Autowired protected UserJpaRepository userJpaRepository;
@@ -56,6 +65,9 @@ public abstract class IntegrationTestSupport {
     @Autowired protected InstagramRestApiManager instagramRestApiManager;
     @Autowired protected InstagramRestApi instagramRestApi;
 
+    // elasticsearch
+    protected ElasticsearchClientManager elasticsearchClientManager = new ElasticsearchClientManager(dockerRunner.getElasticsearchClient());
+
     @AfterEach
     void clearDB() {
         gymLikeJpaRepository.deleteAllInBatch();
@@ -63,4 +75,7 @@ public abstract class IntegrationTestSupport {
         gymJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
     }
+
+
+
 }

@@ -1,0 +1,12 @@
+# MySQL 공식 이미지를 사용합니다.
+FROM mysql:latest
+
+# 환경 변수를 설정하여 root 암호를 지정합니다. 변경하실 수 있습니다.
+#ENV MYSQL_ROOT_PASSWORD=test
+
+# MySQL 한글 설정을 위한 환경 변수를 설정합니다.
+#ENV LANG=C.UTF-8
+#ENV TZ=Asia/Seoul
+
+# 생성할 데이터베이스 이름을 지정합니다.
+ENV MYSQL_DATABASE=test
