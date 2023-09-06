@@ -19,12 +19,12 @@ spring:
 
 app-config:
   jwt :
-    jwt-key: ${dev.jwt.jwt-key}
+    jwt-key: ${dev.jwt.jwt_key}
     valid-time : ${dev.jwt.valid_time}
   elastic:
-    server-url: ${dev.elastic.server-url}
-    api-key : ${dev.elastic.api-key}
-    finger-print : ${dev.elastic.finger-print}
+    server-url: ${dev.elastic.server_url}
+    api-key : ${dev.elastic.api_key}
+    finger-print : ${dev.elastic.finger_print}
 
 
 logging:

@@ -2,6 +2,11 @@ spring:
   config:
     activate:
       on-profile: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${test.db.url}
+    username: ${test.db.username}
+    password: ${test.db.password}
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,5 +21,9 @@ spring:
 
 app-config:
   jwt :
-    jwt-key: ${test.jwt.jwt-key}
-    valid-time : ${test.jwt.valid-time}
+    jwt-key: ${test.jwt.jwt_key}
+    valid-time : ${test.jwt.valid_time}
+  elastic:
+    server-url: ${test.elastic.server_url}
+    api-key: ${test.elastic.api_key}
+    finger-print: ${test.elastic.finger_print}
