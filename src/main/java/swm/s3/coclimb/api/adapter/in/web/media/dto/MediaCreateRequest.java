@@ -21,29 +21,31 @@ public class MediaCreateRequest {
     @NotNull
     String mediaType;
     String thumbnailUrl;
+    String description;
 
     MediaCreateInstagramInfo instagram;
     @NotNull
     MediaCreateProblemInfo problem;
 
     @Builder
-    public MediaCreateRequest(String platform, String mediaUrl, String mediaType, String thumbnailUrl, MediaCreateInstagramInfo instagram, MediaCreateProblemInfo problem) {
+    public MediaCreateRequest(String platform, String mediaUrl, String mediaType, String thumbnailUrl, MediaCreateInstagramInfo instagram, MediaCreateProblemInfo problem, String description) {
         this.platform = platform;
         this.mediaUrl = mediaUrl;
         this.mediaType = mediaType;
         this.thumbnailUrl = thumbnailUrl;
         this.instagram = instagram;
         this.problem = problem;
+        this.description = description;
     }
 
     public MediaCreateRequestDto toServiceDto(User user) {
         return MediaCreateRequestDto.builder()
-                .userId(user.getId())
-                .username(user.getName())
+                .user(user)
                 .mediaUrl(mediaUrl)
                 .mediaType(mediaType)
                 .thumbnailUrl(thumbnailUrl)
                 .platform(platform)
+                .description(description)
                 .instagramMediaInfo(instagram == null ? null :
                         InstagramMediaInfo.builder()
                         .id(instagram.getMediaId())
@@ -56,6 +58,7 @@ public class MediaCreateRequest {
                         .isClear(problem.getIsClear())
                         .perceivedDifficulty(problem.getPerceivedDifficulty())
                         .type(problem.getType())
+                        .clearDate(problem.getClearDate())
                         .build())
                 .build();
     }

@@ -6,6 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class GymUnlikeRequestDto {
-    Long gymId;
+    String gymName;
     Long userId;
 }

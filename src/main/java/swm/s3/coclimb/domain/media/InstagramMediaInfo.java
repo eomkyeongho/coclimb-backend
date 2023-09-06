@@ -23,4 +23,10 @@ public class InstagramMediaInfo {
         this.id = id;
         this.permalink = permalink;
     }
+
+    protected void remove() {
+        this.userId = null;
+        this.id = null;
+        this.permalink = null;
+    }
 }

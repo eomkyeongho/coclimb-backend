@@ -8,5 +8,5 @@ import swm.s3.coclimb.domain.user.User;
 @Getter
 public class GymLikeRequestDto {
     User user;
-    Long gymId;
+    String gymName;
 }

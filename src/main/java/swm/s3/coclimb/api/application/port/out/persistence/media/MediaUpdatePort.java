@@ -4,4 +4,5 @@ import swm.s3.coclimb.domain.media.Media;
 
 public interface MediaUpdatePort {
     void save(Media media);
+    void delete(Media media);
 }

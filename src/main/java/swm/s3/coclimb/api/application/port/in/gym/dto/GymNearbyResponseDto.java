@@ -4,33 +4,35 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
-import swm.s3.coclimb.domain.gym.Location;
 
 @Getter
 @NoArgsConstructor
 public class GymNearbyResponseDto {
-    private Long id;
     private String name;
-    private Location location;
     private float distance;
     private String address;
+    private String imageUrl;
+    private String instagramId;
+    private String phone;
 
     @Builder
-    public GymNearbyResponseDto(Long id, String name, Location location, float distance, String address) {
-        this.id = id;
+    public GymNearbyResponseDto(String name, String instagramId, float distance, String address, String imageUrl, String phone) {
         this.name = name;
-        this.location = location;
+        this.instagramId = instagramId;
         this.distance = distance;
         this.address = address;
+        this.imageUrl = imageUrl;
+        this.phone = phone;
     }
 
     public static GymNearbyResponseDto of(GymNearby gymNearby) {
         return GymNearbyResponseDto.builder()
-                .id(gymNearby.getId())
                 .name(gymNearby.getName())
-                .location(Location.of(gymNearby.getLatitude(), gymNearby.getLongitude()))
+                .instagramId(gymNearby.getInstagramId())
                 .distance(gymNearby.getDistance())
                 .address(gymNearby.getAddress())
+                .imageUrl(gymNearby.getImageUrl())
+                .phone(gymNearby.getPhone())
                 .build();
     }
 }

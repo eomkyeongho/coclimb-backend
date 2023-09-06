@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GymLikeLoadPort {
     List<GymLike> findByUserId(Long userId);
-    GymLike getByUserIdAndGymId(Long userId, Long gymId);
+    GymLike getByUserIdAndGymName(Long userId, String gymName);
 }

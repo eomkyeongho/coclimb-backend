@@ -17,22 +17,17 @@ public class GymLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "gym_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gym_name", referencedColumnName = "name")
     private Gym gym;
 
     @Builder
     public GymLike(User user, Gym gym) {
         this.user = user;
         this.gym = gym;
-    }
-
-    public void remove() {
-        this.user = null;
-        this.gym = null;
     }
 }

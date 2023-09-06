@@ -75,11 +75,13 @@ class LoginControllerDocsTest extends RestDocsTestSupport {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                        fieldWithPath("code").type(JsonFieldType.STRING)
+                        fieldWithPath("code")
+                                .type(JsonFieldType.STRING)
                                 .description("인스타그램 로그인 성공 후에 받은 코드")
                 ),
                 responseFields(
-                        fieldWithPath("accessToken").type(JsonFieldType.STRING)
+                        fieldWithPath("accessToken")
+                                .type(JsonFieldType.STRING)
                                 .description("coclimb access token")
                 )));
     }

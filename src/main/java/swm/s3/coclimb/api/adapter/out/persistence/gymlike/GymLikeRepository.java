@@ -26,7 +26,12 @@ public class GymLikeRepository implements GymLikeUpdatePort, GymLikeLoadPort {
     }
 
     @Override
-    public GymLike getByUserIdAndGymId(Long userId, Long gymId) {
-        return gymLikeJpaRepository.findByUserIdAndGymId(userId, gymId).orElseThrow(GymLikeNotFound::new);
+    public GymLike getByUserIdAndGymName(Long userId, String gymName) {
+        return gymLikeJpaRepository.findByUserIdAndGymName(userId, gymName).orElseThrow(GymLikeNotFound::new);
+    }
+
+    @Override
+    public void delete(GymLike gymLike) {
+        gymLikeJpaRepository.delete(gymLike);
     }
 }

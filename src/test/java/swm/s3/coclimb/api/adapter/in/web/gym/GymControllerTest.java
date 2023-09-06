@@ -12,10 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymInfoResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLikesResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymLocationResponseDto;
-import swm.s3.coclimb.api.application.port.in.gym.dto.GymNearbyResponseDto;
+import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.config.interceptor.AuthInterceptor;
@@ -354,9 +351,11 @@ class GymControllerTest extends ControllerTestSupport {
         given(gymQuery.getNearbyGyms(any(float.class), any(float.class), any(float.class))).willReturn(IntStream.range(0, 5)
                 .mapToObj(i -> GymNearbyResponseDto.builder()
                         .name("암장" + i)
-                        .location(Location.of((float) i, (float) i))
                         .distance((float) i)
                         .address("주소" + i)
+                        .phone("010-1234-567" + i)
+                        .instagramId("instagram" + i)
+                        .imageUrl("imageUrl" + i)
                         .build())
                 .collect(Collectors.toList()));
 
@@ -381,7 +380,7 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         doNothing().when(gymCommand).likeGym(any());
         GymLikeRequest request = GymLikeRequest.builder()
-                .gymId(1L)
+                .name("gym")
                 .build();
 
         // when
@@ -402,7 +401,6 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         given(gymQuery.getLikedGyms(any())).willReturn(IntStream.range(0, 5)
                 .mapToObj(i -> GymLikesResponseDto.builder()
-                        .id((long) i)
                         .name("암장" + i)
                         .build())
                 .collect(Collectors.toList()));
@@ -414,9 +412,7 @@ class GymControllerTest extends ControllerTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gyms").isArray())
                 .andExpect(jsonPath("$.count").value(5))
-                .andExpect(jsonPath("$.gyms[0].id").value(0))
                 .andExpect(jsonPath("$.gyms[0].name").value("암장0"))
-                .andExpect(jsonPath("$.gyms[1].id").value(1))
                 .andExpect(jsonPath("$.gyms[1].name").value("암장1"));
     }
 
@@ -429,7 +425,7 @@ class GymControllerTest extends ControllerTestSupport {
         given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
         doNothing().when(gymCommand).likeGym(any());
         GymUnlikeRequest request = GymUnlikeRequest.builder()
-                .gymId(1L)
+                .name("gym")
                 .build();
 
         // when
@@ -440,5 +436,44 @@ class GymControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         then(gymCommand).should(times(1)).unlikeGym(any());
+    }
+
+    @Test
+    @DisplayName("키워드로 암장을 찾을 수 있다.")
+    void searchGyms() throws Exception {
+        // given
+        given(gymQuery.searchGyms(any())).willReturn(IntStream.range(0, 5)
+                .mapToObj(i -> GymSearchResponseDto.builder()
+                        .name("암장" + i)
+                        .build())
+                .collect(Collectors.toList()));
+
+        // when
+        // then
+        mockMvc.perform(get("/gyms/demo/search")
+                        .param("keyword", "암장"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(5))
+                .andExpect(jsonPath("$.gyms[0].name").value("암장0"))
+                .andExpect(jsonPath("$.gyms[1].name").value("암장1"));
+    }
+
+    @Test
+    @DisplayName("키워드가 없으면 예외를 발생시킨다.")
+    void searchGymsWithoutKeyword() throws Exception {
+        // given
+        given(gymQuery.searchGyms(any())).willReturn(IntStream.range(0, 5)
+                .mapToObj(i -> GymSearchResponseDto.builder()
+                        .name("암장" + i)
+                        .build())
+                .collect(Collectors.toList()));
+
+        // when
+        // then
+        mockMvc.perform(get("/gyms/demo/search"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
