@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile-mysql
+    container_name: test-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - TZ=Asia/Seoul
+      - LANG=C.UTF-8
+
+  elasticsearch:
+    build:
+      context: ./elastic
+      dockerfile: Dockerfile-es
+    container_name: test-elasticsearch
+#    volumes:
+#      - ./elastic/certs/http_ca.crt:/usr/share/elasticsearch/config/certs:ro,Z
+#      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+    ports:
+      - "9200:9200"
+    environment:
+      - ELASTIC_PASSWORD=test
