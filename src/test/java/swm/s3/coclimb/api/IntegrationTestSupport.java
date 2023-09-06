@@ -1,6 +1,7 @@
 package swm.s3.coclimb.api;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,10 +23,17 @@ import swm.s3.coclimb.api.application.service.UserService;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.config.security.JwtManager;
+import swm.s3.coclimb.docker.DockerComposeRunner;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public abstract class IntegrationTestSupport extends TestContainerSupport{
+public abstract class IntegrationTestSupport{
+    static DockerComposeRunner dockerRunner = new DockerComposeRunner();
+    @BeforeAll
+    static void setUpContainer() {
+        dockerRunner.runTestContainers();
+    }
+
     // User
     @Autowired protected UserService userService;
     @Autowired protected UserJpaRepository userJpaRepository;
@@ -58,7 +66,7 @@ public abstract class IntegrationTestSupport extends TestContainerSupport{
     @Autowired protected InstagramRestApi instagramRestApi;
 
     // elasticsearch
-    protected ElasticsearchClientManager elasticsearchClientManager = new ElasticsearchClientManager(getTestEsClient());
+    protected ElasticsearchClientManager elasticsearchClientManager = new ElasticsearchClientManager(dockerRunner.getElasticsearchClient());
 
     @AfterEach
     void clearDB() {
