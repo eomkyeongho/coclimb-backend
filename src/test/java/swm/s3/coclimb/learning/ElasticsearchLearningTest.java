@@ -11,6 +11,10 @@ import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.elasticsearch.GymElasticDto;
 import swm.s3.coclimb.domain.gym.Gym;
 
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -152,39 +156,45 @@ public class ElasticsearchLearningTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("클라이밍 0", "클라이밍 1", "클라이밍 2");
     }
 
+    @Test
+    @DisplayName("한글 분석기 적용")
+    void searchAnalyzer() throws Exception {
+        // given
+        String searchIndex = "gyms";
+        ElasticsearchClient esClient = elasticsearchClientManager.getEsClient();
 
+        Reader input = new StringReader(Files.readString(Path.of("src/test/resources/docker/elastic/gyms.json")));
+        esClient.indices().create(c -> c
+                .index("gyms")
+                .withJson(input));
 
-//    @Test
-//    @DisplayName("엘라스틱서치에서 검색어를 통해 데이터를 가져온다.")
-//    void esSearch() throws Exception {
-//        // given
-//        String searchIndex = "gyms";
-//        String searchField = "name";
-//        String searchText = "더클라임";
-//        // when
-//        ElasticsearchClient esClient = elasticsearchClientManager.getEsClient();
-//        SearchResponse<?> response = esClient.search(s -> s.index(searchIndex)
-//                .source(c -> c
-//                        .filter(f -> f
-//                                .excludes("id")
-//                                .excludes("@timestamp")
-//                                .excludes("created_at")
-//                                .excludes("last_modified_at")
-//                        )
-//                )
-//                .query(q -> q
-//                        .match(t -> t
-//                                .field(searchField)
-//                                .query(searchText)
-//                        )
-//                ), GymElasticDto.class);
-//        GymElasticDto gymElasticDto = (GymElasticDto) response.hits().hits().get(0).source();
-//        Gym sut = gymElasticDto.toDomain();
-//
-//        // then
-//        System.out.println(response);
-//        System.out.println(response.hits().hits().size());
-//        assertThat(sut.getName()).isNotEmpty();
-//    }
+        IndexResponse response = esClient.index(i -> i
+                .index(searchIndex)
+                .id("1")
+                .document(GymElasticDto.fromDomain(Gym.builder()
+                        .name("클라이밍")
+                        .build())));
+        esClient.indices().refresh();
+        // when
+        SearchResponse<GymElasticDto> sut = esClient.search(s -> s.index(searchIndex)
+                .source(c -> c
+                        .filter(f -> f
+                                .excludes("id")
+                                .excludes("@timestamp")
+                                .excludes("created_at")
+                                .excludes("last_modified_at")
+                        )
+                )
+                .query(q -> q
+                        .multiMatch(t -> t
+                                .query("클라")
+                                .fields("name","name.nori", "name.ngram")
+                        )
+                ), GymElasticDto.class);
+
+        // then
+        Gym out = sut.hits().hits().get(0).source().toDomain();
+        assertThat(out.getName()).isEqualTo("클라이밍");
+    }
 
 }
