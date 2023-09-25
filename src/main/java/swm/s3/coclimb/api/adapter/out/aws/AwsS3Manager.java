@@ -4,16 +4,17 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import swm.s3.coclimb.api.application.port.out.aws.AwsS3UploadPort;
+import swm.s3.coclimb.api.application.port.out.aws.AwsS3UpdatePort;
 import swm.s3.coclimb.api.application.port.out.filedownload.DownloadedFileDetail;
 import swm.s3.coclimb.api.exception.errortype.aws.LocalFileDeleteFail;
+import swm.s3.coclimb.api.exception.errortype.aws.S3DeleteFail;
 import swm.s3.coclimb.api.exception.errortype.aws.S3UploadFail;
 
 import java.io.File;
 
 @Component
 @RequiredArgsConstructor
-public class AwsS3Manager implements AwsS3UploadPort {
+public class AwsS3Manager implements AwsS3UpdatePort {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -33,11 +34,21 @@ public class AwsS3Manager implements AwsS3UploadPort {
         } catch (Exception e) {
             throw new S3UploadFail();
         } finally {
-            removeFile(uploadFile);
+            removeLocalFile(uploadFile);
         }
     }
 
-    private void removeFile(File targetFile) {
+    @Override
+    public void deleteFile(String fileUrl) {
+        try {
+            String fileName = fileUrl.substring(cloudFrontHost.length());
+            amazonS3Client.deleteObject(bucket, fileName);
+        } catch (Exception e) {
+            throw new S3DeleteFail();
+        }
+    }
+
+    private void removeLocalFile(File targetFile) {
         try {
             targetFile.delete();
         } catch (Exception e) {

@@ -13,7 +13,7 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaDeleteRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaUpdateRequestDto;
-import swm.s3.coclimb.api.application.port.out.aws.AwsS3UploadPort;
+import swm.s3.coclimb.api.application.port.out.aws.AwsS3UpdatePort;
 import swm.s3.coclimb.api.application.port.out.filedownload.DownloadedFileDetail;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
@@ -36,7 +36,7 @@ public class MediaService implements MediaQuery, MediaCommand {
     private final MediaLoadPort mediaLoadPort;
     private final MediaUpdatePort mediaUpdatePort;
     private final FileDownloader fileDownloader;
-    private final AwsS3UploadPort awsS3UploadPort;
+    private final AwsS3UpdatePort awsS3UpdatePort;
 
     @Override
     public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) {
@@ -61,10 +61,10 @@ public class MediaService implements MediaQuery, MediaCommand {
         }
 
         DownloadedFileDetail mediaFile = fileDownloader.downloadFile(mediaCreateRequestDto.getMediaUrl());
-        String mediaUrl = awsS3UploadPort.uploadFile(mediaFile);
+        String mediaUrl = awsS3UpdatePort.uploadFile(mediaFile);
 
         DownloadedFileDetail thumbnailFile = fileDownloader.downloadFile(mediaCreateRequestDto.getThumbnailUrl());
-        String thumbnailUrl = awsS3UploadPort.uploadFile(thumbnailFile);
+        String thumbnailUrl = awsS3UpdatePort.uploadFile(thumbnailFile);
 
         mediaUpdatePort.save(mediaCreateRequestDto.toEntity(mediaUrl, thumbnailUrl));
     }
@@ -114,6 +114,9 @@ public class MediaService implements MediaQuery, MediaCommand {
         if(!media.getUser().getId().equals(mediaDeleteRequestDto.getUser().getId())) {
             throw new MediaOwnerNotMatched();
         }
+
+        awsS3UpdatePort.deleteFile(media.getMediaUrl());
+        awsS3UpdatePort.deleteFile(media.getThumbnailUrl());
         mediaUpdatePort.delete(media);
     }
 }
