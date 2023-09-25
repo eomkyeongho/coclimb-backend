@@ -21,14 +21,16 @@ public class Report {
     @JoinColumn(name="user_id")
     User user;
 
+    String target;
     String subject;
     @Length(max = 512)
     String description;
 
     @Builder
-    public Report(User user, String subject, String description) {
+    public Report(User user, String subject, String description, String target) {
         this.user = user;
         this.subject = subject;
         this.description = description;
+        this.target = target;
     }
 }

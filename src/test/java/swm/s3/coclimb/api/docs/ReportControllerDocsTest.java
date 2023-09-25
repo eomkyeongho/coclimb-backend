@@ -29,6 +29,7 @@ public class ReportControllerDocsTest extends RestDocsTestSupport {
         User user = userJpaRepository.findAll().get(0);
         ReportCreateRequest request = ReportCreateRequest.builder()
                 .subject("subject")
+                .target("target")
                 .description("description")
                 .build();
         //when
@@ -40,6 +41,7 @@ public class ReportControllerDocsTest extends RestDocsTestSupport {
         // then
         assertThat(report.getUser().getId()).isEqualTo(user.getId());
         assertThat(report.getSubject()).isEqualTo(request.getSubject());
+        assertThat(report.getTarget()).isEqualTo(request.getTarget());
         assertThat(report.getDescription()).isEqualTo(request.getDescription());
         result.andExpect(status().isCreated());
 
@@ -51,8 +53,13 @@ public class ReportControllerDocsTest extends RestDocsTestSupport {
                         headerWithName("Authorization").description("JWT 인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("subject").description("제보 주제"),
-                        fieldWithPath("description").description("제보 내용")
+                        fieldWithPath("subject")
+                                .description("제보 주제"),
+                        fieldWithPath("target")
+                                .optional()
+                                .description("제보 대상 (ex. media/1 - 구분자 통일)"),
+                        fieldWithPath("description")
+                                .description("제보 내용")
                 )
         ));
     }

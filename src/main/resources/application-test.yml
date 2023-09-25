@@ -1,3 +1,6 @@
+server:
+  port: ${test.server.port}
+
 spring:
   config:
     activate:
@@ -27,3 +30,6 @@ app-config:
     server-url: ${test.elastic.server_url}
     api-key: ${test.elastic.api_key}
     finger-print: ${test.elastic.finger_print}
+
+front_end:
+  host: ${test.front_end.host}

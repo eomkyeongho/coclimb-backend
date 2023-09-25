@@ -11,18 +11,21 @@ public class ReportCreateRequestDto {
     User user;
     String subject;
     String description;
+    String target;
 
     @Builder
-    public ReportCreateRequestDto(User user, String subject, String description) {
+    public ReportCreateRequestDto(User user, String subject, String description, String target) {
         this.user = user;
         this.subject = subject;
         this.description = description;
+        this.target = target;
     }
 
     public Report toEntity() {
         return Report.builder()
                 .user(user)
                 .subject(subject)
+                .target(target)
                 .description(description)
                 .build();
     }

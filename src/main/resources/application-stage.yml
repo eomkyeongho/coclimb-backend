@@ -1,15 +1,15 @@
 server:
-  port: ${dev.server.port}
+  port: ${stage.server.port}
 
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: stage
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${dev.db.url}
-    username: ${dev.db.username}
-    password: ${dev.db.password}
+    url: ${stage.db.url}
+    username: ${stage.db.username}
+    password: ${stage.db.password}
   jpa:
     hibernate:
       ddl-auto: create
@@ -18,16 +18,16 @@ spring:
         show_sql: true
         format_sql: true
         create_empty_composites:
-            enabled: true
+          enabled: true
 
 app-config:
   jwt :
-    jwt-key: ${dev.jwt.jwt_key}
-    valid-time : ${dev.jwt.valid_time}
+    jwt-key: ${stage.jwt.jwt_key}
+    valid-time : ${stage.jwt.valid_time}
   elastic:
-    server-url: ${dev.elastic.server_url}
-    api-key : ${dev.elastic.api_key}
-    finger-print : ${dev.elastic.finger_print}
+    server-url: ${stage.elastic.server_url}
+    api-key : ${stage.elastic.api_key}
+    finger-print : ${stage.elastic.finger_print}
 
 
 logging:
@@ -46,4 +46,4 @@ logging:
       total-size-cap: 1000MB
 
 front_end:
-  host: ${dev.front_end.host}
+  host: ${stage.front_end.host}

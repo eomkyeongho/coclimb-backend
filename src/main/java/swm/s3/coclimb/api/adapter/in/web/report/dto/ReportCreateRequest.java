@@ -14,17 +14,20 @@ public class ReportCreateRequest {
     private String subject;
     @NotBlank
     private String description;
+    private String target;
 
     @Builder
-    public ReportCreateRequest(String subject, String description) {
+    public ReportCreateRequest(String subject, String description, String target) {
         this.subject = subject;
         this.description = description;
+        this.target = target;
     }
 
     public ReportCreateRequestDto toServiceDto(User user) {
         return ReportCreateRequestDto.builder()
                 .user(user)
                 .subject(subject)
+                .target(target)
                 .description(description)
                 .build();
     }
