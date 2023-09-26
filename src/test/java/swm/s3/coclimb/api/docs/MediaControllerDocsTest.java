@@ -163,7 +163,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         //then
         ResultActions result = mockMvc.perform(get("/medias")
                         .param("page", "0")
-                        .param("size", String.valueOf(pageSize)))
+                        .param("size", String.valueOf(pageSize))
+                        .param("gymName", "null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medias.length()").value(pageSize))
                 .andExpect(jsonPath("$.medias[0].gymName").value("gym0"))
@@ -174,6 +175,13 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(pageSize))
                 .andExpect(jsonPath("$.totalPage").value(2));
+        mockMvc.perform(get("/medias")
+                .param("page", "0")
+                .param("size", String.valueOf(pageSize))
+                .param("gymName", "gym3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.medias.length()").value(1))
+                .andExpect(jsonPath("$.medias[0].gymName").value("gym3"));
 
         //docs
         result.andDo(document("media-page",
@@ -181,7 +189,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("page").description("페이지 번호"),
-                        parameterWithName("size").description("페이지 사이즈")
+                        parameterWithName("size").description("페이지 사이즈"),
+                        parameterWithName("gymName").description("암장 이름 (없을 시 전체 조회)")
                 ),
                 responseFields(
                         fieldWithPath("page")

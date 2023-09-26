@@ -8,6 +8,7 @@ import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
+import swm.s3.coclimb.api.exception.errortype.gymlike.AlreadyLikedGym;
 import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
@@ -237,6 +238,26 @@ class GymServiceTest extends IntegrationTestSupport {
         assertThat(sut).isNotNull();
         assertThat(sut.getUser().getId()).isEqualTo(user.getId());
         assertThat(sut.getGym().getName()).isEqualTo(gymName);
+    }
+
+    @Test
+    @DisplayName("이미 찜한 암장을 다시 찜할 수 없다.")
+    void likedGymDuplicated() {
+        // given
+        String gymName = "gym";
+        userJpaRepository.save(User.builder().build());
+        gymJpaRepository.save(Gym.builder().name(gymName).build());
+        User user = userJpaRepository.findAll().get(0);
+        GymLikeRequestDto request = GymLikeRequestDto.builder()
+                .user(user)
+                .gymName(gymName)
+                .build();
+
+        // when
+        // then
+        gymService.likeGym(request);
+        assertThatThrownBy(() -> gymService.likeGym(request))
+                .isInstanceOf(AlreadyLikedGym.class);
     }
 
     @Test

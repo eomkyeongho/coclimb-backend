@@ -243,4 +243,41 @@ class MediaServiceTest extends IntegrationTestSupport {
         then(awsS3Manager).should(times(2)).deleteFile(any());
         assertThat(sut).isNull();
     }
+
+    @Test
+    @DisplayName("암장 이름으로 미디어를 조회할 수 있다.")
+    void findByGymName() {
+        //given
+        String gymName = "test";
+        mediaJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Media.builder()
+                        .mediaProblemInfo(MediaProblemInfo.builder()
+                                .gymName(gymName)
+                                .build())
+                        .build())
+                .toList());
+
+        MediaPageRequestDto mediaPageRequestDto0 = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+        MediaPageRequestDto mediaPageRequestDto1 = MediaPageRequestDto.builder()
+                .page(1)
+                .size(5)
+                .build();
+
+        //when
+        Page<Media> sut0 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto0);
+        Page<Media> sut1 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto1);
+
+        //then
+        assertThat(sut0.getTotalElements()).isEqualTo(10);
+        assertThat(sut0.getTotalPages()).isEqualTo(2);
+        assertThat(sut0.getContent()).hasSize(5)
+                .extracting("mediaProblemInfo.gymName")
+                .containsOnly("test");
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("mediaProblemInfo.gymName")
+                .containsOnly("test");
+    }
 }
