@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -82,11 +82,11 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .header("Authorization", jwtManager.issueToken(String.valueOf(userId)))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
-        Media media = mediaJpaRepository.findByUserId(userId).get(0);
+        Media sut = mediaJpaRepository.findByUserId(userId).get(0);
 
         //then
         result.andExpect(status().isCreated());
-        assertThat(media.getMediaProblemInfo().getColor()).isEqualTo("color");
+        assertThat(sut.getMediaProblemInfo().getColor()).isEqualTo("color");
 
         //docs
         result.andDo(document("media-create",
@@ -402,8 +402,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         .description("edit")
                         .build())))
                 .andExpect(status().isNoContent());
-        Media media = mediaJpaRepository.findById(mediaId).orElse(null);
-        assertThat(media.getDescription()).isEqualTo("edit");
+        Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+        assertThat(sut.getDescription()).isEqualTo("edit");
 
         //docs
         result.andDo(document("media-update",
@@ -428,7 +428,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("미디어를 삭제하는 API")
     void deleteMedia() throws Exception {
         //given
-        doNothing().when(awsS3Manager).deleteFile(any());
+        willDoNothing().given(awsS3Manager).deleteFile(any());
         userJpaRepository.save(User.builder().build());
         User user = userJpaRepository.findAll().get(0);
         mediaJpaRepository.save(Media.builder().user(user).build());
@@ -439,8 +439,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         ResultActions result = mockMvc.perform(delete("/medias/{id}", mediaId)
                 .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
                 .andExpect(status().isNoContent());
-        Media media = mediaJpaRepository.findById(mediaId).orElse(null);
-        assertThat(media).isNull();
+        Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+        assertThat(sut).isNull();
 
         //docs
         result.andDo(document("media-delete",
