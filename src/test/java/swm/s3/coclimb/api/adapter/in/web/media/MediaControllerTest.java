@@ -1,18 +1,13 @@
 package swm.s3.coclimb.api.adapter.in.web.media;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateProblemInfo;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaCreateRequest;
 import swm.s3.coclimb.api.adapter.in.web.media.dto.MediaUpdateRequest;
-import swm.s3.coclimb.api.exception.ExceptionControllerAdvice;
-import swm.s3.coclimb.config.interceptor.AuthInterceptor;
 import swm.s3.coclimb.domain.media.InstagramMediaInfo;
 import swm.s3.coclimb.domain.media.Media;
 import swm.s3.coclimb.domain.media.MediaProblemInfo;
@@ -23,8 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,24 +26,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 class MediaControllerTest extends ControllerTestSupport {
-    @Autowired
-    MediaController mediaController;
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(mediaController)
-                .setCustomArgumentResolvers(loginUserArgumentResolver)
-                .setControllerAdvice(ExceptionControllerAdvice.class)
-                .addInterceptors(new AuthInterceptor(jwtManager))
-                .build();
-    }
 
     @Test
     @DisplayName("미디어를 등록할 수 있다.")
     void createMedia() throws Exception {
         //given
-        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(User.builder().instagramUserInfo(InstagramUserInfo.builder().build()).build());
-        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        String accessToken = "token";
+        given(jwtManager.getSubject(accessToken)).willReturn("1");
+        given(userLoadPort.getById(1L)).willReturn(User.builder()
+                .name("username")
+                .instagramUserInfo(InstagramUserInfo.builder().build())
+                .build());
         willDoNothing().given(mediaCommand).createMedia(any());
 
         MediaCreateRequest request = MediaCreateRequest.builder()
@@ -63,6 +50,7 @@ class MediaControllerTest extends ControllerTestSupport {
         //when
         //then
         mockMvc.perform(post("/medias")
+                        .header("Authorization", accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -101,9 +89,12 @@ class MediaControllerTest extends ControllerTestSupport {
     @DisplayName("내 미디어를 페이징 조회할 수 있다.")
     void getPagedMediasByUserId() throws Exception {
         //given
-        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(User.builder().build());
-        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        String accessToken = "token";
+        given(jwtManager.getSubject(accessToken)).willReturn("1");
+        given(userLoadPort.getById(1L)).willReturn(User.builder()
+                .name("username")
+                .instagramUserInfo(InstagramUserInfo.builder().build())
+                .build());
 
         int pageSize = 5;
 
@@ -117,7 +108,9 @@ class MediaControllerTest extends ControllerTestSupport {
 
         //when
         //then
-        mockMvc.perform(get("/medias/me").param("page", "0").param("size", String.valueOf(pageSize)))
+        mockMvc.perform(get("/medias/me")
+                        .header("Authorization", accessToken)
+                        .param("page", "0").param("size", String.valueOf(pageSize)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medias.length()").value(pageSize))
                 .andExpect(jsonPath("$.medias[0].gymName").value("암장0"))
@@ -151,33 +144,43 @@ class MediaControllerTest extends ControllerTestSupport {
     @DisplayName("미디어를 삭제할 수 있다.")
     void deleteMedia() throws Exception {
         //given
-        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(User.builder().build());
-        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        String accessToken = "token";
+        given(jwtManager.getSubject(accessToken)).willReturn("1");
+        given(userLoadPort.getById(1L)).willReturn(User.builder()
+                .name("username")
+                .instagramUserInfo(InstagramUserInfo.builder().build())
+                .build());
         willDoNothing().given(mediaCommand).deleteMedia(any());
 
         //when
         //then
-        mockMvc.perform(delete("/medias/1"))
+        mockMvc.perform(delete("/medias/1")
+                        .header("Authorization", accessToken))
                 .andExpect(status().isNoContent());
+        then(mediaCommand).should(times(1)).deleteMedia(any());
     }
 
     @Test
     @DisplayName("미디어를 수정할 수 있다.")
     void updateMedia() throws Exception {
         //given
-        given(loginUserArgumentResolver.resolveArgument(any(), any(), any(), any()))
-                .willReturn(User.builder().build());
-        given(loginUserArgumentResolver.supportsParameter(any())).willReturn(true);
+        String accessToken = "token";
+        given(jwtManager.getSubject(accessToken)).willReturn("1");
+        given(userLoadPort.getById(1L)).willReturn(User.builder()
+                .name("username")
+                .instagramUserInfo(InstagramUserInfo.builder().build())
+                .build());
         willDoNothing().given(mediaCommand).updateMedia(any());
 
         //when
         //then
         mockMvc.perform(patch("/medias/1")
+                        .header("Authorization", accessToken)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(MediaUpdateRequest.builder()
                                         .description("description")
                                         .build())))
                 .andExpect(status().isNoContent());
+        then(mediaCommand).should(times(1)).updateMedia(any());
     }
 }

@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -427,6 +428,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("미디어를 삭제하는 API")
     void deleteMedia() throws Exception {
         //given
+        doNothing().when(awsS3Manager).deleteFile(any());
         userJpaRepository.save(User.builder().build());
         User user = userJpaRepository.findAll().get(0);
         mediaJpaRepository.save(Media.builder().user(user).build());
