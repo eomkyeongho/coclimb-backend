@@ -18,11 +18,10 @@ public interface MediaJpaRepository extends JpaRepository<Media, Long> {
     Page<Media> findByIdNotNull(PageRequest pageRequest);
     Optional<Media> findByInstagramMediaInfoId(String instagramMediaId);
 
-//    @EntityGraph(attributePaths = {"gym"})
-//    Page<Media> findPagedByGymName(String gymName, PageRequest pageRequest);
+    Page<Media> findByMediaProblemInfoGymName(String gymName, PageRequest pageRequest);
 
     @EntityGraph(attributePaths = {"user"})
-    Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest);
+    Page<Media> findByUserId(Long userId, PageRequest pageRequest);
 
     @EntityGraph(attributePaths = {"user"})
     List<Media> findByUserId(Long userId);

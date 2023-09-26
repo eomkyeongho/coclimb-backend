@@ -82,7 +82,7 @@ class LoginControllerDocsTest extends RestDocsTestSupport {
                 requestFields(
                         fieldWithPath("code")
                                 .type(JsonFieldType.STRING)
-                                .description("인스타그램 로그인 성공 후에 받은 코드")
+                                .description("인스타그램 로그인 성공 후 반환 받은 코드")
                 ),
                 responseFields(
                         fieldWithPath("accessToken")
