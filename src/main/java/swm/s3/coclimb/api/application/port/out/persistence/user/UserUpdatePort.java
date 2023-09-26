@@ -4,4 +4,5 @@ import swm.s3.coclimb.domain.user.User;
 
 public interface UserUpdatePort {
     Long save(User user);
+    void delete(User user);
 }
