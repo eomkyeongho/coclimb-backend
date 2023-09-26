@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 
 @Getter
 public class MediaPageResponse {
-    private List<MediaSubInfo> medias;
+    private List<MediaInfo> medias;
     private int page;
     private int size;
     private int totalPage;
 
     @Builder
     private MediaPageResponse(List<Media> medias, int page, int size, int totalPage) {
-        this.medias = medias.stream().map(MediaSubInfo::new).collect(Collectors.toList());
+        this.medias = medias.stream().map(MediaInfo::new).collect(Collectors.toList());
         this.page = page;
         this.size = size;
         this.totalPage = totalPage;
@@ -33,14 +33,14 @@ public class MediaPageResponse {
     }
 
     @Getter
-    private class MediaSubInfo {
+    private class MediaInfo {
         private Long id;
         private String thumbnailUrl;
         private String gymName;
         private String problemColor;
         private String username;
 
-        private MediaSubInfo(Media media) {
+        private MediaInfo(Media media) {
             this.id = media.getId();
             this.thumbnailUrl = media.getThumbnailUrl();
             this.gymName = media.getMediaProblemInfo().getGymName();

@@ -19,7 +19,6 @@ public class User extends BaseTimeEntity {
 
     private String name;
 
-
     @Embedded
     private InstagramUserInfo instagramUserInfo;
 

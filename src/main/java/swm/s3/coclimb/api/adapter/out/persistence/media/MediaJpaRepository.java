@@ -4,6 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import swm.s3.coclimb.domain.media.Media;
 
 import java.util.List;
@@ -15,8 +18,16 @@ public interface MediaJpaRepository extends JpaRepository<Media, Long> {
     Page<Media> findByIdNotNull(PageRequest pageRequest);
     Optional<Media> findByInstagramMediaInfoId(String instagramMediaId);
 
+//    @EntityGraph(attributePaths = {"gym"})
+//    Page<Media> findPagedByGymName(String gymName, PageRequest pageRequest);
+
     @EntityGraph(attributePaths = {"user"})
     Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest);
 
+    @EntityGraph(attributePaths = {"user"})
     List<Media> findByUserId(Long userId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("delete from Media m where m.user.id = :userId")
+    void deleteAllByUserId(@Param("userId") Long userId);
 }
