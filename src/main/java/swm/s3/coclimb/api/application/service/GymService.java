@@ -57,7 +57,8 @@ public class GymService implements GymCommand, GymQuery {
 
     @Override
     public GymInfoResponseDto getGymInfoByName(String name) {
-        Gym gym = getGymByName(name);
+        Gym gym = gymLoadPort.findByNameAtEs(name)
+                .orElseThrow(GymNotFound::new);
         return GymInfoResponseDto.of(gym);
     }
 
@@ -125,5 +126,10 @@ public class GymService implements GymCommand, GymQuery {
         return gyms.stream()
                 .map(GymSearchResponseDto::of)
                 .toList();
+    }
+
+    @Override
+    public List<String> autoCorrectGymNames(String keyword, int size) {
+        return gymLoadPort.autoCorrectGymNames(keyword, size);
     }
 }

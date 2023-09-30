@@ -17,5 +17,8 @@ public interface GymQuery {
 
     List<GymLikesResponseDto> getLikedGyms(Long userId);
 
+    @Deprecated
     List<GymSearchResponseDto> searchGyms(String keyword);
+
+    List<String> autoCorrectGymNames(String keyword, int size);
 }
