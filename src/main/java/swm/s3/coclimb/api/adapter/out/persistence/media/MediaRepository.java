@@ -8,6 +8,7 @@ import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
 import swm.s3.coclimb.domain.media.Media;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,8 +33,13 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     }
 
     @Override
+    public Page<Media> findPagedByGymName(String gymName, PageRequest pageRequest) {
+        return mediaJpaRepository.findByMediaProblemInfoGymName(gymName, pageRequest);
+    }
+
+    @Override
     public Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest) {
-        return mediaJpaRepository.findPagedByUserId(userId, pageRequest);
+        return mediaJpaRepository.findByUserId(userId, pageRequest);
     }
 
     @Override
@@ -42,7 +48,17 @@ public class MediaRepository implements MediaLoadPort, MediaUpdatePort {
     }
 
     @Override
+    public List<Media> findByUserId(Long userId) {
+        return mediaJpaRepository.findByUserId(userId);
+    }
+
+    @Override
     public void delete(Media media) {
         mediaJpaRepository.delete(media);
+    }
+
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        mediaJpaRepository.deleteAllByUserId(userId);
     }
 }

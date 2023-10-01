@@ -28,8 +28,12 @@ public class ElasticsearchLearningTest extends IntegrationTestSupport {
         // given
         ElasticsearchClient esClient = elasticsearchClientManager.getEsClient();
         System.out.println(esClient.info());
-        esClient.indices().delete(d -> d.index("new-index"));
-        esClient.indices().refresh();
+        try {
+            esClient.indices().delete(d -> d.index("new-index"));
+            esClient.indices().refresh();
+        } catch (Exception e) {
+            System.out.println("index not exists");
+        }
 
         // when
         CreateIndexResponse response = esClient.indices().create(c -> c

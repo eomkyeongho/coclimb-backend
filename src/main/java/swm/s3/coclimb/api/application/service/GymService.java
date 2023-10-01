@@ -15,6 +15,7 @@ import swm.s3.coclimb.api.application.port.out.persistence.gymlike.GymLikeLoadPo
 import swm.s3.coclimb.api.application.port.out.persistence.gymlike.GymLikeUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
+import swm.s3.coclimb.api.exception.errortype.gymlike.AlreadyLikedGym;
 import swm.s3.coclimb.domain.gym.Gym;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 
@@ -96,6 +97,9 @@ public class GymService implements GymCommand, GymQuery {
     @Transactional
     public void likeGym(GymLikeRequestDto request) {
         Gym gym = gymLoadPort.findByName(request.getGymName()).orElseThrow(GymNotFound::new);
+        gymLikeLoadPort.findByUserIdAndGymName(request.getUser().getId(), request.getGymName()).ifPresent(gymLike -> {
+            throw new AlreadyLikedGym();
+        });
         gymLikeUpdatePort.save(GymLike.builder().user(request.getUser()).gym(gym).build());
     }
 

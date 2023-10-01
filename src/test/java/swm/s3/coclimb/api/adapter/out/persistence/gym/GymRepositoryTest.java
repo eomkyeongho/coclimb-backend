@@ -1,6 +1,5 @@
 package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
@@ -14,11 +13,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GymRepositoryTest extends IntegrationTestSupport {
-
-    @AfterEach
-    void tearDown() {
-        gymJpaRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("해당하는 이름의 암장이 존재하는지 확인한다.")

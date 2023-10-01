@@ -11,6 +11,8 @@ include::{snippets}/media-create/http-response.adoc[]
 === 미디어 페이지 조회
 ==== HTTP Request
 include::{snippets}/media-page/http-request.adoc[]
+==== Request Parameters
+include::{snippets}/media-page/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/media-page/http-response.adoc[]
 include::{snippets}/media-page/response-fields.adoc[]

@@ -37,7 +37,7 @@ include::{snippets}/gym-info/http-response.adoc[]
 include::{snippets}/gym-info/response-fields.adoc[]
 ---
 [[gym-locations]]
-=== 암장 위치정보 조회
+=== 암장 위치 정보 조회
 ==== HTTP Request
 include::{snippets}/gym-locations/http-request.adoc[]
 ==== HTTP Response
@@ -48,6 +48,8 @@ include::{snippets}/gym-locations/response-fields.adoc[]
 === 암장 페이지 조회
 ==== HTTP Request
 include::{snippets}/gym-page/http-request.adoc[]
+==== Request Parameters
+include::{snippets}/gym-page/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/gym-page/http-response.adoc[]
 include::{snippets}/gym-page/response-fields.adoc[]
@@ -85,12 +87,18 @@ include::{snippets}/gym-unlike/http-response.adoc[]
 [[gym-my-like]]
 === 내가 찜한 암장 조회
 ==== HTTP Request
-include::{snippets}/gym-my-like/http-request.adoc[]
+include::{snippets}/gym-my-like-0/http-request.adoc[]
 ==== Request Headers
-include::{snippets}/gym-my-like/request-headers.adoc[]
+include::{snippets}/gym-my-like-0/request-headers.adoc[]
+==== Request Parameters
+include::{snippets}/gym-my-like-0/query-parameters.adoc[]
 ==== HTTP Response
-include::{snippets}/gym-my-like/http-response.adoc[]
-include::{snippets}/gym-my-like/response-fields.adoc[]
+CASE 0. resultContent=0
+include::{snippets}/gym-my-like-0/http-response.adoc[]
+include::{snippets}/gym-my-like-0/response-fields.adoc[]
+CASE 1. resultContent=1
+include::{snippets}/gym-my-like-1/http-response.adoc[]
+include::{snippets}/gym-my-like-1/response-fields.adoc[]
 ---
 [[gym-demo-search]]
 === 암장 검색

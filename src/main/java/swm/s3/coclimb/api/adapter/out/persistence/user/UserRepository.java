@@ -27,6 +27,11 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
     }
 
     @Override
+    public void delete(User user) {
+        userJpaRepository.delete(user);
+    }
+
+    @Override
     public User getById(Long id) {
         return userJpaRepository.findById(id)
                 .orElseThrow(UserNotFound::new);

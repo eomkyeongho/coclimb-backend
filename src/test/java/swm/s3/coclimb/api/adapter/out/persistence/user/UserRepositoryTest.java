@@ -1,7 +1,6 @@
 package swm.s3.coclimb.api.adapter.out.persistence.user;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
@@ -10,11 +9,6 @@ import swm.s3.coclimb.domain.user.User;
 
 class UserRepositoryTest extends IntegrationTestSupport {
 
-
-    @AfterEach
-    void tearDown() {
-        userJpaRepository.deleteAllInBatch();
-    }
     @Test
     @DisplayName("id로 사용자 정보를 조회한다.")
     void getById() throws Exception {

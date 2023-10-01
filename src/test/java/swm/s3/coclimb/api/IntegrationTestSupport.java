@@ -8,14 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import swm.s3.coclimb.api.adapter.out.aws.AwsS3Manager;
 import swm.s3.coclimb.api.adapter.out.elasticsearch.ElasticsearchClientManager;
 import swm.s3.coclimb.api.adapter.out.elasticsearch.GymElasticsearchQuery;
+import swm.s3.coclimb.api.adapter.out.filedownload.FileDownloader;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gymlike.GymLikeJpaRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.gymlike.GymLikeRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.report.ReportJpaRepository;
@@ -52,6 +55,9 @@ public abstract class IntegrationTestSupport{
     @Autowired protected GymService gymService;
     @Autowired protected GymJpaRepository gymJpaRepository;
     @Autowired protected GymRepository gymRepository;
+
+    // GymLike
+    @Autowired protected GymLikeRepository gymLikeRepository;
     @Autowired protected GymLikeJpaRepository gymLikeJpaRepository;
 
     // Media
@@ -78,6 +84,10 @@ public abstract class IntegrationTestSupport{
     @Autowired protected InstagramOAuthRecord instagramOAuthRecord;
     @Autowired protected InstagramRestApiManager instagramRestApiManager;
     @Autowired protected InstagramRestApi instagramRestApi;
+
+    // Aws
+    @Autowired protected AwsS3Manager awsS3Manager;
+    @Autowired protected FileDownloader fileDownloader;
 
     // elasticsearch
     @Autowired protected ElasticsearchClient esClient;

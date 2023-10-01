@@ -81,11 +81,13 @@ public class GymController {
 
     @GetMapping("/gyms")
     public ResponseEntity<GymPageResponse> getPagedGyms(@RequestParam(required = false, defaultValue = "0") int page,
-                                                     @RequestParam(required = false, defaultValue = "10") int size) {
+                                                     @RequestParam(required = false, defaultValue = "10") int size,
+                                                        @RequestParam(required = false, defaultValue = "null") String gymName) {
         if (page < 0) {
             throw ValidationFail.onRequest()
                     .addField("page", FieldErrorType.MIN(0));
         }
+
         Page<Gym> pagedGyms = gymQuery.getPagedGyms(GymPageRequestDto.builder()
                 .page(page)
                 .size(size)
@@ -118,12 +120,14 @@ public class GymController {
     }
 
     @GetMapping("/gyms/likes")
-    public ResponseEntity<GymLikesResponse> getLikedGyms(@LoginUser User user) {
+    public ResponseEntity<?> getLikedGyms(@LoginUser User user,
+                                          @RequestParam(required = false, defaultValue = "0") int resultContent) {
+
         List<GymLikesResponseDto> likedGyms = gymQuery.getLikedGyms(user.getId());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(GymLikesResponse.of(likedGyms));
+                .body(GymLikesResponse.of(likedGyms, resultContent));
     }
 
     @DeleteMapping("/gyms/likes")

@@ -6,3 +6,10 @@ include::{snippets}/user-myinfo/http-request.adoc[]
 include::{snippets}/user-myinfo/http-response.adoc[]
 include::{snippets}/user-myinfo/response-fields.adoc[]
 ---
+=== 회원 탈퇴
+==== HTTP Request
+include::{snippets}/user-delete/http-request.adoc[]
+==== Request Headers
+include::{snippets}/user-delete/request-headers.adoc[]
+==== HTTP Response
+include::{snippets}/user-delete/http-response.adoc[]

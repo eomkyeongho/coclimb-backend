@@ -45,16 +45,29 @@ public class MediaController {
 
     @GetMapping("/medias")
     public ResponseEntity<MediaPageResponse> getAllMedias(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size) {
+                                                          @RequestParam(defaultValue = "10") int size,
+                                                          @RequestParam(defaultValue = "null") String gymName) {
         if (page < 0) {
             throw ValidationFail.onRequest()
                     .addField("page", FieldErrorType.MIN(0));
         }
 
-        Page<Media> pagedMedias = mediaQuery.getPagedMedias(MediaPageRequestDto.builder()
-                .page(page)
-                .size(size)
-                .build());
+        Page<Media> pagedMedias;
+
+        switch(gymName) {
+            case "null":
+                pagedMedias = mediaQuery.getPagedMedias(MediaPageRequestDto.builder()
+                        .page(page)
+                        .size(size)
+                        .build());
+                break;
+            default:
+                pagedMedias = mediaQuery.getPagedMediasByGymName(gymName, MediaPageRequestDto.builder()
+                        .page(page)
+                        .size(size)
+                        .build());
+                break;
+        }
 
         return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
     }

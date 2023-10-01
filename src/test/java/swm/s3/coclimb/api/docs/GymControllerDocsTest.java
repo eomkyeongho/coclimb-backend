@@ -308,6 +308,10 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         result.andDo(document("gym-page",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("page").description("페이지 번호"),
+                        parameterWithName("size").description("페이지 크기")
+                ),
                 responseFields(
                         fieldWithPath("gyms")
                                 .type(JsonFieldType.ARRAY)
@@ -506,7 +510,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
 
         // when
         // then
-        ResultActions result = mockMvc.perform(get("/gyms/likes")
+        ResultActions result1 = mockMvc.perform(get("/gyms/likes")
+                        .param("resultContent", "0")
                         .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -514,10 +519,23 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.count").value(3))
                 .andExpect(jsonPath("$.gyms[*].name").value(containsInAnyOrder("암장0", "암장1", "암장2")));
 
+        ResultActions result2 = mockMvc.perform(get("/gyms/likes")
+                        .param("resultContent", "1")
+                        .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gyms").isArray())
+                .andExpect(jsonPath("$.count").value(3))
+                .andExpect(jsonPath("$.gyms[*]").value(containsInAnyOrder("암장0", "암장1", "암장2")));
         // docs
-        result.andDo(document("gym-my-like",
+        result1.andDo(document("gym-my-like-0",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("resultContent")
+                                .description("결과 형태 (0: 모든 정보, 1: 암장 이름만)")
+                                .optional()
+                ),
                 requestHeaders(
                         headerWithName("Authorization").description("JWT 인증 토큰")
                 ),
@@ -546,6 +564,18 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                         fieldWithPath("gyms[].location.longitude")
                                 .type(JsonFieldType.NUMBER)
                                 .description("경도"),
+                        fieldWithPath("count")
+                                .type(JsonFieldType.NUMBER)
+                                .description("조회된 암장의 수")
+                )));
+
+        result2.andDo(document("gym-my-like-1",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                        fieldWithPath("gyms")
+                                .type(JsonFieldType.ARRAY)
+                                .description("찜한 암장명들"),
                         fieldWithPath("count")
                                 .type(JsonFieldType.NUMBER)
                                 .description("조회된 암장의 수")

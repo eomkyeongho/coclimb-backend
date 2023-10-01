@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import swm.s3.coclimb.api.adapter.out.filedownload.FileDownloader;
 import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.MediaCommand;
 import swm.s3.coclimb.api.application.port.in.media.MediaQuery;
@@ -13,8 +12,9 @@ import swm.s3.coclimb.api.application.port.in.media.dto.MediaCreateRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaDeleteRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaUpdateRequestDto;
-import swm.s3.coclimb.api.application.port.out.aws.AwsS3UploadPort;
+import swm.s3.coclimb.api.application.port.out.aws.AwsS3UpdatePort;
 import swm.s3.coclimb.api.application.port.out.filedownload.DownloadedFileDetail;
+import swm.s3.coclimb.api.application.port.out.filedownload.FileDownloadPort;
 import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.media.MediaUpdatePort;
@@ -35,8 +35,8 @@ public class MediaService implements MediaQuery, MediaCommand {
     private final InstagramDataPort instagramDataPort;
     private final MediaLoadPort mediaLoadPort;
     private final MediaUpdatePort mediaUpdatePort;
-    private final FileDownloader fileDownloader;
-    private final AwsS3UploadPort awsS3UploadPort;
+    private final FileDownloadPort fileDownloadPort;
+    private final AwsS3UpdatePort awsS3UpdatePort;
 
     @Override
     public List<InstagramMediaResponseDto> getMyInstagramVideos(String accessToken) {
@@ -60,11 +60,11 @@ public class MediaService implements MediaQuery, MediaCommand {
             throw new InstagramMediaIdConflict();
         }
 
-        DownloadedFileDetail mediaFile = fileDownloader.downloadFile(mediaCreateRequestDto.getMediaUrl());
-        String mediaUrl = awsS3UploadPort.uploadFile(mediaFile);
+        DownloadedFileDetail mediaFile = fileDownloadPort.downloadFile(mediaCreateRequestDto.getMediaUrl());
+        String mediaUrl = awsS3UpdatePort.uploadFile(mediaFile);
 
-        DownloadedFileDetail thumbnailFile = fileDownloader.downloadFile(mediaCreateRequestDto.getThumbnailUrl());
-        String thumbnailUrl = awsS3UploadPort.uploadFile(thumbnailFile);
+        DownloadedFileDetail thumbnailFile = fileDownloadPort.downloadFile(mediaCreateRequestDto.getThumbnailUrl());
+        String thumbnailUrl = awsS3UpdatePort.uploadFile(thumbnailFile);
 
         mediaUpdatePort.save(mediaCreateRequestDto.toEntity(mediaUrl, thumbnailUrl));
     }
@@ -81,6 +81,15 @@ public class MediaService implements MediaQuery, MediaCommand {
                 requestDto.getSize());
 
         return mediaLoadPort.findAllPaged(pageRequest);
+    }
+
+    @Override
+    public Page<Media> getPagedMediasByGymName(String gymName, MediaPageRequestDto requestDto) {
+        PageRequest pageRequest = PageRequest.of(
+                requestDto.getPage(),
+                requestDto.getSize());
+
+        return mediaLoadPort.findPagedByGymName(gymName, pageRequest);
     }
 
     @Override
@@ -114,6 +123,9 @@ public class MediaService implements MediaQuery, MediaCommand {
         if(!media.getUser().getId().equals(mediaDeleteRequestDto.getUser().getId())) {
             throw new MediaOwnerNotMatched();
         }
+
+        awsS3UpdatePort.deleteFile(media.getMediaUrl());
+        awsS3UpdatePort.deleteFile(media.getThumbnailUrl());
         mediaUpdatePort.delete(media);
     }
 }

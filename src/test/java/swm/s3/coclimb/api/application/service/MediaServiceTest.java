@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.IntegrationTestSupport;
 import swm.s3.coclimb.api.adapter.out.aws.AwsS3Manager;
 import swm.s3.coclimb.api.adapter.out.filedownload.FileDownloader;
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 
 class MediaServiceTest extends IntegrationTestSupport {
 
@@ -56,6 +57,7 @@ class MediaServiceTest extends IntegrationTestSupport {
     }
 
     @Test
+    @Transactional
     @DisplayName("미디어를 저장할 수 있다.")
     void save() {
         //given
@@ -214,6 +216,7 @@ class MediaServiceTest extends IntegrationTestSupport {
                 .description("edit")
                 .build());
         Media sut = mediaJpaRepository.findById(mediaId).get();
+        User sut2 = userJpaRepository.findById(user.getId()).get();
 
         //then
         assertThat(sut.getDescription()).isEqualTo("edit");
@@ -223,6 +226,7 @@ class MediaServiceTest extends IntegrationTestSupport {
     @DisplayName("미디어를 삭제할 수 있다.")
     void delete() {
         //given
+        willDoNothing().given(awsS3Manager).deleteFile(any());
         userJpaRepository.save(User.builder().build());
         User user = userJpaRepository.findAll().get(0);
         mediaJpaRepository.save(Media.builder().user(user).build());
@@ -234,8 +238,46 @@ class MediaServiceTest extends IntegrationTestSupport {
                 .user(user)
                 .build());
         Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+        
+        //then
+        then(awsS3Manager).should(times(2)).deleteFile(any());
+        assertThat(sut).isNull();
+    }
+
+    @Test
+    @DisplayName("암장 이름으로 미디어를 조회할 수 있다.")
+    void findByGymName() {
+        //given
+        String gymName = "test";
+        mediaJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Media.builder()
+                        .mediaProblemInfo(MediaProblemInfo.builder()
+                                .gymName(gymName)
+                                .build())
+                        .build())
+                .toList());
+
+        MediaPageRequestDto mediaPageRequestDto0 = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+        MediaPageRequestDto mediaPageRequestDto1 = MediaPageRequestDto.builder()
+                .page(1)
+                .size(5)
+                .build();
+
+        //when
+        Page<Media> sut0 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto0);
+        Page<Media> sut1 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto1);
 
         //then
-        assertThat(sut).isNull();
+        assertThat(sut0.getTotalElements()).isEqualTo(10);
+        assertThat(sut0.getTotalPages()).isEqualTo(2);
+        assertThat(sut0.getContent()).hasSize(5)
+                .extracting("mediaProblemInfo.gymName")
+                .containsOnly("test");
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("mediaProblemInfo.gymName")
+                .containsOnly("test");
     }
 }

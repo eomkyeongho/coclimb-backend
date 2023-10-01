@@ -37,12 +37,12 @@ public class ReportControllerDocsTest extends RestDocsTestSupport {
                 .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId())))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
-        Report report = reportJpaRepository.findAll().get(0);
+        Report sut = reportJpaRepository.findAll().get(0);
         // then
-        assertThat(report.getUser().getId()).isEqualTo(user.getId());
-        assertThat(report.getSubject()).isEqualTo(request.getSubject());
-        assertThat(report.getTarget()).isEqualTo(request.getTarget());
-        assertThat(report.getDescription()).isEqualTo(request.getDescription());
+        assertThat(sut.getUser().getId()).isEqualTo(user.getId());
+        assertThat(sut.getSubject()).isEqualTo(request.getSubject());
+        assertThat(sut.getTarget()).isEqualTo(request.getTarget());
+        assertThat(sut.getDescription()).isEqualTo(request.getDescription());
         result.andExpect(status().isCreated());
 
         // docs

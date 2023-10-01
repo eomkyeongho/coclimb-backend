@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -81,11 +82,11 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .header("Authorization", jwtManager.issueToken(String.valueOf(userId)))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
-        Media media = mediaJpaRepository.findByUserId(userId).get(0);
+        Media sut = mediaJpaRepository.findByUserId(userId).get(0);
 
         //then
         result.andExpect(status().isCreated());
-        assertThat(media.getMediaProblemInfo().getColor()).isEqualTo("color");
+        assertThat(sut.getMediaProblemInfo().getColor()).isEqualTo("color");
 
         //docs
         result.andDo(document("media-create",
@@ -162,7 +163,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         //then
         ResultActions result = mockMvc.perform(get("/medias")
                         .param("page", "0")
-                        .param("size", String.valueOf(pageSize)))
+                        .param("size", String.valueOf(pageSize))
+                        .param("gymName", "null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medias.length()").value(pageSize))
                 .andExpect(jsonPath("$.medias[0].gymName").value("gym0"))
@@ -173,6 +175,13 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(pageSize))
                 .andExpect(jsonPath("$.totalPage").value(2));
+        mockMvc.perform(get("/medias")
+                .param("page", "0")
+                .param("size", String.valueOf(pageSize))
+                .param("gymName", "gym3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.medias.length()").value(1))
+                .andExpect(jsonPath("$.medias[0].gymName").value("gym3"));
 
         //docs
         result.andDo(document("media-page",
@@ -180,7 +189,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("page").description("페이지 번호"),
-                        parameterWithName("size").description("페이지 사이즈")
+                        parameterWithName("size").description("페이지 사이즈"),
+                        parameterWithName("gymName").description("암장 이름 (없을 시 전체 조회)")
                 ),
                 responseFields(
                         fieldWithPath("page")
@@ -401,8 +411,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                         .description("edit")
                         .build())))
                 .andExpect(status().isNoContent());
-        Media media = mediaJpaRepository.findById(mediaId).orElse(null);
-        assertThat(media.getDescription()).isEqualTo("edit");
+        Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+        assertThat(sut.getDescription()).isEqualTo("edit");
 
         //docs
         result.andDo(document("media-update",
@@ -427,6 +437,7 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
     @DisplayName("미디어를 삭제하는 API")
     void deleteMedia() throws Exception {
         //given
+        willDoNothing().given(awsS3Manager).deleteFile(any());
         userJpaRepository.save(User.builder().build());
         User user = userJpaRepository.findAll().get(0);
         mediaJpaRepository.save(Media.builder().user(user).build());
@@ -437,8 +448,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         ResultActions result = mockMvc.perform(delete("/medias/{id}", mediaId)
                 .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId()))))
                 .andExpect(status().isNoContent());
-        Media media = mediaJpaRepository.findById(mediaId).orElse(null);
-        assertThat(media).isNull();
+        Media sut = mediaJpaRepository.findById(mediaId).orElse(null);
+        assertThat(sut).isNull();
 
         //docs
         result.andDo(document("media-delete",
