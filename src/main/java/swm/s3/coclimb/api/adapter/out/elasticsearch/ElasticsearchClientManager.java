@@ -28,22 +28,27 @@ public class ElasticsearchClientManager {
                 .size(size)
                 .query(q -> q
                         .multiMatch(t -> t
-                                .query(keyword)
                                 .fields(field+".nori", field+".ngram")
+                                .query(keyword)
                         )
                 );
     }
 
     protected Function<SearchRequest.Builder, ObjectBuilder<SearchRequest>> createExactSearchQuery(String index, String field, String keyword, int size) {
         return s -> s.index(index)
+                .source(c -> c
+                        .filter(f -> f
+                                .excludes("created_at")
+                                .excludes("last_modified_at")
+                                .excludes("@timestamp")
+                                .excludes("@version")
+                        )
+                )
                 .size(size)
                 .query(q -> q
-                        .bool(b -> b
-                                .must(m -> m
-                                        .matchPhrase(mq->mq.field(field).query(keyword))
-//                                        .term(t -> t.field(field).value(keyword))
-                                )
-                        )
+                        .matchPhrase(t->t
+                                .field(field+".keyword")
+                                .query(keyword))
                 );
     }
 

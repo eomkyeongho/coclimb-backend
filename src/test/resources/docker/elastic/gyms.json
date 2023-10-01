@@ -35,6 +35,9 @@
         "analyzer": "standard",
         "search_analyzer": "standard",
         "fields": {
+          "keyword": {
+            "type": "keyword"
+          },
           "nori": {
             "type": "text",
             "analyzer": "my_nori_analyzer",
