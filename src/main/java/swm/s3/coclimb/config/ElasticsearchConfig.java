@@ -16,9 +16,10 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
     @Override
     public ClientConfiguration clientConfiguration() {
+
         try {
             return ClientConfiguration.builder()
-                    .connectedTo("localhost:9200")//TODO 앞에 protocol 붙으면 에러남
+                    .connectedTo(elasticProperties.getServerUrl())
                     .usingSsl(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
                     .withBasicAuth(elasticProperties.getUserName(), elasticProperties.getPassword())
                     .build();

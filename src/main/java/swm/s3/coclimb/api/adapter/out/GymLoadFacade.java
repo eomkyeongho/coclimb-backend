@@ -3,7 +3,6 @@ package swm.s3.coclimb.api.adapter.out;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
 import swm.s3.coclimb.api.adapter.out.elasticsearch.gym.GymDocumentRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.GymRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class GymLoadFacade  {
     private final GymRepository gymRepository;
     private final GymDocumentRepository gymDocumentRepository;

@@ -103,7 +103,6 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
     private void createTestGym(String name) {
         Gym gym = Gym.builder()
-                .id(1L)
                 .name(name)
                 .address("주소")
                 .phone("02-000-0000")

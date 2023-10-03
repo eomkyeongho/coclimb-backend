@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
@@ -19,6 +18,7 @@ import swm.s3.coclimb.domain.gym.GymDocument;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;
+import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +123,6 @@ class GymServiceTest extends IntegrationTestSupport {
     void getGymInfoByName() throws Exception {
         // given
         gymDocumentRepository.save(GymDocument.fromDomain(gymJpaRepository.save(Gym.builder()
-                .id(1L)
                 .name("테스트 암장")
                 .build())));
 
@@ -138,13 +137,14 @@ class GymServiceTest extends IntegrationTestSupport {
     @Test
     @DisplayName("존재하지 않는 이름으로 암장을 조회할 경우 예외가 발생한다.")
     void getGymInfoByNameWithNonexistent() throws Exception {
+
         // given
-        esClient.index(i -> i.index("gyms")
-                .document(GymElasticDto.fromDomain(Gym.builder()
-                        .id(1L)
+        gymDocumentRepository.save(GymDocument.fromDomain(
+                gymJpaRepository.save(Gym.builder()
                         .name("테스트 암장")
-                        .build())));
-        esClient.indices().refresh();
+                        .build())
+        ));
+
         // when, then
         assertThatThrownBy(() -> gymService.getGymInfoByName("존재하지 않는 암장"))
                 .isInstanceOf(GymNotFound.class)
@@ -152,38 +152,6 @@ class GymServiceTest extends IntegrationTestSupport {
                 .extracting("fields")
                 .hasFieldOrPropertyWithValue("name", FieldErrorType.NOT_MATCH);
     }
-
-//    @Test
-//    @DisplayName("이름으로 암장 정보를 조회한다.")
-//    void getGymInfoByName() throws Exception {
-//        // given
-//        gymJpaRepository.save(Gym.builder()
-//                .name("테스트 암장")
-//                .build());
-//
-//        // when
-//        GymInfoResponseDto sut = gymService.getGymInfoByName("테스트 암장");
-//
-//        // then
-//        assertThat(sut.getName()).isEqualTo("테스트 암장");
-//    }
-//
-//
-//    @Test
-//    @DisplayName("존재하지 않는 이름으로 암장을 조회할 경우 예외가 발생한다.")
-//    void getGymInfoByNameWithNonexistent() throws Exception {
-//        // given
-//        gymJpaRepository.save(Gym.builder()
-//                .name("테스트 암장")
-//                .build());
-//
-//        // when, then
-//        assertThatThrownBy(() -> gymService.getGymInfoByName("존재하지 않는 암장"))
-//                .isInstanceOf(GymNotFound.class)
-//                .hasMessage("해당 암장을 찾을 수 없습니다.")
-//                .extracting("fields")
-//                .hasFieldOrPropertyWithValue("name", FieldErrorType.NOT_MATCH);
-//    }
 
 
     @Test

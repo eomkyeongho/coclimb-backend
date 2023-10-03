@@ -45,7 +45,6 @@ public class GymDocument {
 
     public Gym toDomain() {
         return Gym.builder()
-                .id(Long.valueOf(id))
                 .name(name)
                 .phone(phone)
                 .address(address)
