@@ -8,13 +8,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.data.domain.Page;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.dto.GymElasticDto;
+import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.api.exception.errortype.gymlike.AlreadyLikedGym;
 import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.GymDocument;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;
@@ -121,11 +122,10 @@ class GymServiceTest extends IntegrationTestSupport {
     @DisplayName("이름으로 암장 정보를 조회한다.")
     void getGymInfoByName() throws Exception {
         // given
-        esClient.index(i -> i.index("gyms")
-                .document(GymElasticDto.fromDomain(gymJpaRepository.save(Gym.builder()
-                        .name("테스트 암장")
-                        .build()))));
-        esClient.indices().refresh();
+        gymDocumentRepository.save(GymDocument.fromDomain(gymJpaRepository.save(Gym.builder()
+                .id(1L)
+                .name("테스트 암장")
+                .build())));
 
         // when
         GymInfoResponseDto sut = gymService.getGymInfoByName("테스트 암장");
@@ -415,7 +415,7 @@ class GymServiceTest extends IntegrationTestSupport {
         esClient.indices().refresh();
 
         // when
-        List<String> sut = gymService.autoCorrectGymNames(keyword, 1);
+        List<String> sut = gymService.autoCompleteGymNames(keyword, 1);
 
         System.out.println(sut);
         // then
