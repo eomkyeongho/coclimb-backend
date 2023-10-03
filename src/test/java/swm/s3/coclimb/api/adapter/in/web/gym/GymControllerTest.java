@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import swm.s3.coclimb.api.ControllerTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
 import swm.s3.coclimb.api.application.port.in.gym.dto.*;
@@ -481,14 +480,14 @@ class GymControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("키워드를 입력하면 자동완성된 암장 리스트를 제공한다.")
-    void autoCorrectGymNames() throws Exception {
+    void autoCompleteGymNames() throws Exception {
         // given
-        given(gymQuery.autoCorrectGymNames(any(), anyInt())).willReturn(IntStream.range(0, 10)
+        given(gymQuery.autoCompleteGymNames(any(), anyInt())).willReturn(IntStream.range(0, 10)
                 .mapToObj(i -> new String("암장" + i))
                 .toList());
 
         // when, then
-        ResultActions result = mockMvc.perform(get("/gyms/autocorrect")
+        ResultActions result = mockMvc.perform(get("/gyms/autocomplete")
                         .param("keyword", "더클라임"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -500,14 +499,14 @@ class GymControllerTest extends ControllerTestSupport {
 
     @Test
     @DisplayName("자동완성 시 키워드가 없으면 예외가 발생한다.")
-    void autoCorrectGymNamesWithoutKeyword() throws Exception {
+    void autoCompleteGymNamesWithoutKeyword() throws Exception {
         // given
-        given(gymQuery.autoCorrectGymNames(any(), anyInt())).willReturn(IntStream.range(0, 10)
+        given(gymQuery.autoCompleteGymNames(any(), anyInt())).willReturn(IntStream.range(0, 10)
                 .mapToObj(i -> new String("암장" + i))
                 .toList());
 
         // when, then
-        ResultActions result = mockMvc.perform(get("/gyms/autocorrect"))
+        ResultActions result = mockMvc.perform(get("/gyms/autocomplete"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

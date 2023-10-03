@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import swm.s3.coclimb.api.adapter.out.aws.AwsS3Manager;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.ElasticsearchClientManager;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.GymElasticsearchQuery;
+import swm.s3.coclimb.api.adapter.out.elasticsearch.gym.GymDocumentRepository;
 import swm.s3.coclimb.api.adapter.out.filedownload.FileDownloader;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;
@@ -39,63 +38,88 @@ import java.nio.file.Path;
 @SpringBootTest
 @ActiveProfiles("test")
 @Slf4j
-public abstract class IntegrationTestSupport{
+public abstract class IntegrationTestSupport {
     static DockerComposeRunner dockerRunner = new DockerComposeRunner();
+
     @BeforeAll
     static void setUpContainer() {
         dockerRunner.runTestContainers();
     }
 
     // User
-    @Autowired protected UserService userService;
-    @Autowired protected UserJpaRepository userJpaRepository;
-    @Autowired protected UserRepository userRepository;
+    @Autowired
+    protected UserService userService;
+    @Autowired
+    protected UserJpaRepository userJpaRepository;
+    @Autowired
+    protected UserRepository userRepository;
 
     // Gym
-    @Autowired protected GymService gymService;
-    @Autowired protected GymJpaRepository gymJpaRepository;
-    @Autowired protected GymRepository gymRepository;
+    @Autowired
+    protected GymService gymService;
+    @Autowired
+    protected GymJpaRepository gymJpaRepository;
+    @Autowired
+    protected GymRepository gymRepository;
 
     // GymLike
-    @Autowired protected GymLikeRepository gymLikeRepository;
-    @Autowired protected GymLikeJpaRepository gymLikeJpaRepository;
+    @Autowired
+    protected GymLikeRepository gymLikeRepository;
+    @Autowired
+    protected GymLikeJpaRepository gymLikeJpaRepository;
 
     // Media
-    @Autowired protected MediaService mediaService;
-    @Autowired protected MediaJpaRepository mediaJpaRepository;
-    @Autowired protected MediaRepository mediaRepository;
+    @Autowired
+    protected MediaService mediaService;
+    @Autowired
+    protected MediaJpaRepository mediaJpaRepository;
+    @Autowired
+    protected MediaRepository mediaRepository;
 
     // Login
-    @Autowired protected LoginService loginService;
+    @Autowired
+    protected LoginService loginService;
 
     // Report
-    @Autowired protected ReportService reportService;
-    @Autowired protected ReportJpaRepository reportJpaRepository;
-    @Autowired protected ReportRepository reportRepository;
+    @Autowired
+    protected ReportService reportService;
+    @Autowired
+    protected ReportJpaRepository reportJpaRepository;
+    @Autowired
+    protected ReportRepository reportRepository;
 
     // Config
-    @Autowired protected AppConfig appConfig;
-    @Autowired protected ServerClock serverClock;
+    @Autowired
+    protected AppConfig appConfig;
+    @Autowired
+    protected ServerClock serverClock;
 
     // Login
-    @Autowired protected JwtManager jwtManager;
+    @Autowired
+    protected JwtManager jwtManager;
 
     // Instagram
-    @Autowired protected InstagramOAuthRecord instagramOAuthRecord;
-    @Autowired protected InstagramRestApiManager instagramRestApiManager;
-    @Autowired protected InstagramRestApi instagramRestApi;
+    @Autowired
+    protected InstagramOAuthRecord instagramOAuthRecord;
+    @Autowired
+    protected InstagramRestApiManager instagramRestApiManager;
+    @Autowired
+    protected InstagramRestApi instagramRestApi;
 
     // Aws
-    @Autowired protected AwsS3Manager awsS3Manager;
-    @Autowired protected FileDownloader fileDownloader;
+    @Autowired
+    protected AwsS3Manager awsS3Manager;
+    @Autowired
+    protected FileDownloader fileDownloader;
 
     // elasticsearch
+    @Autowired
+    protected GymDocumentRepository gymDocumentRepository;
     @Autowired protected ElasticsearchClient esClient;
-    @Autowired protected ElasticsearchClientManager elasticsearchClientManager;
-    @Autowired protected GymElasticsearchQuery gymElasticsearchQuery;
 
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp() throws Exception {
+        esClient.indices().delete(d -> d.index("gyms"));
         Reader input = new StringReader(Files.readString(Path.of("src/test/resources/docker/elastic/gyms.json")));
         esClient.indices().create(c -> c
                 .index("gyms")
@@ -110,8 +134,6 @@ public abstract class IntegrationTestSupport{
         mediaJpaRepository.deleteAllInBatch();
         gymJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
-        esClient.indices().delete(d -> d.index("gyms"));
-        esClient.indices().refresh();
     }
 
 }

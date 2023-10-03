@@ -9,8 +9,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.dto.GymElasticDto;
+import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
 import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.GymDocument;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;
@@ -102,6 +103,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
     }
     private void createTestGym(String name) {
         Gym gym = Gym.builder()
+                .id(1L)
                 .name(name)
                 .address("주소")
                 .phone("02-000-0000")
@@ -111,15 +113,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .gradingSystem("gradingSystem")
                 .location(Location.of(0f, 0f))
                 .build();
-        gymJpaRepository.save(gym);
-        try {
-            esClient.index(i -> i.index("gyms")
-                    .document(GymElasticDto.fromDomain(gym)));
-            esClient.indices().refresh();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
+        gymDocumentRepository.save(GymDocument.fromDomain(gymJpaRepository.save(gym)));
     }
     @Test
     @DisplayName("이름을 입력받아 암장 정보를 제거하는 API")
@@ -640,8 +635,8 @@ class GymControllerDocsTest extends RestDocsTestSupport {
         esClient.bulk(br.build());
         esClient.indices().refresh();
         // when, then
-        ResultActions result = mockMvc.perform(get("/gyms/autocorrect")
-                        .param("keyword", "더클라임"))
+        ResultActions result = mockMvc.perform(get("/gyms/autocomplete")
+                        .param("keyword", "더클 서울"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gymNames").isArray())
@@ -649,7 +644,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.count").value(10));
 
         // docs
-        result.andDo(document("gym-autocorrect",
+        result.andDo(document("gym-autocomplete",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 queryParameters(
