@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.elasticsearch.gym;
+package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.config.security;
+package swm.s3.coclimb.config.propeties;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;

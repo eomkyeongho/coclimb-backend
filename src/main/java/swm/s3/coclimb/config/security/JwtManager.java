@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import swm.s3.coclimb.api.exception.errortype.login.InvalidToken;
 import swm.s3.coclimb.config.AppConfig;
 import swm.s3.coclimb.config.ServerClock;
+import swm.s3.coclimb.config.propeties.JwtProperties;
 
 import java.sql.Timestamp;
 import java.util.Date;

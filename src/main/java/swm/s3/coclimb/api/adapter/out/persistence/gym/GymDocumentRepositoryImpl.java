@@ -1,8 +1,7 @@
-package swm.s3.coclimb.api.adapter.out.elasticsearch.gym;
+package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.ElasticsearchQueryFactory;
 import swm.s3.coclimb.api.exception.errortype.elasticsearch.InvalidElasticQuery;
 import swm.s3.coclimb.domain.gym.GymDocument;
 

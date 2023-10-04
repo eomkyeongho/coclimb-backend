@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import swm.s3.coclimb.api.adapter.out.aws.AwsS3Manager;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.gym.GymDocumentRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.gym.GymDocumentRepository;
 import swm.s3.coclimb.api.adapter.out.filedownload.FileDownloader;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
 import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApi;

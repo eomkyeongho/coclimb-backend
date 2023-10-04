@@ -6,7 +6,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.ElasticProperties;
+import swm.s3.coclimb.config.propeties.ElasticProperties;
 
 @Configuration
 @RequiredArgsConstructor

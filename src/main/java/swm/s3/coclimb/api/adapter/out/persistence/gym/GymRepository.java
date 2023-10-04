@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-import swm.s3.coclimb.api.adapter.out.elasticsearch.gym.GymDocumentRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.gym.dto.GymNearby;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.gym.GymUpdatePort;
