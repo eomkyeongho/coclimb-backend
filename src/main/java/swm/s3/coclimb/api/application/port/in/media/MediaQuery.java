@@ -14,7 +14,8 @@ public interface MediaQuery {
 
     Page<Media> getPagedMediasByGymName(String gymName, MediaPageRequestDto requestDto);
 
-    Page<Media> getPagedMediasByUserId(Long userId, MediaPageRequestDto requestDto);
+    Page<Media> getPagedMediasByUserName(String userName, MediaPageRequestDto requestDto);
+    Page<Media> getPagedMediasByGymNameAndUserName(String gymName, String userName, MediaPageRequestDto requestDto);
 
     Media getMediaById(Long mediaId);
 }

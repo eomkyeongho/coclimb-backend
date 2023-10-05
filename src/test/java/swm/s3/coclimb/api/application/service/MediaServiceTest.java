@@ -148,45 +148,6 @@ class MediaServiceTest extends IntegrationTestSupport {
     }
 
     @Test
-    @DisplayName("UserId로 미디어를 페이징 조회할 수 있다.")
-    void getPagedMediasByUserId() {
-        //given
-        userJpaRepository.save(User.builder().build());
-        userJpaRepository.save(User.builder().build());
-        User user1 = userJpaRepository.findAll().get(0);
-        User user2 = userJpaRepository.findAll().get(1);
-
-
-        mediaJpaRepository.saveAll(IntStream.range(0,5).mapToObj(i -> Media.builder()
-                .user(user1)
-                .build()).toList());
-        mediaJpaRepository.saveAll(IntStream.range(0,5).mapToObj(i -> Media.builder()
-                .user(user2)
-                .build()).toList());
-
-        MediaPageRequestDto mediaPageRequestDto = MediaPageRequestDto.builder()
-                .page(0)
-                .size(5)
-                .build();
-
-        //when
-        Page<Media> sut1 = mediaService.getPagedMediasByUserId(user1.getId(), mediaPageRequestDto);
-        Page<Media> sut2 = mediaService.getPagedMediasByUserId(user2.getId(), mediaPageRequestDto);
-
-        //then
-        assertThat(sut1.getTotalElements()).isEqualTo(5);
-        assertThat(sut1.getTotalPages()).isEqualTo(1);
-        assertThat(sut1.getContent()).hasSize(5)
-                .extracting("user.id")
-                .containsOnly(user1.getId());
-        assertThat(sut2.getTotalElements()).isEqualTo(5);
-        assertThat(sut2.getTotalPages()).isEqualTo(1);
-        assertThat(sut2.getContent()).hasSize(5)
-                .extracting("user.id")
-                .containsOnly(user2.getId());
-    }
-
-    @Test
     @DisplayName("미디어 ID로 조회할 수 있다.")
     void getById() {
         //given
@@ -248,36 +209,127 @@ class MediaServiceTest extends IntegrationTestSupport {
     @DisplayName("암장 이름으로 미디어를 조회할 수 있다.")
     void findByGymName() {
         //given
-        String gymName = "test";
+        String gymName1 = "test1";
+        String gymName2 = "test2";
+
+        List<String> gymNames = List.of(gymName1, gymName2);
+
         mediaJpaRepository.saveAll(IntStream.range(0, 10)
                 .mapToObj(i -> Media.builder()
                         .mediaProblemInfo(MediaProblemInfo.builder()
-                                .gymName(gymName)
+                                .gymName(gymNames.get(i % 2))
                                 .build())
                         .build())
                 .toList());
 
-        MediaPageRequestDto mediaPageRequestDto0 = MediaPageRequestDto.builder()
+        MediaPageRequestDto mediaPageRequestDto = MediaPageRequestDto.builder()
                 .page(0)
-                .size(5)
-                .build();
-        MediaPageRequestDto mediaPageRequestDto1 = MediaPageRequestDto.builder()
-                .page(1)
                 .size(5)
                 .build();
 
         //when
-        Page<Media> sut0 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto0);
-        Page<Media> sut1 = mediaService.getPagedMediasByGymName(gymName, mediaPageRequestDto1);
+        Page<Media> sut1 = mediaService.getPagedMediasByGymName(gymName1, mediaPageRequestDto);
+        Page<Media> sut2 = mediaService.getPagedMediasByGymName(gymName2, mediaPageRequestDto);
 
         //then
-        assertThat(sut0.getTotalElements()).isEqualTo(10);
-        assertThat(sut0.getTotalPages()).isEqualTo(2);
-        assertThat(sut0.getContent()).hasSize(5)
-                .extracting("mediaProblemInfo.gymName")
-                .containsOnly("test");
+        assertThat(sut1.getTotalElements()).isEqualTo(5);
+        assertThat(sut1.getTotalPages()).isEqualTo(1);
         assertThat(sut1.getContent()).hasSize(5)
                 .extracting("mediaProblemInfo.gymName")
-                .containsOnly("test");
+                .containsOnly(gymName1);
+        assertThat(sut2.getTotalElements()).isEqualTo(5);
+        assertThat(sut2.getTotalPages()).isEqualTo(1);
+        assertThat(sut2.getContent()).hasSize(5)
+                .extracting("mediaProblemInfo.gymName")
+                .containsOnly(gymName2);
+    }
+
+    @Test
+    @DisplayName("유저 이름으로 미디어를 조회할 수 있다.")
+    void findByUserName() {
+        //given
+        String userName1 = "test1";
+        String userName2 = "test2";
+
+        userJpaRepository.saveAll(List.of(
+                User.builder().name(userName1).build(),
+                User.builder().name(userName2).build()
+        ));
+
+        List<User> users = userJpaRepository.findAll();
+
+        mediaJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Media.builder()
+                        .user(users.get(i % 2))
+                        .build())
+                .toList());
+
+        MediaPageRequestDto mediaPageRequestDto = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+
+        //when
+        Page<Media> sut1 = mediaService.getPagedMediasByUserName(userName1, mediaPageRequestDto);
+        Page<Media> sut2 = mediaService.getPagedMediasByUserName(userName2, mediaPageRequestDto);
+
+        //then
+        assertThat(sut1.getTotalElements()).isEqualTo(5);
+        assertThat(sut1.getTotalPages()).isEqualTo(1);
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("user.name")
+                .containsOnly(userName1);
+        assertThat(sut2.getTotalElements()).isEqualTo(5);
+        assertThat(sut2.getTotalPages()).isEqualTo(1);
+        assertThat(sut2.getContent()).hasSize(5)
+                .extracting("user.name")
+                .containsOnly(userName2);
+    }
+
+    @Test
+    @DisplayName("암장 이름과 유저 이름으로 미디어를 조회할 수 있다.")
+    void findByGymNameAndUserName() {
+        //given
+        String gymName1 = "test1";
+        String gymName2 = "test2";
+        String userName1 = "test1";
+        String userName2 = "test2";
+
+        userJpaRepository.saveAll(List.of(
+                User.builder().name(userName1).build(),
+                User.builder().name(userName2).build()
+        ));
+
+        List<User> users = userJpaRepository.findAll();
+        List<String> gymNames = List.of(gymName1, gymName2);
+
+        mediaJpaRepository.saveAll(IntStream.range(0, 10)
+                .mapToObj(i -> Media.builder()
+                        .user(users.get(i % 2))
+                        .mediaProblemInfo(MediaProblemInfo.builder()
+                                .gymName(gymNames.get(i % 2))
+                                .build())
+                        .build())
+                .toList());
+        MediaPageRequestDto mediaPageRequestDto = MediaPageRequestDto.builder()
+                .page(0)
+                .size(5)
+                .build();
+
+        //when
+        Page<Media> sut1 = mediaService.getPagedMediasByGymNameAndUserName(gymName1, userName1, mediaPageRequestDto);
+        Page<Media> sut2 = mediaService.getPagedMediasByGymNameAndUserName(gymName2, userName2, mediaPageRequestDto);
+
+        //then
+        assertThat(sut1.getTotalElements()).isEqualTo(5);
+        assertThat(sut1.getTotalPages()).isEqualTo(1);
+        assertThat(sut1.getContent()).hasSize(5)
+                .extracting("user.name", "mediaProblemInfo.gymName")
+                .containsOnly(tuple(userName1, gymName1));
+        assertThat(sut2.getTotalElements()).isEqualTo(5);
+        assertThat(sut2.getTotalPages()).isEqualTo(1);
+        assertThat(sut2.getContent()).hasSize(5)
+                .extracting("user.name", "mediaProblemInfo.gymName")
+                .containsOnly(tuple(userName2, gymName2));
     }
 }

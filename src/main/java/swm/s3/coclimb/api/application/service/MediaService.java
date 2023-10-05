@@ -93,12 +93,21 @@ public class MediaService implements MediaQuery, MediaCommand {
     }
 
     @Override
-    public Page<Media> getPagedMediasByUserId(Long userId, MediaPageRequestDto requestDto) {
+    public Page<Media> getPagedMediasByUserName(String userName, MediaPageRequestDto requestDto) {
         PageRequest pageRequest = PageRequest.of(
                 requestDto.getPage(),
                 requestDto.getSize());
 
-        return mediaLoadPort.findPagedByUserId(userId, pageRequest);
+        return mediaLoadPort.findPagedByUserName(userName, pageRequest);
+    }
+
+    @Override
+    public Page<Media> getPagedMediasByGymNameAndUserName(String gymName, String userName, MediaPageRequestDto requestDto) {
+        PageRequest pageRequest = PageRequest.of(
+                requestDto.getPage(),
+                requestDto.getSize());
+
+        return mediaLoadPort.findPagedByGymNameAndUserName(gymName, userName, pageRequest);
     }
 
     @Override

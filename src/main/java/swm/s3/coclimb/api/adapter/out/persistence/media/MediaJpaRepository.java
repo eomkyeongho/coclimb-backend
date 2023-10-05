@@ -21,7 +21,10 @@ public interface MediaJpaRepository extends JpaRepository<Media, Long> {
     Page<Media> findByMediaProblemInfoGymName(String gymName, PageRequest pageRequest);
 
     @EntityGraph(attributePaths = {"user"})
-    Page<Media> findByUserId(Long userId, PageRequest pageRequest);
+    Page<Media> findByUserName(String userName, PageRequest pageRequest);
+
+    @EntityGraph(attributePaths = {"user"})
+    Page<Media> findByMediaProblemInfoGymNameAndUserName(String gymName, String userName, PageRequest pageRequest);
 
     @EntityGraph(attributePaths = {"user"})
     List<Media> findByUserId(Long userId);

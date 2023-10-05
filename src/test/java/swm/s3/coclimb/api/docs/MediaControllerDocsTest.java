@@ -164,7 +164,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
         ResultActions result = mockMvc.perform(get("/medias")
                         .param("page", "0")
                         .param("size", String.valueOf(pageSize))
-                        .param("gymName", "null"))
+                        .param("gymName", "null")
+                        .param("userName", "null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medias.length()").value(pageSize))
                 .andExpect(jsonPath("$.medias[0].gymName").value("gym0"))
@@ -182,6 +183,22 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.medias.length()").value(1))
                 .andExpect(jsonPath("$.medias[0].gymName").value("gym3"));
+        mockMvc.perform(get("/medias")
+                .param("page", "0")
+                .param("size", String.valueOf(pageSize))
+                .param("userName", "user3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.medias.length()").value(1))
+                .andExpect(jsonPath("$.medias[0].username").value("user3"));
+        mockMvc.perform(get("/medias")
+                .param("page", "0")
+                .param("size", String.valueOf(pageSize))
+                .param("gymName", "gym3")
+                .param("userName", "user3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.medias.length()").value(1))
+                .andExpect(jsonPath("$.medias[0].gymName").value("gym3"))
+                .andExpect(jsonPath("$.medias[0].username").value("user3"));
 
         //docs
         result.andDo(document("media-page",
@@ -190,84 +207,8 @@ public class MediaControllerDocsTest extends RestDocsTestSupport {
                 queryParameters(
                         parameterWithName("page").description("페이지 번호"),
                         parameterWithName("size").description("페이지 사이즈"),
-                        parameterWithName("gymName").description("암장 이름 (없을 시 전체 조회)")
-                ),
-                responseFields(
-                        fieldWithPath("page")
-                                .type(JsonFieldType.NUMBER)
-                                .description("페이지 번호"),
-                        fieldWithPath("size")
-                                .type(JsonFieldType.NUMBER)
-                                .description("페이지 사이즈"),
-                        fieldWithPath("totalPage")
-                                .type(JsonFieldType.NUMBER)
-                                .description("전체 페이지 수"),
-                        fieldWithPath("medias")
-                                .type(JsonFieldType.ARRAY)
-                                .description("미디어 목록"),
-                        fieldWithPath("medias[].id")
-                                .type(JsonFieldType.NUMBER)
-                                .description("미디어 ID"),
-                        fieldWithPath("medias[].username")
-                                .type(JsonFieldType.STRING)
-                                .description("미디어 업로드 유저명"),
-                        fieldWithPath("medias[].thumbnailUrl")
-                                .type(JsonFieldType.STRING)
-                                .description("미디어 썸네일 URL"),
-                        fieldWithPath("medias[].gymName")
-                                .type(JsonFieldType.STRING)
-                                .description("미디어 내 암장 이름"),
-                        fieldWithPath("medias[].problemColor")
-                                .type(JsonFieldType.STRING)
-                                .description("미디어 내 문제 난이도 색상")
-                )));
-    }
-    @Test
-    @DisplayName("본인 미디어 페이지 조회하는 API")
-    void getPagedMediasByUserId() throws Exception {
-        //given
-        int pageSize = 5;
-
-        userJpaRepository.save(User.builder().name("me").build());
-        User user = userJpaRepository.findAll().get(0);
-
-        mediaJpaRepository.saveAll(IntStream.range(0, 10).mapToObj(i -> Media.builder()
-                        .user(user)
-                        .thumbnailUrl("thumbnailUrl" + String.valueOf(i))
-                        .mediaProblemInfo(MediaProblemInfo.builder()
-                                .gymName("gym" + String.valueOf(i))
-                                .color("color" + String.valueOf(i))
-                                .build())
-                        .build())
-                .collect(Collectors.toList()));
-
-        //when
-        //then
-        ResultActions result = mockMvc.perform(get("/medias/me")
-                        .header("Authorization", jwtManager.issueToken(String.valueOf(user.getId())))
-                        .param("page", "0")
-                        .param("size", String.valueOf(pageSize)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.medias.length()").value(pageSize))
-                .andExpect(jsonPath("$.medias[0].gymName").value("gym0"))
-                .andExpect(jsonPath("$.medias[1].gymName").value("gym1"))
-                .andExpect(jsonPath("$.medias[2].gymName").value("gym2"))
-                .andExpect(jsonPath("$.medias[3].gymName").value("gym3"))
-                .andExpect(jsonPath("$.medias[4].gymName").value("gym4"))
-                .andExpect(jsonPath("$.page").value(0))
-                .andExpect(jsonPath("$.size").value(pageSize))
-                .andExpect(jsonPath("$.totalPage").value(2));
-
-        //docs
-        result.andDo(document("media-my",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                requestHeaders(
-                        headerWithName("Authorization").description("JWT 인증 토큰")
-                ),
-                queryParameters(
-                        parameterWithName("page").description("페이지 번호"),
-                        parameterWithName("size").description("페이지 사이즈")
+                        parameterWithName("gymName").description("암장 이름 (없을 시 전체 조회)"),
+                        parameterWithName("userName").description("유저 이름 (없을 시 전체 조회)")
                 ),
                 responseFields(
                         fieldWithPath("page")

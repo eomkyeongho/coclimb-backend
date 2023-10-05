@@ -44,9 +44,10 @@ public class MediaController {
     }
 
     @GetMapping("/medias")
-    public ResponseEntity<MediaPageResponse> getAllMedias(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<MediaPageResponse> getPagedMedias(@RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "10") int size,
-                                                          @RequestParam(defaultValue = "null") String gymName) {
+                                                          @RequestParam(defaultValue = "null") String gymName,
+                                                          @RequestParam(defaultValue = "null") String userName) {
         if (page < 0) {
             throw ValidationFail.onRequest()
                     .addField("page", FieldErrorType.MIN(0));
@@ -54,37 +55,28 @@ public class MediaController {
 
         Page<Media> pagedMedias;
 
-        switch(gymName) {
-            case "null":
-                pagedMedias = mediaQuery.getPagedMedias(MediaPageRequestDto.builder()
-                        .page(page)
-                        .size(size)
-                        .build());
-                break;
-            default:
+        if(!gymName.equals("null") && !userName.equals("null")) {
+            pagedMedias = mediaQuery.getPagedMediasByGymNameAndUserName(gymName, userName, MediaPageRequestDto
+                    .builder()
+                    .page(page)
+                    .size(size)
+                    .build());
+        } else if(!gymName.equals("null")) {
                 pagedMedias = mediaQuery.getPagedMediasByGymName(gymName, MediaPageRequestDto.builder()
                         .page(page)
                         .size(size)
                         .build());
-                break;
+        } else if(!userName.equals("null")) {
+            pagedMedias = mediaQuery.getPagedMediasByUserName(userName, MediaPageRequestDto.builder()
+                    .page(page)
+                    .size(size)
+                    .build());
+        } else {
+            pagedMedias = mediaQuery.getPagedMedias(MediaPageRequestDto.builder()
+                    .page(page)
+                    .size(size)
+                    .build());
         }
-
-        return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
-    }
-
-    @GetMapping("/medias/me")
-    public ResponseEntity<MediaPageResponse> getMyMedias(@LoginUser User user,
-                                                         @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "10") int size) {
-        if (page < 0) {
-            throw ValidationFail.onRequest()
-                    .addField("page", FieldErrorType.MIN(0));
-        }
-
-        Page<Media> pagedMedias = mediaQuery.getPagedMediasByUserId(user.getId(), MediaPageRequestDto.builder()
-                .page(page)
-                .size(size)
-                .build());
 
         return ResponseEntity.ok(MediaPageResponse.of(pagedMedias));
     }

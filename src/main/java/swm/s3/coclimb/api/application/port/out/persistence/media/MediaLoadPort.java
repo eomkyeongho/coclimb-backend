@@ -15,7 +15,9 @@ public interface MediaLoadPort {
 
     Page<Media> findPagedByGymName(String gymName, PageRequest pageRequest);
 
-    Page<Media> findPagedByUserId(Long userId, PageRequest pageRequest);
+    Page<Media> findPagedByUserName(String userName, PageRequest pageRequest);
+
+    Page<Media> findPagedByGymNameAndUserName(String gymName, String userName, PageRequest pageRequest);
 
     Optional<Media> findById(Long mediaId);
 
