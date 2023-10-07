@@ -101,7 +101,7 @@ include::{snippets}/gym-my-like-1/http-response.adoc[]
 include::{snippets}/gym-my-like-1/response-fields.adoc[]
 ---
 [[gym-demo-search]]
-=== 암장 검색
+=== 암장 검색 데모
 ==== HTTP Request
 include::{snippets}/gym-demo-search/http-request.adoc[]
 ==== Request Parameters
