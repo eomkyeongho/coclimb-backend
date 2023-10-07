@@ -1,0 +1,13 @@
+[[search-autocomplete-name]]
+=== 검색시 이름으로 자동완성
+==== HTTP Request
+include::{snippets}/search-autocomplete-name/http-request.adoc[]
+==== Request Parameters
+include::{snippets}/search-autocomplete-name/query-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/search-autocomplete-name/http-response.adoc[]
+include::{snippets}/search-autocomplete-name/response-fields.adoc[]
+
+
+
+

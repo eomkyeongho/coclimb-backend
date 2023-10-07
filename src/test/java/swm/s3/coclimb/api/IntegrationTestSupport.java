@@ -22,6 +22,8 @@ import swm.s3.coclimb.api.adapter.out.persistence.media.MediaJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.media.MediaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.report.ReportJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.report.ReportRepository;
+import swm.s3.coclimb.api.adapter.out.persistence.search.SearchManager;
+import swm.s3.coclimb.api.adapter.out.persistence.user.UserDocumentRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserJpaRepository;
 import swm.s3.coclimb.api.adapter.out.persistence.user.UserRepository;
 import swm.s3.coclimb.api.application.service.*;
@@ -30,10 +32,11 @@ import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.config.security.JwtManager;
 import swm.s3.coclimb.docker.DockerComposeRunner;
 
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -114,8 +117,17 @@ public abstract class IntegrationTestSupport {
 
     // elasticsearch
     @Autowired
+    protected ElasticsearchClient esClient;
+    @Autowired
     protected GymDocumentRepository gymDocumentRepository;
-    @Autowired protected ElasticsearchClient esClient;
+    @Autowired
+    protected UserDocumentRepository userDocumentRepository;
+
+    // Search
+    @Autowired
+    protected SearchManager searchManager;
+    @Autowired
+    protected SearchService searchService;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -134,6 +146,21 @@ public abstract class IntegrationTestSupport {
         mediaJpaRepository.deleteAllInBatch();
         gymJpaRepository.deleteAllInBatch();
         userJpaRepository.deleteAllInBatch();
+        gymDocumentRepository.deleteAll();
+        userDocumentRepository.deleteAll();
     }
+    protected List<String> readFileToList(String filePath) {
+        List<String> lines = new ArrayList<>();
 
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return lines;
+    }
 }
