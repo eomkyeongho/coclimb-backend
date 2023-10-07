@@ -1,6 +1,8 @@
 package swm.s3.coclimb.api.application.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import swm.s3.coclimb.api.adapter.out.persistence.search.SearchManager;
 import swm.s3.coclimb.api.adapter.out.persistence.search.dto.AutoCompleteNameDto;
 import swm.s3.coclimb.api.application.port.in.search.SearchQuery;
@@ -11,12 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class SearchService implements SearchQuery {
     private final SearchManager searchManager;
-
-    public SearchService(SearchManager searchManager) {
-        this.searchManager = searchManager;
-    }
 
     @Override
     public List<SearchNameResult> autoComplete(String keyword, List<Document> documents, int size) {
