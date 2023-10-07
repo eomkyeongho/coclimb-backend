@@ -11,5 +11,5 @@ services:
       - 9300:9300
     environment:
       ES_JAVA_OPTS : -Xms1g -Xmx1g
-      ELASTIC_PASSWORD : p@ssw0rd
-    network_mode: host
+      ELASTIC_PASSWORD : password
+#    network_mode: host #host모드는 리눅스환경에서만 사용 가능

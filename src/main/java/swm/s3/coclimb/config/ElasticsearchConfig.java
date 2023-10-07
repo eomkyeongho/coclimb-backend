@@ -20,7 +20,7 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
         try {
             return ClientConfiguration.builder()
                     .connectedTo(elasticProperties.getServerUrl())
-                    .usingSsl(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
+//                    .usingSsl(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
                     .withBasicAuth(elasticProperties.getUserName(), elasticProperties.getPassword())
                     .build();
         } catch (Exception e) {
