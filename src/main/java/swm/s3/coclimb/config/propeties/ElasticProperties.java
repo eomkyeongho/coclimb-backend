@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.elasticsearch;
+package swm.s3.coclimb.config.propeties;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

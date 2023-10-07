@@ -2,7 +2,9 @@
 !src/**/build/
 # server logs
 logs/
-
+# api docs html
+src/docs/asciidoc/index.html
+src/main/resources/static/index.html
 # secret configurations
 src/main/resources/application-secret.yml
 

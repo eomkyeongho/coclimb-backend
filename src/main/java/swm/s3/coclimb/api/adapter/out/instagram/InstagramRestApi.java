@@ -136,7 +136,7 @@ public class InstagramRestApi {
             Map<String, Object> map = objectMapper.readValue(response, Map.class);
             return map.get("username").toString();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //TODO 500에러는 이쪽문제같은디
         }
     }
 }

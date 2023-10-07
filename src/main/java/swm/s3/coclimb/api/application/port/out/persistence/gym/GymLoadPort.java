@@ -13,7 +13,7 @@ public interface GymLoadPort {
 
     Optional<Gym> findByName(String name);
 
-    Optional<Gym> findByNameAtEs(String name);
+    Gym getByNameAtEs(String name);
 
     List<Gym> findAll();
 
@@ -22,7 +22,4 @@ public interface GymLoadPort {
     List<GymNearby> findNearby(float latitude, float longitude, float distance);
 
     List<Gym> searchByName(String name);
-
-
-    List<String> autoCorrectGymNames(String name, int size);
 }

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.elasticsearch.dto;
+package swm.s3.coclimb.learning.elasticsearch;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +36,6 @@ public class GymElasticDto {
 
     public Gym toDomain() {
         return Gym.builder()
-                .id(gym_id)
                 .name(name)
                 .phone(phone)
                 .address(address)

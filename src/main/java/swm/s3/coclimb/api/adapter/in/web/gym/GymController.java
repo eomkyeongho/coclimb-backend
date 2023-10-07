@@ -148,10 +148,4 @@ public class GymController {
                 .body(GymSearchResponse.of(gyms));
     }
 
-    @GetMapping("/gyms/autocorrect")
-    public ResponseEntity<GymNameAutoCorrectResponse> getAutoCorrectedGymNames(@RequestParam @NotNull(message = "keyword is required") String keyword) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new GymNameAutoCorrectResponse(gymQuery.autoCorrectGymNames(keyword,10)));
-    }
 }

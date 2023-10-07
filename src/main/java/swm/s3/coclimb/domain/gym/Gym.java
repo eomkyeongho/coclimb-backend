@@ -31,8 +31,7 @@ public class Gym extends BaseTimeEntity {
     private Location location;
 
     @Builder
-    public Gym(Long id, String name, String address, String phone, String imageUrl, String instagramId, String homepageUrl, String gradingSystem, Location location) {
-        this.id = id;
+    public Gym(String name, String address, String phone, String imageUrl, String instagramId, String homepageUrl, String gradingSystem, Location location) {
         this.name = name;
         this.address = address;
         this.phone = phone;

@@ -6,10 +6,10 @@
           "type": "nori_tokenizer",
           "decompound_mode": "mixed"
         },
-        "ngram_tokenizer": {
-          "type": "ngram",
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
           "min_gram": 2,
-          "max_gram": 3,
+          "max_gram": 20,
           "token_chars": ["letter", "digit"]
         }
       },
@@ -19,11 +19,10 @@
           "tokenizer": "nori_tokenizer",
           "filter" : ["lowercase", "stop", "trim"]
         },
-        "my_ngram_analyzer": {
-          "type": "custom",
-          "tokenizer": "ngram_tokenizer",
-          "filter": ["lowercase", "stop", "trim",  "nori_part_of_speech"],
-          "char_filter": ["html_strip"]
+        "my_edge_ngram_analyzer": {
+          "type" : "custom",
+          "tokenizer": "edge_ngram_tokenizer",
+          "filter": ["lowercase", "stop", "trim", "nori_part_of_speech"]
         }
       }
     }
@@ -43,10 +42,10 @@
             "analyzer": "my_nori_analyzer",
             "search_analyzer": "my_nori_analyzer"
           },
-          "ngram": {
+          "edge_ngram": {
             "type": "text",
-            "analyzer": "my_ngram_analyzer",
-            "search_analyzer": "my_ngram_analyzer"
+            "analyzer": "my_edge_ngram_analyzer",
+            "search_analyzer": "my_edge_ngram_analyzer"
           }
         }
       }
