@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserLoadPort;
 import swm.s3.coclimb.api.application.port.out.persistence.user.UserUpdatePort;
 import swm.s3.coclimb.api.exception.errortype.user.UserNotFound;
+import swm.s3.coclimb.domain.document.UserDocument;
 import swm.s3.coclimb.domain.user.User;
 
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UserRepository implements UserLoadPort, UserUpdatePort {
 
     private final UserJpaRepository userJpaRepository;
+    private final UserDocumentRepository userDocumentRepository;
 
     @Override
     public Optional<User> findByInstagramUserId(Long instagramUserId) {
@@ -22,12 +24,14 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
 
     @Override
     public Long save(User user) {
-        Long id = userJpaRepository.save(user).getId();
-        return id;
+        User savedUser = userJpaRepository.save(user);
+        userDocumentRepository.save(UserDocument.fromDomain(savedUser));
+        return savedUser.getId();
     }
 
     @Override
     public void delete(User user) {
+        userDocumentRepository.delete(UserDocument.fromDomain(user));
         userJpaRepository.delete(user);
     }
 
