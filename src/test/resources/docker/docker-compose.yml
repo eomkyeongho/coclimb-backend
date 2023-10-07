@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   mysql:
     build:
@@ -17,10 +17,9 @@ services:
       context: ./elastic
       dockerfile: Dockerfile-es
     container_name: test-elasticsearch
-#    volumes:
-#      - ./elastic/certs/http_ca.crt:/usr/share/elasticsearch/config/certs:ro,Z
-#      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
     ports:
-      - "9200:9200"
+      - 9200:9200
+    volumes:
+      - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     environment:
-      - ELASTIC_PASSWORD=test
+      ELASTIC_PASSWORD: test

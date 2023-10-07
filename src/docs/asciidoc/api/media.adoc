@@ -17,15 +17,7 @@ include::{snippets}/media-page/query-parameters.adoc[]
 include::{snippets}/media-page/http-response.adoc[]
 include::{snippets}/media-page/response-fields.adoc[]
 ---
-=== 나의 미디어 페이지 조회
-==== HTTP Request
-include::{snippets}/media-my/http-request.adoc[]
-==== Request Headers
-include::{snippets}/media-my/request-headers.adoc[]
-==== HTTP Response
-include::{snippets}/media-my/http-response.adoc[]
-include::{snippets}/media-my/response-fields.adoc[]
----
+
 === 미디어 정보 조회
 ==== HTTP Request
 include::{snippets}/media-info/http-request.adoc[]

@@ -8,6 +8,9 @@ services:
       - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
       - 5601:5601
-#    environment:
-#      KIBANA_SYSTEM_PASSWORD : p@ssw0rd
-    network_mode: host
+#    network_mode: host #host모드는 리눅스환경에서만 사용 가능
+    networks: #local
+      - elasticsearch_default
+networks:
+  elasticsearch_default:
+    external: true
