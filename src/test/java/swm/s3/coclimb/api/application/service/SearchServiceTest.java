@@ -62,4 +62,5 @@ class SearchServiceTest extends IntegrationTestSupport {
         // then
         assertThat(sut).isEmpty();
     }
+
 }

@@ -20,5 +20,4 @@ public interface GymQuery {
     @Deprecated
     List<GymSearchResponseDto> searchGyms(String keyword);
 
-    List<String> autoCompleteGymNames(String keyword, int size);
 }

@@ -61,10 +61,4 @@ public class GymRepository implements GymUpdatePort, GymLoadPort {
         return gymJpaRepository.findByNameLike(keyword);
     }
 
-    @Override
-    public List<String> autoCompleteGymNames(String name, int size) {
-        return gymDocumentRepository.autoCompleteName(name, size);
-    }
-
-
 }

@@ -126,8 +126,4 @@ public class GymService implements GymCommand, GymQuery {
                 .toList();
     }
 
-    @Override
-    public List<String> autoCompleteGymNames(String keyword, int size) {
-        return gymLoadPort.autoCompleteGymNames(keyword, size);
-    }
 }

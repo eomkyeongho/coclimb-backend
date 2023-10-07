@@ -110,16 +110,6 @@ include::{snippets}/gym-demo-search/query-parameters.adoc[]
 include::{snippets}/gym-demo-search/http-response.adoc[]
 include::{snippets}/gym-demo-search/response-fields.adoc[]
 ---
-[[gym-autocomplete]]
-=== 암장명 자동완성
-==== HTTP Request
-include::{snippets}/gym-autocomplete/http-request.adoc[]
-==== Request Parameters
-include::{snippets}/gym-autocomplete/query-parameters.adoc[]
-==== HTTP Response
-include::{snippets}/gym-autocomplete/http-response.adoc[]
-include::{snippets}/gym-autocomplete/response-fields.adoc[]
-
 
 
 

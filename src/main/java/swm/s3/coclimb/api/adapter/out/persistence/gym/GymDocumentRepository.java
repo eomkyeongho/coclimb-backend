@@ -5,7 +5,7 @@ import swm.s3.coclimb.domain.document.GymDocument;
 
 import java.util.Optional;
 
-public interface GymDocumentRepository extends ElasticsearchRepository<GymDocument, String>, GymDocumentRepositoryCustom {
+public interface GymDocumentRepository extends ElasticsearchRepository<GymDocument, String> {
 
     Optional<GymDocument> findByName(String name);
 }
