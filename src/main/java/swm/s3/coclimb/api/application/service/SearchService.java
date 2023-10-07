@@ -31,6 +31,7 @@ public class SearchService implements SearchQuery {
 
     }
 
+    //TODO 대상별 조회 갯수 분배 로직 리팩토링
     private List<SearchNameResult> getSearchNameResults(List<AutoCompleteNameDto> autoCompletedNames, int left, int threshold) {
         List<SearchNameResult> searchNameResults = new ArrayList<>();
         for (AutoCompleteNameDto autoCompleteNameDto : autoCompletedNames) {
