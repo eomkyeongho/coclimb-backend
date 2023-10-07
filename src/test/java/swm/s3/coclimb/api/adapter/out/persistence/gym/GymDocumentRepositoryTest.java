@@ -1,16 +1,12 @@
-package swm.s3.coclimb.api.adapter.out.elasticsearch;
+package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.domain.gym.GymDocument;
+import swm.s3.coclimb.domain.document.GymDocument;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -47,18 +43,5 @@ class GymDocumentRepositoryTest extends IntegrationTestSupport {
         // then
         assertThat(sut.get(0)).isEqualTo(expected);
     }
-    private List<String> readFileToList(String filePath) {
-        List<String> lines = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return lines;
-    }
 }

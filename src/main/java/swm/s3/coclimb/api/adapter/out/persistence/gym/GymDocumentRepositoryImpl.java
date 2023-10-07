@@ -2,8 +2,9 @@ package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
+import swm.s3.coclimb.api.adapter.out.persistence.search.ElasticsearchQueryFactory;
 import swm.s3.coclimb.api.exception.errortype.elasticsearch.InvalidElasticQuery;
-import swm.s3.coclimb.domain.gym.GymDocument;
+import swm.s3.coclimb.domain.document.GymDocument;
 
 import java.io.IOException;
 import java.util.List;

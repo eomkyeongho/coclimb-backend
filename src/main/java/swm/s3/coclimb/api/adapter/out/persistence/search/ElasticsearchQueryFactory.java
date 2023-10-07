@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.persistence.gym;
+package swm.s3.coclimb.api.adapter.out.persistence.search;
 
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.util.ObjectBuilder;

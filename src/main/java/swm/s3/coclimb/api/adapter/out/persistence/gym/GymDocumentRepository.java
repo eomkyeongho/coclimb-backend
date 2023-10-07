@@ -1,7 +1,7 @@
 package swm.s3.coclimb.api.adapter.out.persistence.gym;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import swm.s3.coclimb.domain.gym.GymDocument;
+import swm.s3.coclimb.domain.document.GymDocument;
 
 import java.util.Optional;
 

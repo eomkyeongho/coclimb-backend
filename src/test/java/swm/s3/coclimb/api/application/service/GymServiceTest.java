@@ -14,7 +14,7 @@ import swm.s3.coclimb.api.exception.errortype.gym.GymNameConflict;
 import swm.s3.coclimb.api.exception.errortype.gym.GymNotFound;
 import swm.s3.coclimb.api.exception.errortype.gymlike.AlreadyLikedGym;
 import swm.s3.coclimb.domain.gym.Gym;
-import swm.s3.coclimb.domain.gym.GymDocument;
+import swm.s3.coclimb.domain.document.GymDocument;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;

@@ -6,7 +6,7 @@ import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.persistence.gym.ElasticsearchQueryFactory;
+import swm.s3.coclimb.api.adapter.out.persistence.search.ElasticsearchQueryFactory;
 import swm.s3.coclimb.domain.gym.Gym;
 
 import java.util.List;

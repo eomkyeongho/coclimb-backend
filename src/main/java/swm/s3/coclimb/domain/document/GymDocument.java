@@ -1,4 +1,4 @@
-package swm.s3.coclimb.domain.gym;
+package swm.s3.coclimb.domain.document;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Id;
@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.elasticsearch.annotations.Document;
+import swm.s3.coclimb.domain.gym.Gym;
+import swm.s3.coclimb.domain.gym.Location;
 
 
 @Getter

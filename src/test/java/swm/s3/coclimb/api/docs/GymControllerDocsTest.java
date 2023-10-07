@@ -9,17 +9,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import swm.s3.coclimb.api.RestDocsTestSupport;
 import swm.s3.coclimb.api.adapter.in.web.gym.dto.*;
-import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
+import swm.s3.coclimb.domain.document.GymDocument;
 import swm.s3.coclimb.domain.gym.Gym;
-import swm.s3.coclimb.domain.gym.GymDocument;
 import swm.s3.coclimb.domain.gym.Location;
 import swm.s3.coclimb.domain.gymlike.GymLike;
 import swm.s3.coclimb.domain.user.User;
+import swm.s3.coclimb.learning.elasticsearch.GymElasticDto;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -616,7 +612,7 @@ class GymControllerDocsTest extends RestDocsTestSupport {
 
     @Test
     @DisplayName("키워드를 입력하면 자동완성된 암장 리스트를 제공하는 API")
-    void autoCorrectGymNames() throws Exception {
+    void autoCompleteGymNames() throws Exception {
         // given
         List<String> gymNames = readFileToList("src/test/resources/docker/elastic/gyms.txt");
 
@@ -656,18 +652,5 @@ class GymControllerDocsTest extends RestDocsTestSupport {
                                 .description("조회된 암장의 수")
                 )));
     }
-    private List<String> readFileToList(String filePath) {
-        List<String> lines = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return lines;
-    }
 }
