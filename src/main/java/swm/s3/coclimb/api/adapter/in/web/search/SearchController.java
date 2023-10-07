@@ -15,7 +15,9 @@ import swm.s3.coclimb.api.exception.errortype.ValidationFail;
 import swm.s3.coclimb.domain.document.Document;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -39,7 +41,7 @@ public class SearchController {
     }
 
     private List<Document> getDocuments(int[] searchTargets) {
-        List<Document> documents = new ArrayList<>();
+        Set<Document> documents = new HashSet<>();
 
         for (int target : searchTargets) {
             switch (target){
@@ -54,7 +56,7 @@ public class SearchController {
                             .addField("targets", target + FieldErrorType.INVALID_VALUE);
             }
         }
-        return documents;
+        return documents.stream().toList();
     }
 
 }
