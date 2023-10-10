@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface UserQuery {
 
     Optional<User> findUserByInstagramUserId(Long instagramUserId);
+
+    Optional<User> findUserByKakaoUserId(Long kakaoUserId);
 }

@@ -1,7 +1,7 @@
 package swm.s3.coclimb.api.application.port.in.media;
 
 import org.springframework.data.domain.Page;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.InstagramMediaResponseDto;
 import swm.s3.coclimb.api.application.port.in.media.dto.MediaPageRequestDto;
 import swm.s3.coclimb.domain.media.Media;
 

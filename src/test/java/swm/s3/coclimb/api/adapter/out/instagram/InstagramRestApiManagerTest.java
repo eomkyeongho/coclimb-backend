@@ -4,8 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import swm.s3.coclimb.api.IntegrationTestSupport;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.InstagramRestApi;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.LongLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 

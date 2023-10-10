@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import swm.s3.coclimb.api.ControllerTestSupport;
-import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
+import swm.s3.coclimb.api.adapter.in.web.login.dto.OAuthLoginRequest;
 import swm.s3.coclimb.api.exception.FieldErrorType;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +33,7 @@ class LoginControllerTest extends ControllerTestSupport {
     @DisplayName("인스타그램으로 로그인에 성공하면 엑세스 토큰을 발급한다.")
     void loginWithInstagram() throws Exception {
         // given
-        InstagramLoginRequest request = InstagramLoginRequest.of("123");
+        OAuthLoginRequest request = OAuthLoginRequest.of("123");
         given(loginCommand.loginWithInstagram(any())).willReturn(1L);
         given(jwtManager.issueToken(any())).willReturn("token");
         // when, then
@@ -48,7 +48,7 @@ class LoginControllerTest extends ControllerTestSupport {
     @DisplayName("인스타그램으로 로그인 시 code는 필수값이다.")
     void loginWithInstagramWithNoCode() throws Exception {
         // given
-        InstagramLoginRequest request = InstagramLoginRequest.of(null);
+        OAuthLoginRequest request = OAuthLoginRequest.of(null);
 
         // when, then
         mockMvc.perform(post("/login/instagram")

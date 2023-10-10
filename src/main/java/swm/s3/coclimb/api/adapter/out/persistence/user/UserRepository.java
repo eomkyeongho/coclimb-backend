@@ -23,6 +23,11 @@ public class UserRepository implements UserLoadPort, UserUpdatePort {
     }
 
     @Override
+    public Optional<User> findByKakaoUserId(Long kakaoUserId) {
+        return userJpaRepository.findByKakaoUserInfoId(kakaoUserId);
+    }
+
+    @Override
     public Long save(User user) {
         User savedUser = userJpaRepository.save(user);
         userDocumentRepository.save(UserDocument.fromDomain(savedUser));

@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class InstagramLoginPageResponse {
+public class OAuthLoginPageResponse {
     String loginPageUrl;
 
     @Builder
-    public InstagramLoginPageResponse(String loginPageUrl) {
+    public OAuthLoginPageResponse(String loginPageUrl) {
         this.loginPageUrl = loginPageUrl;
     }
 }

@@ -1,12 +1,12 @@
-package swm.s3.coclimb.api.adapter.out.instagram;
+package swm.s3.coclimb.api.adapter.out.oauth.instagram;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
-import swm.s3.coclimb.api.application.port.out.instagram.InstagramAuthPort;
-import swm.s3.coclimb.api.application.port.out.instagram.InstagramDataPort;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.InstagramMediaResponseDto;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.LongLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.api.application.port.out.oauth.instagram.InstagramAuthPort;
+import swm.s3.coclimb.api.application.port.out.oauth.instagram.InstagramDataPort;
 import swm.s3.coclimb.config.ServerClock;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 

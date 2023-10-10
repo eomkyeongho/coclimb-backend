@@ -1,7 +1,7 @@
 package swm.s3.coclimb.api.adapter.in.web.media.dto;
 
 import lombok.Getter;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.InstagramMediaResponseDto;
 
 import java.util.List;
 

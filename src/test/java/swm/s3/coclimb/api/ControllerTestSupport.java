@@ -12,7 +12,8 @@ import swm.s3.coclimb.api.adapter.in.web.media.MediaController;
 import swm.s3.coclimb.api.adapter.in.web.report.ReportController;
 import swm.s3.coclimb.api.adapter.in.web.search.SearchController;
 import swm.s3.coclimb.api.adapter.in.web.user.UserController;
-import swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.InstagramOAuthRecord;
+import swm.s3.coclimb.api.adapter.out.oauth.kakao.KakaoOAuthRecord;
 import swm.s3.coclimb.api.application.port.in.gym.GymCommand;
 import swm.s3.coclimb.api.application.port.in.gym.GymQuery;
 import swm.s3.coclimb.api.application.port.in.login.LoginCommand;
@@ -70,6 +71,10 @@ public abstract class ControllerTestSupport{
     // Instagram
     @MockBean
     protected InstagramOAuthRecord instagramOAuthRecord;
+
+    // Kakao
+    @MockBean
+    protected KakaoOAuthRecord kakaoOAuthRecord;
 
     // Media
     @MockBean

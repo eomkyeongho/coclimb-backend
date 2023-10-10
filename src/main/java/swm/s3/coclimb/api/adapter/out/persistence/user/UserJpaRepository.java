@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface UserJpaRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByInstagramUserInfoId(Long instagramUserId);
+
+    Optional<User> findByKakaoUserInfoId(Long kakaoUserId);
 }

@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import swm.s3.coclimb.api.RestDocsTestSupport;
-import swm.s3.coclimb.api.adapter.in.web.login.dto.InstagramLoginRequest;
-import swm.s3.coclimb.api.adapter.out.instagram.InstagramRestApiManager;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.in.web.login.dto.OAuthLoginRequest;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.InstagramRestApiManager;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -57,7 +57,7 @@ class LoginControllerDocsTest extends RestDocsTestSupport {
     void loginWithInstagram() throws Exception {
 
         // given
-        InstagramLoginRequest request = InstagramLoginRequest.of("sample-code");
+        OAuthLoginRequest request = OAuthLoginRequest.of("sample-code");
         String instagramToken = "insta-token";
         Long instagramUserId = 1L;
         given(instagramRestApiManager.getShortLivedTokenAndUserId(any()))

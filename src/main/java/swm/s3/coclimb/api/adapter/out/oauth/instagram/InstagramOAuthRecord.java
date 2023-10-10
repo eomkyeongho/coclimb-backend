@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.instagram;
+package swm.s3.coclimb.api.adapter.out.oauth.instagram;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.instagram;
+package swm.s3.coclimb.api.adapter.out.oauth.instagram;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,9 +10,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.InstagramMediaResponseDto;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.InstagramMediaResponseDto;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.LongLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.api.exception.errortype.instagram.*;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class InstagramRestApi {
         return getTokenResponseDto(response, ShortLivedTokenResponse.class);
     }
 
-    protected LongLivedTokenResponse getLongLivedToken(String shortLivedToken) {
+    public LongLivedTokenResponse getLongLivedToken(String shortLivedToken) {
         String targetUri = String.format("/access_token?grant_type=ig_exchange_token&client_secret=%s&access_token=%s",
                 instagramOAuthRecord.getClientSecret(), shortLivedToken);
 
@@ -70,7 +70,7 @@ public class InstagramRestApi {
         return getTokenResponseDto(response, LongLivedTokenResponse.class);
     }
 
-    protected LongLivedTokenResponse refreshLongLivedToken(String longLivedToken) {
+    public LongLivedTokenResponse refreshLongLivedToken(String longLivedToken) {
         String targetUri = String.format("/refresh_access_token?grant_type=ig_refresh_token&access_token=%s",
                 longLivedToken);
 
@@ -95,7 +95,7 @@ public class InstagramRestApi {
         }
     }
 
-    protected List<InstagramMediaResponseDto> getMyMedias(String accessToken) {
+    public List<InstagramMediaResponseDto> getMyMedias(String accessToken) {
         String targetUri = String.format("/me/media?fields=id,media_type,media_url,permalink,thumbnail_url&access_token=%s",
                 accessToken);
 
@@ -118,7 +118,7 @@ public class InstagramRestApi {
         }
     }
 
-    protected String getMyUsername(String accessToken) {
+    public String getMyUsername(String accessToken) {
         String targetUri = String.format("/me?fields=username&access_token=%s",
                 accessToken);
 

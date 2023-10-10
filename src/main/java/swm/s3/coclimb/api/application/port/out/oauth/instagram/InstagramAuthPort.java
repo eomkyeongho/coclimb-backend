@@ -1,7 +1,7 @@
-package swm.s3.coclimb.api.application.port.out.instagram;
+package swm.s3.coclimb.api.application.port.out.oauth.instagram;
 
-import swm.s3.coclimb.api.adapter.out.instagram.dto.LongLivedTokenResponse;
-import swm.s3.coclimb.api.adapter.out.instagram.dto.ShortLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.LongLivedTokenResponse;
+import swm.s3.coclimb.api.adapter.out.oauth.instagram.dto.ShortLivedTokenResponse;
 import swm.s3.coclimb.domain.user.InstagramUserInfo;
 
 public interface InstagramAuthPort {

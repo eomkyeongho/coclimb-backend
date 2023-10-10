@@ -22,10 +22,14 @@ public class User extends BaseTimeEntity {
     @Embedded
     private InstagramUserInfo instagramUserInfo;
 
+    @Embedded
+    private KakaoUserInfo kakaoUserInfo;
+
     @Builder
-    public User(String name, InstagramUserInfo instagramUserInfo) {
+    public User(String name, InstagramUserInfo instagramUserInfo, KakaoUserInfo kakaoUserInfo) {
         this.name = name;
         this.instagramUserInfo = instagramUserInfo;
+        this.kakaoUserInfo = kakaoUserInfo;
     }
 
 }

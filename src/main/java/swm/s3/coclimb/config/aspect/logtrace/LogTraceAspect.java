@@ -36,7 +36,7 @@ public class LogTraceAspect {
     private void all(){}
 //    @Pointcut("execution(* swm.s3.coclimb.api..*(..))")
 //    private void api(){}
-    @Pointcut("target(swm.s3.coclimb.api.adapter.out.instagram.InstagramOAuthRecord)")
+    @Pointcut("target(swm.s3.coclimb.api.adapter.out.oauth.instagram.InstagramOAuthRecord)")
     private void isFinal(){}
     @Pointcut("within(swm.s3.coclimb.config.*Config)")
     private void isConfig(){}

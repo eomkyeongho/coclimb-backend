@@ -1,4 +1,4 @@
-package swm.s3.coclimb.api.adapter.out.instagram.dto;
+package swm.s3.coclimb.api.adapter.out.oauth.instagram.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

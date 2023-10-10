@@ -6,15 +6,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class InstagramLoginRequest {
+public class OAuthLoginRequest {
     @NotNull
     String code;
 
-    private InstagramLoginRequest(String code) {
+    private OAuthLoginRequest(String code) {
         this.code = code;
     }
 
-    public static InstagramLoginRequest of(String code) {
-        return new InstagramLoginRequest(code);
+    public static OAuthLoginRequest of(String code) {
+        return new OAuthLoginRequest(code);
     }
 }
